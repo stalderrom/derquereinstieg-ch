@@ -1,11 +1,44 @@
 import type { Metadata } from 'next'
+import { client } from '@/lib/sanity/client'
 
-export const metadata: Metadata = {
-  title: 'Quereinsteiger Jobs Schweiz | derquereinstieg.ch',
-  description: 'Die Plattform für Quereinsteiger in der Schweiz. Ehrliche Jobs, echte Stories, konkrete Hilfe.',
-  alternates: {
-    canonical: 'https://derquereinstieg.ch/',
-  },
+// --- Typen ---
+interface HomepageData {
+  heroTitle?: string
+  heroSubtitle?: string
+  heroCtaText?: string
+  heroCtaUrl?: string
+  seoTitle?: string
+  seoDescription?: string
+}
+
+// --- Sanity Query ---
+async function getHomepage(): Promise<HomepageData | null> {
+  return client.fetch(
+    `*[_type == "homepage" && _id == "homepage"][0]{
+      heroTitle, heroSubtitle, heroCtaText, heroCtaUrl,
+      seoTitle, seoDescription
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  )
+}
+
+// --- Metadata ---
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getHomepage()
+  return {
+    title: data?.seoTitle ?? 'Quereinsteiger Jobs Schweiz | derquereinstieg.ch',
+    description: data?.seoDescription ?? 'Die Plattform für Quereinsteiger in der Schweiz. Ehrliche Jobs, echte Stories, konkrete Hilfe.',
+    alternates: { canonical: 'https://derquereinstieg.ch/' },
+  }
+}
+
+// --- Fallbacks ---
+const DEFAULTS = {
+  heroTitle: 'Quereinsteiger Jobs in der Schweiz',
+  heroSubtitle: 'Die Plattform für Menschen, die neu anfangen. Ehrliche Jobs, echte Stories, konkrete Hilfe.',
+  heroCtaText: null,
+  heroCtaUrl: null,
 }
 
 const CATEGORIES = [
@@ -17,20 +50,36 @@ const CATEGORIES = [
   'Verkauf',
 ]
 
-export default function HomePage() {
+// --- Page ---
+export default async function HomePage() {
+  const data = await getHomepage()
+
+  const heroTitle = data?.heroTitle ?? DEFAULTS.heroTitle
+  const heroSubtitle = data?.heroSubtitle ?? DEFAULTS.heroSubtitle
+  const heroCtaText = data?.heroCtaText ?? DEFAULTS.heroCtaText
+  const heroCtaUrl = data?.heroCtaUrl ?? DEFAULTS.heroCtaUrl
+
   return (
     <>
       {/* Hero */}
       <section className="bg-dark text-white pt-20 pb-16 border-b-4 border-orange">
         <div className="max-w-content mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4">
-            Quereinsteiger Jobs<br />
-            <em className="not-italic text-orange">in der Schweiz</em>
+            {heroTitle}
           </h1>
-          <p className="text-lg text-white/70 max-w-xl mb-8">
-            Die Plattform für Menschen, die neu anfangen. Ehrliche Jobs,
-            echte Stories, konkrete Hilfe.
-          </p>
+          {heroSubtitle && (
+            <p className="text-lg text-white/70 max-w-xl mb-8">
+              {heroSubtitle}
+            </p>
+          )}
+          {heroCtaText && heroCtaUrl && (
+            <a
+              href={heroCtaUrl}
+              className="inline-block bg-orange hover:bg-orange-dark text-white font-semibold px-6 py-3 rounded-md transition-colors mb-8"
+            >
+              {heroCtaText}
+            </a>
+          )}
           <div className="flex flex-wrap gap-4 text-sm text-white/50">
             {['Für Quereinsteiger', 'Fokus Schweiz', 'Kostenlos'].map((item) => (
               <span key={item}>
