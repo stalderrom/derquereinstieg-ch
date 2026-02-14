@@ -31,6 +31,27 @@ const THEMES = [
     swatch: '#C9873A',
     bg: '#1B2D1F',
   },
+  {
+    id: 'v5',
+    label: 'Aubergine + Kupfer',
+    description: 'Mutig, kreativ',
+    swatch: '#C4773B',
+    bg: '#160E1A',
+  },
+  {
+    id: 'v6',
+    label: 'Graphit + Safran',
+    description: 'Editorial, helvetisch',
+    swatch: '#D4940E',
+    bg: '#1A1A1A',
+  },
+  {
+    id: 'v7',
+    label: 'Weinrot + Gold',
+    description: 'Reif, vertrauenswürdig',
+    swatch: '#C8A040',
+    bg: '#1C1014',
+  },
 ]
 
 export default function ThemeSwitcher() {

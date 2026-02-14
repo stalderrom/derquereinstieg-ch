@@ -64,3 +64,33 @@
   --color-cream:       #F4F2EC;
   --color-border:      #DAD5C8;
 }
+
+/* V5: Aubergine + Kupfer — mutig, kreativ */
+[data-theme="v5"] {
+  --color-dark:        #160E1A;
+  --color-orange:      #C4773B;
+  --color-orange-dark: #A6622E;
+  --color-blue:        #3D1F5C;
+  --color-cream:       #F7F3EF;
+  --color-border:      #E3DDD6;
+}
+
+/* V6: Graphit + Safran — editorial, helvetisch */
+[data-theme="v6"] {
+  --color-dark:        #1A1A1A;
+  --color-orange:      #D4940E;
+  --color-orange-dark: #B07B0A;
+  --color-blue:        #3D3D3D;
+  --color-cream:       #F9F6F0;
+  --color-border:      #E8E3D8;
+}
+
+/* V7: Weinrot + Gold — reif, vertrauenswürdig */
+[data-theme="v7"] {
+  --color-dark:        #1C1014;
+  --color-orange:      #C8A040;
+  --color-orange-dark: #A68430;
+  --color-blue:        #6A2035;
+  --color-cream:       #F8F4EE;
+  --color-border:      #E4DCCE;
+}
