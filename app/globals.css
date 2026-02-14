@@ -22,3 +22,28 @@
     color: #374151;
   }
 }
+
+/* --- Theme overrides --- */
+[data-theme="green"] {
+  --color-dark:        #1B3A2D;
+  --color-orange:      #2D7D52;
+  --color-orange-dark: #235f3e;
+  --color-blue:        #2D7D52;
+  --color-cream:       #F5F7F2;
+}
+
+[data-theme="slate"] {
+  --color-dark:        #1E2936;
+  --color-orange:      #F5C842;
+  --color-orange-dark: #d4a830;
+  --color-blue:        #3D5A7A;
+  --color-cream:       #F9F8F5;
+}
+
+[data-theme="terracotta"] {
+  --color-dark:        #2C2C3E;
+  --color-orange:      #C1603F;
+  --color-orange-dark: #a34e32;
+  --color-blue:        #5B6B8A;
+  --color-cream:       #FAF7F4;
+}
