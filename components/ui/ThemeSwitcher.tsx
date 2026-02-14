@@ -4,37 +4,48 @@ import { useEffect, useState } from 'react'
 
 const THEMES = [
   {
-    id: 'default',
+    id: 'v1',
     label: 'Navy & Orange',
+    description: 'Seriös, direkt',
     swatch: '#E67E22',
     bg: '#1A2332',
   },
   {
-    id: 'green',
-    label: 'Grün & Weiss',
-    swatch: '#2D7D52',
-    bg: '#1B3A2D',
+    id: 'v2',
+    label: 'Blau & Orange',
+    description: 'Markenfarbe als Basis',
+    swatch: '#E67E22',
+    bg: '#2E5C8A',
   },
   {
-    id: 'slate',
-    label: 'Slate & Gold',
-    swatch: '#F5C842',
-    bg: '#1E2936',
+    id: 'v3',
+    label: 'Warm & Sand',
+    description: 'Menschlich, nahbar',
+    swatch: '#C97D2E',
+    bg: '#2C2A26',
   },
   {
-    id: 'terracotta',
-    label: 'Tinte & Terrakotta',
-    swatch: '#C1603F',
-    bg: '#2C2C3E',
+    id: 'v4',
+    label: 'Tief & Orange',
+    description: 'Premium, fokussiert',
+    swatch: '#E67E22',
+    bg: '#0D1117',
+  },
+  {
+    id: 'v5',
+    label: 'Hell & Frisch',
+    description: 'Modern, zugänglich',
+    swatch: '#E8841C',
+    bg: '#1B3A5F',
   },
 ]
 
 export default function ThemeSwitcher() {
-  const [active, setActive] = useState('default')
+  const [active, setActive] = useState('v1')
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme') ?? 'default'
+    const saved = localStorage.getItem('theme') ?? 'v1'
     setActive(saved)
     document.documentElement.setAttribute('data-theme', saved)
   }, [])
@@ -46,34 +57,50 @@ export default function ThemeSwitcher() {
     setOpen(false)
   }
 
+  const current = THEMES.find((t) => t.id === active)
+
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2">
       {open && (
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-3 flex flex-col gap-1 min-w-[180px]">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide px-1 mb-1">Farbpalette</p>
-          {THEMES.map((t) => (
+        <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-3 flex flex-col gap-1 w-[220px]">
+          <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-2 pb-1">
+            Branding
+          </p>
+          {THEMES.map((t, i) => (
             <button
               key={t.id}
               onClick={() => apply(t.id)}
-              className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-sm text-left transition-colors w-full ${
-                active === t.id ? 'bg-gray-100 font-semibold' : 'hover:bg-gray-50'
+              className={`flex items-center gap-3 px-2 py-2 rounded-lg text-left transition-colors w-full group ${
+                active === t.id ? 'bg-gray-100' : 'hover:bg-gray-50'
               }`}
             >
+              {/* Swatch: Hintergrund + Akzentfarbe */}
               <span
-                className="w-6 h-6 rounded-full flex-shrink-0 border-2 border-white shadow-sm"
-                style={{ background: `linear-gradient(135deg, ${t.bg} 50%, ${t.swatch} 50%)` }}
+                className="w-8 h-8 rounded-lg flex-shrink-0 shadow-sm border border-black/10"
+                style={{
+                  background: `linear-gradient(135deg, ${t.bg} 55%, ${t.swatch} 55%)`,
+                }}
               />
-              <span className="text-gray-700">{t.label}</span>
+              <span>
+                <span className={`block text-sm ${active === t.id ? 'font-semibold text-gray-800' : 'text-gray-700'}`}>
+                  {i + 1}. {t.label}
+                </span>
+                <span className="block text-[11px] text-gray-400">{t.description}</span>
+              </span>
             </button>
           ))}
         </div>
       )}
+
+      {/* Toggle-Button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        title="Farbpalette wählen"
-        className="w-10 h-10 rounded-full shadow-lg flex items-center justify-center bg-white border border-gray-200 hover:scale-105 transition-transform"
+        title="Branding wählen"
+        className="w-11 h-11 rounded-full shadow-lg border-2 border-white flex items-center justify-center hover:scale-105 transition-transform overflow-hidden"
         style={{
-          background: `conic-gradient(#E67E22 0% 25%, #2D7D52 25% 50%, #F5C842 50% 75%, #C1603F 75% 100%)`,
+          background: current
+            ? `linear-gradient(135deg, ${current.bg} 55%, ${current.swatch} 55%)`
+            : '#1A2332',
         }}
       />
     </div>

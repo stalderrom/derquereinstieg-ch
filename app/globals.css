@@ -23,27 +23,49 @@
   }
 }
 
-/* --- Theme overrides --- */
-[data-theme="green"] {
-  --color-dark:        #1B3A2D;
-  --color-orange:      #2D7D52;
-  --color-orange-dark: #235f3e;
-  --color-blue:        #2D7D52;
-  --color-cream:       #F5F7F2;
+/* --- Branding Themes (alle basieren auf Brand-Farben #2E5C8A + #E67E22) --- */
+
+/* V1: Navy & Orange – Seriös, direkt (default) */
+[data-theme="v1"] {
+  --color-dark:        #1A2332;
+  --color-orange:      #E67E22;
+  --color-orange-dark: #c96a12;
+  --color-blue:        #2E5C8A;
+  --color-cream:       #F8F6F2;
 }
 
-[data-theme="slate"] {
-  --color-dark:        #1E2936;
-  --color-orange:      #F5C842;
-  --color-orange-dark: #d4a830;
-  --color-blue:        #3D5A7A;
-  --color-cream:       #F9F8F5;
+/* V2: Blau & Orange – Markenfarbe als Basis */
+[data-theme="v2"] {
+  --color-dark:        #2E5C8A;
+  --color-orange:      #E67E22;
+  --color-orange-dark: #c96a12;
+  --color-blue:        #1A2332;
+  --color-cream:       #EFF4FA;
 }
 
-[data-theme="terracotta"] {
-  --color-dark:        #2C2C3E;
-  --color-orange:      #C1603F;
-  --color-orange-dark: #a34e32;
-  --color-blue:        #5B6B8A;
-  --color-cream:       #FAF7F4;
+/* V3: Warm & Sand – Menschlich, nahbar */
+[data-theme="v3"] {
+  --color-dark:        #2C2A26;
+  --color-orange:      #C97D2E;
+  --color-orange-dark: #a6641e;
+  --color-blue:        #2E5C8A;
+  --color-cream:       #FBF7F0;
+}
+
+/* V4: Tief & Orange – Premium, fokussiert */
+[data-theme="v4"] {
+  --color-dark:        #0D1117;
+  --color-orange:      #E67E22;
+  --color-orange-dark: #c96a12;
+  --color-blue:        #2E5C8A;
+  --color-cream:       #F5F5F3;
+}
+
+/* V5: Hell & Frisch – Modern, zugänglich */
+[data-theme="v5"] {
+  --color-dark:        #1B3A5F;
+  --color-orange:      #E8841C;
+  --color-orange-dark: #c96a12;
+  --color-blue:        #3A87CF;
+  --color-cream:       #F7F9FB;
 }
