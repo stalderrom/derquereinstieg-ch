@@ -23,49 +23,44 @@
   }
 }
 
-/* --- Branding Themes (alle basieren auf Brand-Farben #2E5C8A + #E67E22) --- */
+/* ─── Branding-Themes aus color-variants.html ─── */
 
-/* V1: Navy & Orange – Seriös, direkt (default) */
+/* V1: Blau + Orange — professionell, bewährt */
 [data-theme="v1"] {
   --color-dark:        #1A2332;
   --color-orange:      #E67E22;
-  --color-orange-dark: #c96a12;
+  --color-orange-dark: #c06010;
   --color-blue:        #2E5C8A;
   --color-cream:       #F8F6F2;
+  --color-border:      #E5E0D8;
 }
 
-/* V2: Blau & Orange – Markenfarbe als Basis */
+/* V2: Petrol + Terrakotta — eigenständig, zeitgemäss */
 [data-theme="v2"] {
-  --color-dark:        #2E5C8A;
-  --color-orange:      #E67E22;
-  --color-orange-dark: #c96a12;
-  --color-blue:        #1A2332;
-  --color-cream:       #EFF4FA;
+  --color-dark:        #152028;
+  --color-orange:      #C25A35;
+  --color-orange-dark: #a34828;
+  --color-blue:        #1B5F72;
+  --color-cream:       #F5F2EE;
+  --color-border:      #DDD8D0;
 }
 
-/* V3: Warm & Sand – Menschlich, nahbar */
+/* V3: Schiefergrau + Senfgelb — editorial, NZZ-Feeling */
 [data-theme="v3"] {
-  --color-dark:        #2C2A26;
-  --color-orange:      #C97D2E;
-  --color-orange-dark: #a6641e;
-  --color-blue:        #2E5C8A;
-  --color-cream:       #FBF7F0;
+  --color-dark:        #1A2530;
+  --color-orange:      #C9941A;
+  --color-orange-dark: #a87814;
+  --color-blue:        #2C3E50;
+  --color-cream:       #F7F5F0;
+  --color-border:      #E0DCD4;
 }
 
-/* V4: Tief & Orange – Premium, fokussiert */
+/* V4: Waldgrün + Warmsand — organisch, Neuanfang */
 [data-theme="v4"] {
-  --color-dark:        #0D1117;
-  --color-orange:      #E67E22;
-  --color-orange-dark: #c96a12;
-  --color-blue:        #2E5C8A;
-  --color-cream:       #F5F5F3;
-}
-
-/* V5: Hell & Frisch – Modern, zugänglich */
-[data-theme="v5"] {
-  --color-dark:        #1B3A5F;
-  --color-orange:      #E8841C;
-  --color-orange-dark: #c96a12;
-  --color-blue:        #3A87CF;
-  --color-cream:       #F7F9FB;
+  --color-dark:        #1B2D1F;
+  --color-orange:      #C9873A;
+  --color-orange-dark: #a36a28;
+  --color-blue:        #2E5535;
+  --color-cream:       #F4F2EC;
+  --color-border:      #DAD5C8;
 }
