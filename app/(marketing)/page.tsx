@@ -1,12 +1,36 @@
 import type { Metadata } from 'next'
+import { PortableText, type PortableTextBlock } from 'next-sanity'
 import { client } from '@/lib/sanity/client'
 
 // --- Typen ---
+type TextSection = {
+  _type: 'textSection'
+  _key: string
+  title: string
+  content?: PortableTextBlock[]
+}
+type BulletSection = {
+  _type: 'bulletSection'
+  _key: string
+  title: string
+  items?: string[]
+}
+type CtaSection = {
+  _type: 'ctaSection'
+  _key: string
+  title: string
+  subtitle?: string
+  ctaText?: string
+  ctaUrl?: string
+}
+type Section = TextSection | BulletSection | CtaSection
+
 interface HomepageData {
   heroTitle?: string
   heroSubtitle?: string
   heroCtaText?: string
   heroCtaUrl?: string
+  sections?: Section[]
   seoTitle?: string
   seoDescription?: string
 }
@@ -16,6 +40,13 @@ async function getHomepage(): Promise<HomepageData | null> {
   return client.fetch(
     `*[_type == "homepage" && _id == "homepage"][0]{
       heroTitle, heroSubtitle, heroCtaText, heroCtaUrl,
+      sections[]{
+        _type, _key,
+        title,
+        content,
+        items,
+        subtitle, ctaText, ctaUrl
+      },
       seoTitle, seoDescription
     }`,
     {},
@@ -33,31 +64,120 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-// --- Fallbacks ---
-const DEFAULTS = {
-  heroTitle: 'Quereinsteiger Jobs in der Schweiz',
-  heroSubtitle: 'Die Plattform für Menschen, die neu anfangen. Ehrliche Jobs, echte Stories, konkrete Hilfe.',
-  heroCtaText: null,
-  heroCtaUrl: null,
+// --- Sektionen rendern ---
+function RenderSection({ section }: { section: Section }) {
+  if (section._type === 'textSection') {
+    return (
+      <section>
+        <h2 className="text-xl font-bold text-dark mb-3">{section.title}</h2>
+        {section.content && (
+          <div className="prose prose-sm max-w-none">
+            <PortableText value={section.content} />
+          </div>
+        )}
+      </section>
+    )
+  }
+
+  if (section._type === 'bulletSection') {
+    return (
+      <section>
+        <h2 className="text-xl font-bold text-dark mb-3">{section.title}</h2>
+        {section.items && section.items.length > 0 && (
+          <ul className="list-disc pl-5 space-y-1">
+            {section.items.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        )}
+      </section>
+    )
+  }
+
+  if (section._type === 'ctaSection') {
+    return (
+      <div className="bg-dark text-white rounded-xl p-8 text-center">
+        <h2 className="text-xl font-bold mb-2">{section.title}</h2>
+        {section.subtitle && (
+          <p className="text-white/60 text-sm mb-6">{section.subtitle}</p>
+        )}
+        {section.ctaText && section.ctaUrl && (
+          <a
+            href={section.ctaUrl}
+            className="inline-block bg-orange hover:bg-orange-dark text-white font-semibold px-6 py-3 rounded-md transition-colors"
+          >
+            {section.ctaText}
+          </a>
+        )}
+      </div>
+    )
+  }
+
+  return null
 }
 
-const CATEGORIES = [
-  'Pflege & Gesundheit',
-  'IT & Tech',
-  'Pädagogik',
-  'Soziales',
-  'Handwerk',
-  'Verkauf',
+// --- Fallback-Sektionen (wenn Sanity leer) ---
+const FALLBACK_SECTIONS: Section[] = [
+  {
+    _type: 'textSection',
+    _key: 'fallback-1',
+    title: 'Was ist ein Quereinsteiger?',
+    content: [
+      {
+        _type: 'block',
+        _key: 'b1',
+        style: 'normal',
+        children: [{ _type: 'span', _key: 's1', text: 'Als Quereinsteiger oder Quereinstiegerin wechselst du in einen Beruf, für den du keine klassische Ausbildung mitbringst – stattdessen zählen deine Erfahrungen, deine Motivation und der Mut, Neues zu wagen.' }],
+      },
+      {
+        _type: 'block',
+        _key: 'b2',
+        style: 'normal',
+        children: [{ _type: 'span', _key: 's2', text: 'In der Schweiz suchen immer mehr Arbeitgeber genau solche Profile, besonders in Pflege, IT, Pädagogik, Handwerk und Sozialbereich.' }],
+      },
+    ],
+  },
+  {
+    _type: 'textSection',
+    _key: 'fallback-2',
+    title: 'Job als Quereinsteiger finden',
+    content: [
+      {
+        _type: 'block',
+        _key: 'b3',
+        style: 'normal',
+        children: [{ _type: 'span', _key: 's3', text: 'Nicht jeder Job verlangt ein passendes Diplom. Wer als Quereinsteiger eine Stelle sucht, braucht vor allem die richtigen Informationen, realistische Erwartungen – und die passende Plattform.' }],
+      },
+    ],
+  },
+  {
+    _type: 'bulletSection',
+    _key: 'fallback-3',
+    title: 'Was dich hier erwartet',
+    items: [
+      'Stellenanzeigen gezielt für Quereinsteiger – nach Kanton, Bereich und Erfahrung',
+      'Echte Stories von Menschen, die erfolgreich gewechselt haben',
+      'Konkrete Tipps für Bewerbung, Umschulung und Einstieg',
+      'Übersichtlich, kostenlos und ohne Ablenkung',
+    ],
+  },
+  {
+    _type: 'ctaSection',
+    _key: 'fallback-4',
+    title: 'Sei dabei, wenn wir starten',
+    subtitle: 'Trag dich ein – du bekommst eine kurze Mail, sobald die Plattform live ist.',
+  },
 ]
 
 // --- Page ---
 export default async function HomePage() {
   const data = await getHomepage()
 
-  const heroTitle = data?.heroTitle ?? DEFAULTS.heroTitle
-  const heroSubtitle = data?.heroSubtitle ?? DEFAULTS.heroSubtitle
-  const heroCtaText = data?.heroCtaText ?? DEFAULTS.heroCtaText
-  const heroCtaUrl = data?.heroCtaUrl ?? DEFAULTS.heroCtaUrl
+  const heroTitle = data?.heroTitle ?? 'Quereinsteiger Jobs in der Schweiz'
+  const heroSubtitle = data?.heroSubtitle ?? 'Die Plattform für Menschen, die neu anfangen. Ehrliche Jobs, echte Stories, konkrete Hilfe.'
+  const heroCtaText = data?.heroCtaText
+  const heroCtaUrl = data?.heroCtaUrl
+  const sections = data?.sections?.length ? data.sections : FALLBACK_SECTIONS
 
   return (
     <>
@@ -90,80 +210,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Content */}
+      {/* Sektionen */}
       <div className="max-w-content mx-auto px-6 py-14 space-y-10">
-
-        <section>
-          <h2 className="text-xl font-bold text-dark mb-3">Was ist ein Quereinsteiger?</h2>
-          <p className="mb-3">
-            Als Quereinsteiger oder Quereinstiegerin wechselst du in einen Beruf,
-            für den du keine klassische Ausbildung mitbringst – stattdessen zählen
-            deine Erfahrungen, deine Motivation und der Mut, Neues zu wagen.
-          </p>
-          <p>
-            In der Schweiz suchen immer mehr Arbeitgeber genau solche Profile,
-            besonders in Pflege, IT, Pädagogik, Handwerk und Sozialbereich.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-bold text-dark mb-3">Job als Quereinsteiger finden</h2>
-          <p className="mb-4">
-            Nicht jeder Job verlangt ein passendes Diplom. Wer als Quereinsteiger
-            eine Stelle sucht, braucht vor allem die richtigen Informationen,
-            realistische Erwartungen – und die passende Plattform.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <span
-                key={cat}
-                className="bg-blue text-white text-sm font-medium px-3 py-1 rounded-full"
-              >
-                {cat}
-              </span>
-            ))}
-            <span className="bg-orange text-white text-sm font-medium px-3 py-1 rounded-full">
-              Alle 26 Kantone
-            </span>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-bold text-dark mb-3">Was dich hier erwartet</h2>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Stellenanzeigen gezielt für Quereinsteiger – nach Kanton, Bereich und Erfahrung</li>
-            <li>Echte Stories von Menschen, die erfolgreich gewechselt haben</li>
-            <li>Konkrete Tipps für Bewerbung, Umschulung und Einstieg</li>
-            <li>Übersichtlich, kostenlos und ohne Ablenkung</li>
-          </ul>
-        </section>
-
-        {/* Newsletter CTA */}
-        <div className="bg-dark text-white rounded-xl p-8 text-center">
-          <h2 className="text-xl font-bold mb-2">Sei dabei, wenn wir starten</h2>
-          <p className="text-white/60 text-sm mb-6">
-            Trag dich ein – du bekommst eine kurze Mail, sobald die Plattform live ist.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-            <input
-              type="email"
-              name="email"
-              placeholder="deine@email.ch"
-              required
-              autoComplete="email"
-              aria-label="E-Mail Adresse"
-              className="flex-1 px-4 py-2.5 rounded-md text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-orange"
-            />
-            <button
-              type="submit"
-              className="bg-orange hover:bg-orange-dark text-white font-semibold px-5 py-2.5 rounded-md text-sm whitespace-nowrap transition-colors"
-            >
-              Benachrichtigen
-            </button>
-          </form>
-          <p className="text-white/35 text-xs mt-3">Kein Spam. Nur eine Mail bei Launch.</p>
-        </div>
-
+        {sections.map((section) => (
+          <RenderSection key={section._key} section={section} />
+        ))}
       </div>
     </>
   )
