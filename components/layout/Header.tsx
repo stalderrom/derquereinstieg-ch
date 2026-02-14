@@ -4,8 +4,8 @@ export default function Header() {
   return (
     <header className="bg-dark sticky top-0 z-50">
       <div className="max-w-wide mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="font-bold text-white text-[1.05rem]">
-          der<span className="text-orange">quereinstieg</span>.ch
+        <Link href="/" className="font-bold text-white text-[1.05rem] tracking-tight">
+          Der Quereinstieg
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm text-white/70">
           <Link href="/jobs" className="hover:text-white transition-colors">Jobs</Link>

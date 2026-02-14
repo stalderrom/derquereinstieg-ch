@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
+import { Nunito } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  variable: '--font-nunito',
+  display: 'swap',
+})
 
 const GA_ID = 'G-9CWXYP0Z9C'
 
@@ -35,8 +42,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="de">
-      <body className="antialiased">
+    <html lang="de" className={nunito.variable}>
+      <body className="antialiased font-nunito">
         {children}
 
         {/* Google Analytics 4 */}

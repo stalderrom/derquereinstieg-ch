@@ -12,6 +12,8 @@
 
   --max-width-content: 760px;
   --max-width-wide:    1240px;
+
+  --font-nunito: var(--font-nunito), sans-serif;
 }
 
 @layer base {
