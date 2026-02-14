@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
+
+const GA_ID = 'G-9CWXYP0Z9C'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://derquereinstieg.ch'),
@@ -32,6 +35,20 @@ export default function RootLayout({
     <html lang="de">
       <body className="antialiased">
         {children}
+
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
       </body>
     </html>
   )
