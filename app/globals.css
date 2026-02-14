@@ -65,32 +65,32 @@
   --color-border:      #DAD5C8;
 }
 
-/* V5: Aubergine + Kupfer — mutig, kreativ */
+/* V5: Indigo + Türkis — modern, eigenständig */
 [data-theme="v5"] {
-  --color-dark:        #160E1A;
-  --color-orange:      #C4773B;
-  --color-orange-dark: #A6622E;
-  --color-blue:        #3D1F5C;
-  --color-cream:       #F7F3EF;
-  --color-border:      #E3DDD6;
+  --color-dark:        #252D7A;
+  --color-orange:      #1DB5A8;
+  --color-orange-dark: #169A8E;
+  --color-blue:        #3040A0;
+  --color-cream:       #F5F7FA;
+  --color-border:      #DDE3E8;
 }
 
-/* V6: Graphit + Safran — editorial, helvetisch */
+/* V6: Smaragd + Pfirsich — warm, einladend */
 [data-theme="v6"] {
-  --color-dark:        #1A1A1A;
-  --color-orange:      #D4940E;
-  --color-orange-dark: #B07B0A;
-  --color-blue:        #3D3D3D;
-  --color-cream:       #F9F6F0;
-  --color-border:      #E8E3D8;
+  --color-dark:        #0D4535;
+  --color-orange:      #E8844A;
+  --color-orange-dark: #C8683A;
+  --color-blue:        #186850;
+  --color-cream:       #F7F3EE;
+  --color-border:      #E0D9D0;
 }
 
-/* V7: Weinrot + Gold — reif, vertrauenswürdig */
+/* V7: Rostbraun + Gold — handwerklich, warm */
 [data-theme="v7"] {
-  --color-dark:        #1C1014;
-  --color-orange:      #C8A040;
-  --color-orange-dark: #A68430;
-  --color-blue:        #6A2035;
-  --color-cream:       #F8F4EE;
-  --color-border:      #E4DCCE;
+  --color-dark:        #5C2A18;
+  --color-orange:      #D4AA30;
+  --color-orange-dark: #B08A22;
+  --color-blue:        #7A3820;
+  --color-cream:       #F9F4EC;
+  --color-border:      #E8DEC8;
 }
