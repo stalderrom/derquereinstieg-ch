@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO: Title & Description -->
+  <title>Quereinsteiger Jobs Schweiz | derquereinstieg.ch</title>
+  <meta name="description" content="Die Plattform für Quereinsteiger in der Schweiz. Ehrliche Jobs, echte Stories, konkrete Hilfe." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://derquereinstieg.ch/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://derquereinstieg.ch/" />
+  <meta property="og:title" content="Quereinsteiger Jobs Schweiz | derquereinstieg.ch" />
+  <meta property="og:description" content="Die Plattform für Quereinsteiger in der Schweiz. Ehrliche Jobs, echte Stories, konkrete Hilfe." />
+  <meta property="og:locale" content="de_CH" />
+
+  <!-- Schema.org: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "derquereinstieg.ch",
+    "url": "https://derquereinstieg.ch/",
+    "description": "Die Plattform für Quereinsteiger in der Schweiz",
+    "inLanguage": "de-CH",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://derquereinstieg.ch/jobs?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- Schema.org: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "derquereinstieg.ch",
+    "url": "https://derquereinstieg.ch/",
+    "description": "Plattform für Quereinsteiger in der Schweiz – Jobs, Stories, Hilfe"
+  }
+  </script>
+
+  <!-- =====================================================
+       SCHRITT 3: Google Analytics 4
+       GA4 Measurement-ID hier einfügen (Format: G-XXXXXXXXXX)
+       Kommentar entfernen nach Setup.
+  ====================================================== -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+  -->
+
+  <!-- =====================================================
+       SCHRITT 5: Google Search Console Verification
+       Meta-Tag von GSC hier einfügen.
+       Kommentar entfernen nach Setup.
+  ====================================================== -->
+  <!-- <meta name="google-site-verification" content="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" /> -->
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:   #2E5C8A;
+      --orange: #E67E22;
+      --dark:   #1A2332;
+      --cream:  #F8F6F2;
+      --text:   #374151;
+      --muted:  #6B7280;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--cream);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* --- HEADER --- */
+    header {
+      background: var(--dark);
+      padding: 1.25rem 0;
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+    .logo span { color: var(--orange); }
+    .badge {
+      background: var(--orange);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2em 0.65em;
+      border-radius: 4px;
+    }
+
+    /* --- HERO --- */
+    .hero {
+      background: var(--dark);
+      color: #fff;
+      padding: 5rem 0 4rem;
+      border-bottom: 3px solid var(--orange);
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .hero p {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.72);
+      max-width: 520px;
+      margin-bottom: 2rem;
+    }
+    .hero-checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .hero-checks span::before { content: "✓ "; color: var(--orange); }
+
+    /* --- MAIN CONTENT --- */
+    main { padding: 3.5rem 0 4rem; }
+    main h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 2.5rem 0 0.65rem;
+    }
+    main h2:first-child { margin-top: 0; }
+    main p { margin-bottom: 1rem; }
+    main ul {
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    main li { margin-bottom: 0.4rem; }
+
+    /* Tag cloud */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.25rem 0;
+    }
+    .tag {
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.3em 0.8em;
+      border-radius: 999px;
+    }
+    .tag.accent { background: var(--orange); }
+
+    /* CTA box */
+    .cta-box {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 12px;
+      padding: 2.25rem 2rem;
+      margin-top: 2.75rem;
+      text-align: center;
+    }
+    .cta-box h2 {
+      color: #fff;
+      font-size: 1.2rem;
+      margin: 0 0 0.5rem;
+    }
+    .cta-box p {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.925rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-form {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .cta-form input[type="email"] {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.925rem;
+    }
+    .cta-form input[type="email"]:focus { outline: 2px solid var(--orange); }
+    .cta-form button {
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.25rem;
+      font-size: 0.925rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-note {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+      margin: 0.75rem 0 0;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.35);
+      font-size: 0.8rem;
+      padding: 1.5rem 0;
+      text-align: center;
+    }
+    footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .cta-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a href="/" class="logo">der<span>quereinstieg</span>.ch</a>
+      <span class="badge">Bald online</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Quereinsteiger Jobs<br><em>in der Schweiz</em></h1>
+      <p>Die Plattform für Menschen, die neu anfangen. Ehrliche Jobs, echte Stories, konkrete Hilfe.</p>
+      <div class="hero-checks">
+        <span>Für Quereinsteiger</span>
+        <span>Fokus Schweiz</span>
+        <span>Kostenlos</span>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+
+      <h2>Was ist ein Quereinsteiger?</h2>
+      <p>
+        Als Quereinsteiger oder Quereinstiegerin wechselst du in einen Beruf,
+        für den du keine klassische Ausbildung mitbringst – stattdessen zählen
+        deine Erfahrungen, deine Motivation und der Mut, Neues zu wagen.
+      </p>
+      <p>
+        In der Schweiz suchen immer mehr Arbeitgeber genau solche Profile,
+        besonders in Pflege, IT, Pädagogik, Handwerk und Sozialbereich.
+      </p>
+
+      <h2>Job als Quereinsteiger finden</h2>
+      <p>
+        Nicht jeder Job verlangt ein passendes Diplom. Wer als Quereinsteiger
+        eine Stelle sucht, braucht vor allem die richtigen Informationen,
+        realistische Erwartungen – und die passende Plattform.
+      </p>
+
+      <div class="tags">
+        <span class="tag">Pflege & Gesundheit</span>
+        <span class="tag">IT & Tech</span>
+        <span class="tag">Pädagogik</span>
+        <span class="tag">Soziales</span>
+        <span class="tag">Handwerk</span>
+        <span class="tag">Verkauf</span>
+        <span class="tag accent">Alle 26 Kantone</span>
+      </div>
+
+      <h2>Was dich hier erwartet</h2>
+      <ul>
+        <li>Stellenanzeigen gezielt für Quereinsteiger – nach Kanton, Bereich und Erfahrung</li>
+        <li>Echte Stories von Menschen, die erfolgreich gewechselt haben</li>
+        <li>Konkrete Tipps für Bewerbung, Umschulung und Einstieg</li>
+        <li>Übersichtlich, kostenlos und ohne Ablenkung</li>
+      </ul>
+
+      <div class="cta-box">
+        <h2>Sei dabei, wenn wir starten</h2>
+        <p>Trag dich ein – du bekommst eine kurze Mail, sobald die Plattform live ist.</p>
+        <form class="cta-form" action="#" method="post">
+          <input
+            type="email"
+            name="email"
+            placeholder="deine@email.ch"
+            required
+            autocomplete="email"
+            aria-label="E-Mail Adresse"
+          />
+          <button type="submit">Benachrichtigen</button>
+        </form>
+        <p class="cta-note">Kein Spam. Nur eine Mail bei Launch.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>
+        &copy; 2025 derquereinstieg.ch &nbsp;&middot;&nbsp;
+        <a href="/impressum">Impressum</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

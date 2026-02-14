@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jobs für Quereinsteiger Schweiz 2026 | derquereinstieg.ch</title>
+  <meta name="description" content="Die besten Jobs für Quereinsteiger in der Schweiz. Validierte Stellen, ehrliche Gehälter, konkrete Einstiegswege. Kein Bullshit — nur was wirklich funktioniert.">
+  <link rel="canonical" href="https://www.derquereinstieg.ch/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.derquereinstieg.ch/">
+  <meta property="og:title" content="Jobs für Quereinsteiger Schweiz 2026 | derquereinstieg.ch">
+  <meta property="og:description" content="12.100 Menschen suchen jeden Monat nach einem neuen Job in der Schweiz. Die besten Chancen für Quereinsteiger findest du hier.">
+  <meta property="og:site_name" content="derquereinstieg.ch">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "derquereinstieg.ch",
+    "url": "https://www.derquereinstieg.ch",
+    "description": "Die führende Plattform für Quereinsteiger in der Schweiz",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.derquereinstieg.ch/jobs?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "derquereinstieg.ch",
+    "url": "https://www.derquereinstieg.ch",
+    "description": "Schweizer Plattform für Quereinsteiger — Jobs, Guides, Community",
+    "foundingDate": "2026",
+    "address": { "@type": "PostalAddress", "addressCountry": "CH" }
+  }
+  </script>
+
+  <style>
+    /* ---- Canton map labels ---- */
+    .canton-label {
+      font-family: var(--font-heading);
+      fill: rgba(255,255,255,0.85);
+      font-weight: 600;
+      text-anchor: middle;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: 0.03em;
+    }
+
+    /* ---- Page-specific styles ---- */
+
+    /* Hero */
+    .hero {
+      background: var(--dark);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+      padding: clamp(3rem, 8vw, 6rem) 0 0;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(46, 92, 138, 0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(230, 126, 34, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.25rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--orange);
+    }
+    .hero-headline {
+      font-family: var(--font-heading);
+      font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+    }
+    .hero-headline em {
+      font-style: normal;
+      color: var(--orange);
+      position: relative;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      color: rgba(255,255,255,0.65);
+      line-height: 1.65;
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+    .hero-sub strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+    .hero-link {
+      font-size: 0.9375rem;
+      color: rgba(255,255,255,0.6);
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+      transition: color var(--transition), border-color var(--transition);
+      padding-bottom: 1px;
+    }
+    .hero-link:hover { color: var(--white); border-color: var(--white); }
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 1rem 0;
+      border-top: 1px solid rgba(255,255,255,0.10);
+    }
+    .hero-trust-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-family: var(--font-heading);
+      font-weight: 500;
+    }
+    .hero-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--font-heading);
+      font-weight: 500;
+    }
+    .hero-trust-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+
+    /* Hero SVG */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-svg { width: 100%; max-width: 460px; }
+    .path-animate {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: drawPath 1.5s ease forwards;
+    }
+    .path-animate:nth-child(2) { animation-delay: 0.2s; }
+    .path-animate:nth-child(3) { animation-delay: 0.4s; }
+    .path-animate:nth-child(4) { animation-delay: 0.6s; }
+    .path-animate:nth-child(5) { animation-delay: 0.8s; }
+    .path-animate:nth-child(6) { animation-delay: 1.0s; }
+    .node-pulse { animation: nodePulse 2.5s ease-in-out infinite; }
+    @keyframes drawPath {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes nodePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.06); opacity: 0.85; }
+    }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .float-bubble { animation: floatBubble 3s ease-in-out infinite; }
+    .float-bubble:nth-child(2) { animation-delay: 0.8s; }
+    .float-bubble:nth-child(3) { animation-delay: 1.6s; }
+
+    /* Hero bottom wave */
+    .hero-bottom {
+      position: relative;
+      height: 48px;
+      margin-top: 3rem;
+    }
+    .hero-bottom svg {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      width: 100%;
+    }
+
+    /* Stats strip */
+    .stats-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 1rem 2rem;
+      position: relative;
+    }
+    .stat-item + .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 1px;
+      background: var(--border);
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      font-feature-settings: 'tnum';
+    }
+    .stat-label {
+      font-family: var(--font-heading);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .stat-source {
+      font-size: 0.6875rem;
+      color: var(--border);
+      margin-top: 0.25rem;
+    }
+
+    /* Categories */
+    .categories-section {
+      padding: clamp(3rem, 7vw, 5rem) 0;
+    }
+    .categories-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+    .cat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.25rem 1rem 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .cat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: var(--orange);
+    }
+    .cat-card:hover::after { transform: scaleX(1); }
+    .cat-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--blue-light);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+    }
+    .cat-name {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.3;
+    }
+
+    /* How it works */
+    .how-section {
+      background: var(--dark);
+      color: var(--white);
+      padding: clamp(3rem, 7vw, 5rem) 0;
+    }
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+    .how-step {
+      position: relative;
+      padding-left: 0;
+    }
+    .how-number {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      position: absolute;
+      top: -1.5rem;
+      left: -0.5rem;
+      pointer-events: none;
+    }
+    .how-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(230, 126, 34, 0.15);
+      border: 1px solid rgba(230, 126, 34, 0.3);
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      color: var(--orange);
+    }
+    .how-title {
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .how-desc {
+      font-size: 0.9375rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+    }
+    .how-connector {
+      display: none; /* shown at lg */
+    }
+
+    /* Featured jobs */
+    .jobs-section {
+      padding: clamp(3rem, 7vw, 5rem) 0;
+      background: var(--cream-dark);
+    }
+    .jobs-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .jobs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .job-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: box-shadow var(--transition), transform var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+    .job-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .job-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .job-company-icon {
+      width: 44px; height: 44px;
+      background: var(--blue-light);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+    .job-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.3;
+      margin-bottom: 0.2rem;
+    }
+    .job-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .job-location {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .job-salary {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .job-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .job-card-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .job-cta-link {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: gap var(--transition);
+    }
+    .job-card:hover .job-cta-link { gap: 0.6rem; }
+
+    /* Lead magnet */
+    .lead-magnet {
+      background: var(--blue);
+      color: var(--white);
+      padding: clamp(3rem, 7vw, 5rem) 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .lead-magnet::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+    .lead-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .lead-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .lead-title em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .lead-sub {
+      color: rgba(255,255,255,0.7);
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+    .lead-trust {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .lead-form {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--r-lg);
+      padding: 2rem;
+    }
+    .lead-form-title {
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.35rem;
+    }
+    .lead-form-sub {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.4rem;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--r-sm);
+      padding: 0.75rem 1rem;
+      color: var(--white);
+      font-size: 0.9375rem;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.35); }
+    .form-input:focus {
+      border-color: var(--orange);
+      background: rgba(255,255,255,0.12);
+      outline: 2px solid rgba(230, 126, 34, 0.3);
+      outline-offset: 2px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: clamp(3rem, 7vw, 5rem) 0;
+      background: var(--white);
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .testi-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.75rem;
+      position: relative;
+    }
+    .testi-card::before {
+      content: '\201C';
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--blue);
+      opacity: 0.15;
+      position: absolute;
+      top: 0.5rem;
+      left: 1.25rem;
+      line-height: 1;
+    }
+    .testi-text {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      padding-top: 1rem;
+      font-style: italic;
+    }
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .testi-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .testi-name {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .testi-role {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+    .testi-arrow {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--green);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* Articles */
+    .articles-section {
+      padding: clamp(3rem, 7vw, 5rem) 0;
+    }
+    .articles-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .articles-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 1.25rem; }
+    .article-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition), transform var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+    .article-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .article-thumb {
+      height: 180px;
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 60%, #3D7AB5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .article-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 30%, rgba(230,126,34,0.25) 0%, transparent 60%);
+    }
+    .article-thumb-text {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 240px;
+    }
+    .article-card-body { padding: 1.25rem 1.5rem 1.5rem; flex: 1; display: flex; flex-direction: column; }
+    .article-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .article-date { font-size: 0.8125rem; color: var(--muted); }
+    .article-read-time { font-size: 0.8125rem; color: var(--muted); }
+    .article-title {
+      font-family: var(--font-heading);
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+    .article-excerpt { font-size: 0.9rem; color: var(--muted); line-height: 1.55; flex: 1; }
+    .article-cta {
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--blue);
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .categories-grid { grid-template-columns: repeat(4, 1fr); }
+      .how-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(3)::before,
+      .stat-item:nth-child(1)::before { display: none; }
+      .stat-item:nth-child(2)::before { display: block; }
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      .jobs-grid { grid-template-columns: 1fr; }
+      .lead-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .articles-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<header>
+  <nav class="nav" id="main-nav" role="navigation" aria-label="Hauptnavigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo" aria-label="derquereinstieg.ch — Startseite">
+          <span>der</span>quereinstieg.ch
+        </a>
+        <ul class="nav-links" id="nav-links" role="list">
+          <li><a href="jobs.html" data-track="nav-jobs">Jobs</a></li>
+          <li><a href="#branchen" data-track="nav-branchen">Branchen</a></li>
+          <li><a href="blog.html" data-track="nav-blog">Blog</a></li>
+          <li><a href="#ueber-uns" data-track="nav-ueber">Über uns</a></li>
+          <li><a href="jobs.html" class="nav-cta" data-track="nav-cta-sticky">Jobs entdecken →</a></li>
+        </ul>
+        <button class="nav-mobile-toggle" id="mobile-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menü öffnen">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+            <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<main>
+  <section class="hero" aria-labelledby="hero-headline">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-eyebrow" aria-hidden="true">Schweizer Quereinsteiger-Plattform</div>
+          <h1 class="hero-headline" id="hero-headline">
+            Dein Quereinstieg.<br>
+            Dein Weg.<br>
+            <em>Kein Bullshit.</em>
+          </h1>
+          <p class="hero-sub">
+            <strong>12.100 Menschen</strong> suchen jeden Monat nach einem neuen Job in der Schweiz. Die besten Chancen, ehrlichen Gehälter und konkreten Einstiegswege findest du hier.
+          </p>
+          <div class="hero-ctas">
+            <a href="jobs.html" class="btn btn-primary btn-lg" data-track="hero-cta-primary">
+              Jobs entdecken
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#lead-magnet" class="hero-link" data-track="hero-cta-secondary">Welcher Job passt zu mir? (kostenlos)</a>
+          </div>
+          <div class="hero-trust" aria-label="Datenquellen">
+            <span class="hero-trust-label">Quellen</span>
+            <span class="hero-trust-item">BFS-Daten</span>
+            <span class="hero-trust-dot" aria-hidden="true"></span>
+            <span class="hero-trust-item">Adecco Index 2025</span>
+            <span class="hero-trust-dot" aria-hidden="true"></span>
+            <span class="hero-trust-item">ZHAW-Forschung</span>
+            <span class="hero-trust-dot" aria-hidden="true"></span>
+            <span class="hero-trust-item">Aktuell Feb. 2026</span>
+          </div>
+        </div>
+
+        <!-- Hero SVG Illustration: Career Path Network -->
+        <div class="hero-visual" aria-hidden="true">
+          <svg class="hero-svg" viewBox="0 0 460 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background rings -->
+            <circle cx="260" cy="190" r="170" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <circle cx="260" cy="190" r="110" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <circle cx="260" cy="190" r="55" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+            <!-- Connector line from start -->
+            <line x1="58" y1="190" x2="182" y2="190" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+            <!-- Start node (current job - grey) -->
+            <circle cx="42" cy="190" r="16" fill="rgba(156,163,175,0.2)" stroke="rgba(156,163,175,0.4)" stroke-width="1.5"/>
+            <text x="42" y="195" text-anchor="middle" fill="rgba(156,163,175,0.8)" font-size="10" font-family="DM Sans, sans-serif" font-weight="500">Jetzt</text>
+            <text x="42" y="218" text-anchor="middle" fill="rgba(156,163,175,0.5)" font-size="8" font-family="DM Sans, sans-serif">dein Job</text>
+
+            <!-- Central node (derquereinstieg.ch) -->
+            <circle cx="210" cy="190" r="32" fill="#2E5C8A" class="node-pulse" style="transform-origin: 210px 190px;"/>
+            <circle cx="210" cy="190" r="38" fill="rgba(46,92,138,0.2)" class="node-pulse" style="transform-origin: 210px 190px; animation-delay: 0.3s;"/>
+            <line x1="210" y1="178" x2="210" y2="202" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            <line x1="197" y1="190" x2="223" y2="190" stroke="white" stroke-width="3" stroke-linecap="round"/>
+
+            <!-- Destination paths (animated) -->
+            <!-- Pflege/Gesundheit - top -->
+            <path d="M236 175 Q310 110 382 78" stroke="rgba(230,126,34,0.5)" stroke-width="1.5" stroke-dasharray="5,3" class="path-animate"/>
+            <!-- IT & Tech - upper right -->
+            <path d="M240 182 Q320 150 388 138" stroke="rgba(230,126,34,0.5)" stroke-width="1.5" stroke-dasharray="5,3" class="path-animate"/>
+            <!-- Sales - right -->
+            <path d="M242 190 Q330 190 396 190" stroke="rgba(230,126,34,0.5)" stroke-width="1.5" stroke-dasharray="5,3" class="path-animate"/>
+            <!-- Bildung - lower right -->
+            <path d="M240 198 Q320 232 388 248" stroke="rgba(230,126,34,0.5)" stroke-width="1.5" stroke-dasharray="5,3" class="path-animate"/>
+            <!-- Bau - bottom -->
+            <path d="M232 208 Q300 278 372 308" stroke="rgba(230,126,34,0.5)" stroke-width="1.5" stroke-dasharray="5,3" class="path-animate"/>
+            <!-- Soziales - bottom left arc -->
+            <path d="M225 215 Q250 290 300 320" stroke="rgba(230,126,34,0.3)" stroke-width="1.5" stroke-dasharray="5,3" class="path-animate"/>
+
+            <!-- Destination nodes -->
+            <!-- Pflege -->
+            <g class="float-bubble" style="transform-origin: 392px 72px;">
+              <circle cx="392" cy="72" r="12" fill="#27AE60" opacity="0.9"/>
+              <text x="392" y="57" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8" font-family="DM Sans, sans-serif" font-weight="500">Pflege</text>
+            </g>
+            <!-- IT -->
+            <g class="float-bubble" style="transform-origin: 400px 138px;">
+              <circle cx="400" cy="138" r="12" fill="#27AE60" opacity="0.9"/>
+              <text x="400" y="123" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8" font-family="DM Sans, sans-serif" font-weight="500">IT</text>
+            </g>
+            <!-- Sales -->
+            <g class="float-bubble" style="transform-origin: 410px 190px;">
+              <circle cx="410" cy="190" r="12" fill="#27AE60" opacity="0.9"/>
+              <text x="410" y="206" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8" font-family="DM Sans, sans-serif" font-weight="500">Sales</text>
+            </g>
+            <!-- Bildung -->
+            <g class="float-bubble" style="transform-origin: 400px 250px;">
+              <circle cx="400" cy="250" r="12" fill="#27AE60" opacity="0.9"/>
+              <text x="400" y="266" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8" font-family="DM Sans, sans-serif" font-weight="500">Lehre</text>
+            </g>
+            <!-- Bau -->
+            <g class="float-bubble" style="transform-origin: 380px 310px;">
+              <circle cx="380" cy="310" r="12" fill="#27AE60" opacity="0.9"/>
+              <text x="380" y="326" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8" font-family="DM Sans, sans-serif" font-weight="500">Bau</text>
+            </g>
+
+            <!-- Floating stat bubbles -->
+            <g class="float-bubble" style="transform-origin: 80px 82px;">
+              <rect x="30" y="62" width="100" height="40" rx="8" fill="rgba(230,126,34,0.15)" stroke="rgba(230,126,34,0.3)" stroke-width="1"/>
+              <text x="80" y="78" text-anchor="middle" fill="rgba(230,126,34,0.9)" font-size="11" font-family="Poppins, sans-serif" font-weight="700">12.100</text>
+              <text x="80" y="93" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="DM Sans, sans-serif">Suchanfragen/Mt.</text>
+            </g>
+            <g class="float-bubble" style="transform-origin: 90px 305px; animation-delay: 1.2s;">
+              <rect x="30" y="285" width="120" height="40" rx="8" fill="rgba(39,174,96,0.15)" stroke="rgba(39,174,96,0.3)" stroke-width="1"/>
+              <text x="90" y="301" text-anchor="middle" fill="rgba(39,174,96,0.9)" font-size="11" font-family="Poppins, sans-serif" font-weight="700">34.5%</text>
+              <text x="90" y="316" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="DM Sans, sans-serif">wechseln den Beruf</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <svg viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 48 L0 24 Q360 0 720 24 Q1080 48 1440 12 L1440 48 Z" fill="#F8F6F2"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== STATS STRIP ===== -->
+  <section class="stats-strip" aria-label="Schlüsseldaten Schweizer Arbeitsmarkt">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <div class="stat-number" aria-label="41 Prozent der Schweizer denken über einen Berufswechsel nach">41%</div>
+          <div class="stat-label">der Schweizer denken gerade<br>über einen Berufswechsel nach</div>
+          <div class="stat-source">Du bist in bester Gesellschaft · XING Arbeitsmarktreport CH</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-number" aria-label="34,5 Prozent wechseln beim Jobwechsel auch die Branche">34.5%</div>
+          <div class="stat-label">wechseln beim Jobwechsel<br>auch die Branche — nicht nur den Job</div>
+          <div class="stat-source">Das ist der Normalfall · BFS, Berufliche Mobilität 2023</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-number" aria-label="4 von 32 Berufsgruppen mit echtem Fachkräftemangel">4<span style="font-family:var(--font-body);font-size:0.38em;font-weight:400;letter-spacing:0;vertical-align:middle;padding-left:0.3em;opacity:0.7;">von 32</span></div>
+          <div class="stat-label">Berufsgruppen mit echtem<br>Fachkräftemangel — wisse wo</div>
+          <div class="stat-source">Sei gezielt, nicht naiv · Adecco Fachkräftemangel-Index 2025</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-number" aria-label="14,7 Prozent der Schweizer haben 2023 den Job gewechselt">14.7%</div>
+          <div class="stat-label">der Schweizer haben 2023<br>den Job gewechselt — der Markt bewegt sich</div>
+          <div class="stat-source">Mehr als je zuvor · BFS, Arbeitskräfteerhebung 2023</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INTERACTIVE CANTON MAP ===== -->
+  <section class="map-section" id="karte" aria-labelledby="map-title">
+    <div class="container">
+      <div class="map-section-header reveal">
+        <p class="section-label" aria-hidden="true">Regional entdecken</p>
+        <h2 class="section-title" id="map-title">Jobs in deiner Region</h2>
+        <p class="section-sub">Du denkst geografisch? Klick auf deinen Kanton — und sieh sofort, wo echte Chancen warten.</p>
+      </div>
+
+      <div class="map-layout reveal reveal-delay-1">
+        <!-- SVG KARTE -->
+        <div class="map-wrap">
+          <svg class="ch-map" viewBox="0 0 610 370" xmlns="http://www.w3.org/2000/svg"
+               role="img" aria-label="Interaktive Karte der Schweizer Kantone mit Jobdaten">
+            <title>Schweizer Kantone — Jobchancen für Quereinsteiger 2026</title>
+
+            <!-- Schaffhausen (N-Exklave) -->
+            <polygon class="canton canton-low" id="c-SH" tabindex="0"
+              data-name="Schaffhausen" data-code="SH" data-jobs="0" data-demand="Wachsend"
+              points="308,36 304,18 326,8 350,8 370,14 376,30 368,44 344,48 318,46"/>
+
+            <!-- Genf (SW-Exklave) -->
+            <polygon class="canton canton-medium" id="c-GE" tabindex="0"
+              data-name="Genf" data-code="GE" data-jobs="0" data-demand="Moderate Chancen"
+              points="18,273 24,252 40,250 48,270 38,288 22,290"/>
+
+            <!-- Waadt -->
+            <polygon class="canton canton-medium" id="c-VD" tabindex="0"
+              data-name="Waadt" data-code="VD" data-jobs="0" data-demand="Moderate Chancen"
+              points="6,205 16,180 12,250 18,273 22,290 38,288 48,270 70,255 96,238 110,222 122,210 120,205 108,195 106,178 110,162 118,150 114,140 100,148 86,148 70,155 52,170 36,192"/>
+
+            <!-- Neuenburg -->
+            <polygon class="canton canton-low" id="c-NE" tabindex="0"
+              data-name="Neuenburg" data-code="NE" data-jobs="0" data-demand="Nische"
+              points="97,148 104,122 114,108 128,102 144,105 150,120 146,142 132,155 112,155 98,152"/>
+
+            <!-- Jura -->
+            <polygon class="canton canton-low" id="c-JU" tabindex="0"
+              data-name="Jura" data-code="JU" data-jobs="0" data-demand="Nische"
+              points="122,97 100,115 97,148 98,152 112,155 132,155 148,140 162,118 170,97 164,74 148,60 130,57 118,62"/>
+
+            <!-- Basel-Stadt -->
+            <polygon class="canton canton-high" id="c-BS" tabindex="0"
+              data-name="Basel-Stadt" data-code="BS" data-jobs="1" data-demand="Stark nachgefragt"
+              points="204,50 212,40 224,44 226,54 214,62 204,58"/>
+
+            <!-- Basel-Landschaft -->
+            <polygon class="canton canton-medium" id="c-BL" tabindex="0"
+              data-name="Basel-Landschaft" data-code="BL" data-jobs="0" data-demand="Moderate Chancen"
+              points="190,88 196,68 204,58 214,62 226,54 238,62 250,74 244,92 226,100 208,100"/>
+
+            <!-- Solothurn -->
+            <polygon class="canton canton-medium" id="c-SO" tabindex="0"
+              data-name="Solothurn" data-code="SO" data-jobs="0" data-demand="Moderate Chancen"
+              points="190,88 208,100 226,100 244,92 264,94 272,102 268,118 248,128 222,132 200,126 190,108"/>
+
+            <!-- Aargau -->
+            <polygon class="canton canton-high" id="c-AG" tabindex="0"
+              data-name="Aargau" data-code="AG" data-jobs="1" data-demand="Stark nachgefragt"
+              points="250,74 254,56 270,46 298,42 326,48 336,64 328,90 312,102 285,106 264,104 244,92"/>
+
+            <!-- Zürich -->
+            <polygon class="canton canton-high" id="c-ZH" tabindex="0"
+              data-name="Zürich" data-code="ZH" data-jobs="3" data-demand="Stark nachgefragt"
+              points="318,46 344,48 368,44 382,50 392,68 388,92 380,110 360,118 340,120 322,114 312,102 320,82 320,62"/>
+
+            <!-- Thurgau -->
+            <polygon class="canton canton-medium" id="c-TG" tabindex="0"
+              data-name="Thurgau" data-code="TG" data-jobs="0" data-demand="Moderate Chancen"
+              points="392,50 408,40 438,34 464,40 476,54 468,74 444,80 420,82 396,82 388,68"/>
+
+            <!-- St. Gallen -->
+            <polygon class="canton canton-medium" id="c-SG" tabindex="0"
+              data-name="St. Gallen" data-code="SG" data-jobs="0" data-demand="Moderate Chancen"
+              points="468,74 476,54 492,36 518,28 540,42 552,62 554,92 550,122 536,144 520,162 498,166 480,160 460,144 450,124 448,104 458,90"/>
+
+            <!-- Appenzell Ausserrhoden -->
+            <polygon class="canton canton-low" id="c-AR" tabindex="0"
+              data-name="Appenzell A.Rh." data-code="AR" data-jobs="0" data-demand="Nische"
+              points="452,102 462,90 470,80 480,78 490,90 494,110 488,120 472,122 458,114"/>
+
+            <!-- Appenzell Innerrhoden -->
+            <polygon class="canton canton-low" id="c-AI" tabindex="0"
+              data-name="Appenzell I.Rh." data-code="AI" data-jobs="0" data-demand="Nische"
+              points="464,100 472,94 480,102 476,112 466,116 458,112"/>
+
+            <!-- Glarus -->
+            <polygon class="canton canton-low" id="c-GL" tabindex="0"
+              data-name="Glarus" data-code="GL" data-jobs="0" data-demand="Nische"
+              points="380,126 396,122 422,122 434,136 440,154 432,170 416,176 400,172 386,160 380,142"/>
+
+            <!-- Zug -->
+            <polygon class="canton canton-high" id="c-ZG" tabindex="0"
+              data-name="Zug" data-code="ZG" data-jobs="1" data-demand="Stark nachgefragt"
+              points="322,114 340,120 342,122 344,136 334,144 320,142 314,130 317,117"/>
+
+            <!-- Luzern -->
+            <polygon class="canton canton-high" id="c-LU" tabindex="0"
+              data-name="Luzern" data-code="LU" data-jobs="1" data-demand="Stark nachgefragt"
+              points="264,104 285,106 312,102 314,130 320,142 334,144 332,156 332,168 320,174 300,180 278,180 258,170 248,157 246,140 252,122"/>
+
+            <!-- Schwyz -->
+            <polygon class="canton canton-low" id="c-SZ" tabindex="0"
+              data-name="Schwyz" data-code="SZ" data-jobs="0" data-demand="Nische"
+              points="340,120 360,116 382,120 396,128 398,142 386,152 372,152 362,150 352,146 342,135"/>
+
+            <!-- Uri -->
+            <polygon class="canton canton-low" id="c-UR" tabindex="0"
+              data-name="Uri" data-code="UR" data-jobs="0" data-demand="Nische"
+              points="338,150 354,144 365,150 374,152 367,165 356,177 350,192 342,204 327,210 312,202 310,180 320,167 330,157"/>
+
+            <!-- Obwalden -->
+            <polygon class="canton canton-low" id="c-OW" tabindex="0"
+              data-name="Obwalden" data-code="OW" data-jobs="0" data-demand="Nische"
+              points="246,157 258,170 278,180 284,197 274,212 257,217 242,210 228,200 228,182 238,168"/>
+
+            <!-- Nidwalden -->
+            <polygon class="canton canton-low" id="c-NW" tabindex="0"
+              data-name="Nidwalden" data-code="NW" data-jobs="0" data-demand="Nische"
+              points="284,197 300,180 320,174 324,187 315,200 307,207 292,207"/>
+
+            <!-- Fribourg -->
+            <polygon class="canton canton-medium" id="c-FR" tabindex="0"
+              data-name="Freiburg" data-code="FR" data-jobs="0" data-demand="Moderate Chancen"
+              points="120,148 136,148 138,162 136,178 128,195 120,210 108,200 106,182 110,165 118,152"/>
+
+            <!-- Bern (grosse vereinfachte Form) -->
+            <polygon class="canton canton-high" id="c-BE" tabindex="0"
+              data-name="Bern" data-code="BE" data-jobs="1" data-demand="Stark nachgefragt"
+              points="122,97 200,90 264,95 285,106 264,104 246,140 246,157 238,168 228,182 228,200 244,215 248,252 232,270 215,280 198,283 180,278 162,268 148,255 136,242 128,222 120,210 128,195 136,178 138,162 136,148 120,148 110,148 100,148 114,140 130,125 122,108"/>
+
+            <!-- Graubünden -->
+            <polygon class="canton canton-medium" id="c-GR" tabindex="0"
+              data-name="Graubünden" data-code="GR" data-jobs="0" data-demand="Moderate Chancen"
+              points="380,142 398,142 416,148 432,148 440,154 450,148 468,162 480,180 492,200 502,220 510,240 500,258 474,267 450,260 426,244 404,234 390,242 376,232 362,220 350,208 348,192 354,177 365,165 374,152"/>
+
+            <!-- Wallis -->
+            <polygon class="canton canton-medium" id="c-VS" tabindex="0"
+              data-name="Wallis" data-code="VS" data-jobs="0" data-demand="Moderate Chancen"
+              points="44,270 68,256 95,240 120,225 136,242 148,255 162,268 180,278 198,283 215,280 232,270 248,252 244,215 228,200 228,218 215,235 205,255 195,270 185,282 175,298 175,325 155,338 128,340 100,338 74,332 52,322 38,308 36,290 44,278"/>
+
+            <!-- Tessin -->
+            <polygon class="canton canton-medium" id="c-TI" tabindex="0"
+              data-name="Tessin" data-code="TI" data-jobs="0" data-demand="Moderate Chancen"
+              points="312,202 327,210 342,204 350,208 362,220 376,232 390,242 404,234 412,250 408,278 400,305 390,328 375,345 355,352 332,352 312,340 298,325 290,305 290,282 298,262 308,245 310,225 312,210"/>
+
+            <!-- Kantonskürzel Labels -->
+            <text class="canton-label" x="340" y="22" font-size="8">SH</text>
+            <text class="canton-label" x="33" y="274" font-size="7">GE</text>
+            <text class="canton-label" x="60" y="218" font-size="9">VD</text>
+            <text class="canton-label" x="118" y="135" font-size="8">NE</text>
+            <text class="canton-label" x="135" y="80" font-size="8">JU</text>
+            <text class="canton-label" x="208" y="52" font-size="7">BS</text>
+            <text class="canton-label" x="215" y="78" font-size="8">BL</text>
+            <text class="canton-label" x="226" y="112" font-size="8">SO</text>
+            <text class="canton-label" x="284" y="72" font-size="9">AG</text>
+            <text class="canton-label" x="348" y="82" font-size="10" font-weight="700">ZH</text>
+            <text class="canton-label" x="428" y="58" font-size="9">TG</text>
+            <text class="canton-label" x="494" y="100" font-size="9">SG</text>
+            <text class="canton-label" x="468" y="112" font-size="7">AR</text>
+            <text class="canton-label" x="469" y="106" font-size="6">AI</text>
+            <text class="canton-label" x="408" y="150" font-size="8">GL</text>
+            <text class="canton-label" x="322" y="132" font-size="7">ZG</text>
+            <text class="canton-label" x="284" y="145" font-size="9" font-weight="700">LU</text>
+            <text class="canton-label" x="368" y="138" font-size="8">SZ</text>
+            <text class="canton-label" x="330" y="182" font-size="8">UR</text>
+            <text class="canton-label" x="250" y="192" font-size="8">OW</text>
+            <text class="canton-label" x="302" y="198" font-size="7">NW</text>
+            <text class="canton-label" x="118" y="178" font-size="8">FR</text>
+            <text class="canton-label" x="188" y="165" font-size="10" font-weight="700">BE</text>
+            <text class="canton-label" x="430" y="205" font-size="9">GR</text>
+            <text class="canton-label" x="150" y="300" font-size="9">VS</text>
+            <text class="canton-label" x="338" y="290" font-size="9">TI</text>
+          </svg>
+
+          <!-- Floating tooltip -->
+          <div class="map-tooltip" id="mapTooltip" style="display:none; left:0; top:0;">
+            <div class="map-tt-canton" id="ttCanton">—</div>
+            <div class="map-tt-jobs" id="ttJobs">—</div>
+            <div class="map-tt-demand" id="ttDemand">—</div>
+            <div class="map-tt-cta">Jobs ansehen →</div>
+          </div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="map-panel">
+          <div class="map-legend">
+            <h3>Nachfrage 2026</h3>
+            <div class="legend-row">
+              <span class="legend-swatch demand-high"></span>
+              <span>Stark nachgefragt</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-swatch demand-medium"></span>
+              <span>Moderate Chancen</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-swatch demand-low"></span>
+              <span>Nische / Kleinkanton</span>
+            </div>
+          </div>
+
+          <div class="map-top-cantons">
+            <h3>Job-Hotspots</h3>
+            <div class="map-hotspot" data-kanton="ZH" role="button" tabindex="0">
+              <span class="hs-dot demand-high"></span>
+              <span class="hs-name">Zürich</span>
+              <span class="hs-count">3 Jobs</span>
+            </div>
+            <div class="map-hotspot" data-kanton="BE" role="button" tabindex="0">
+              <span class="hs-dot demand-high"></span>
+              <span class="hs-name">Bern</span>
+              <span class="hs-count">1 Job</span>
+            </div>
+            <div class="map-hotspot" data-kanton="BS" role="button" tabindex="0">
+              <span class="hs-dot demand-high"></span>
+              <span class="hs-name">Basel-Stadt</span>
+              <span class="hs-count">1 Job</span>
+            </div>
+            <div class="map-hotspot" data-kanton="ZG" role="button" tabindex="0">
+              <span class="hs-dot demand-high"></span>
+              <span class="hs-name">Zug</span>
+              <span class="hs-count">1 Job</span>
+            </div>
+            <div class="map-hotspot" data-kanton="LU" role="button" tabindex="0">
+              <span class="hs-dot demand-high"></span>
+              <span class="hs-name">Luzern</span>
+              <span class="hs-count">1 Job</span>
+            </div>
+            <div class="map-hotspot" data-kanton="AG" role="button" tabindex="0">
+              <span class="hs-dot demand-high"></span>
+              <span class="hs-name">Aargau</span>
+              <span class="hs-count">1 Job</span>
+            </div>
+            <a href="jobs.html" class="btn btn-primary" style="margin-top:1rem;width:100%;justify-content:center;" data-track="map-cta-all-jobs">
+              Alle Jobs ansehen
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div><!-- /.map-layout -->
+    </div><!-- /.container -->
+  </section>
+
+  <!-- ===== JOB CATEGORIES ===== -->
+  <section class="categories-section" id="branchen" aria-labelledby="categories-title">
+    <div class="container">
+      <div class="categories-header">
+        <div>
+          <p class="section-label" aria-hidden="true">Branchen</p>
+          <h2 class="section-title" id="categories-title">Wo suchst du deinen Quereinstieg?</h2>
+        </div>
+        <a href="jobs.html" class="btn-ghost" data-track="categories-see-all">Alle Jobs ansehen →</a>
+      </div>
+      <div class="categories-grid" role="list">
+
+        <!-- Pflege -->
+        <a href="jobs.html#pflege" class="cat-card reveal" role="listitem" data-track="cat-pflege">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Pflege &amp;<br>Gesundheit</div>
+            <span class="badge badge-red" style="margin-top:0.4rem;">Stark nachgefragt</span>
+          </div>
+        </a>
+
+        <!-- Elektro -->
+        <a href="jobs.html#elektro" class="cat-card reveal reveal-delay-1" role="listitem" data-track="cat-elektro">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Elektro &amp;<br>Handwerk</div>
+            <span class="badge badge-red" style="margin-top:0.4rem;">Stark nachgefragt</span>
+          </div>
+        </a>
+
+        <!-- Bau -->
+        <a href="jobs.html#bau" class="cat-card reveal reveal-delay-2" role="listitem" data-track="cat-bau">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Bau &amp;<br>Architektur</div>
+            <span class="badge badge-red" style="margin-top:0.4rem;">Stark nachgefragt</span>
+          </div>
+        </a>
+
+        <!-- IT -->
+        <a href="jobs.html#it" class="cat-card reveal reveal-delay-3" role="listitem" data-track="cat-it">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">IT &amp;<br>Tech</div>
+            <span class="badge badge-orange" style="margin-top:0.4rem;">40.000 fehlende Stellen</span>
+          </div>
+        </a>
+
+        <!-- Sales -->
+        <a href="jobs.html#sales" class="cat-card reveal" role="listitem" data-track="cat-sales">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Sales &amp;<br>Vertrieb</div>
+            <span class="badge badge-blue" style="margin-top:0.4rem;">Fachwissen = Vorteil</span>
+          </div>
+        </a>
+
+        <!-- Bildung -->
+        <a href="jobs.html#bildung" class="cat-card reveal reveal-delay-1" role="listitem" data-track="cat-bildung">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Bildung &amp;<br>Ausbildung</div>
+            <span class="badge badge-green" style="margin-top:0.4rem;">Wachsend</span>
+          </div>
+        </a>
+
+        <!-- Soziales -->
+        <a href="jobs.html#soziales" class="cat-card reveal reveal-delay-2" role="listitem" data-track="cat-soziales">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Soziale<br>Arbeit</div>
+            <span class="badge badge-green" style="margin-top:0.4rem;">+450% Interesse</span>
+          </div>
+        </a>
+
+        <!-- Marketing -->
+        <a href="jobs.html#marketing" class="cat-card reveal reveal-delay-3" role="listitem" data-track="cat-marketing">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Marketing &amp;<br>Content</div>
+            <span class="badge badge-blue" style="margin-top:0.4rem;">Niedrige Hürde</span>
+          </div>
+        </a>
+
+        <!-- Data -->
+        <a href="jobs.html#data" class="cat-card reveal" role="listitem" data-track="cat-data">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Data &amp;<br>Analytics</div>
+            <span class="badge badge-orange" style="margin-top:0.4rem;">Top-Gehalt</span>
+          </div>
+        </a>
+
+        <!-- Projekt -->
+        <a href="jobs.html#projekt" class="cat-card reveal reveal-delay-1" role="listitem" data-track="cat-projekt">
+          <div class="cat-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div>
+            <div class="cat-name">Projekt-<br>management</div>
+            <span class="badge badge-blue" style="margin-top:0.4rem;">Branchenunabhängig</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-section" aria-labelledby="how-title">
+    <div class="container">
+      <p class="section-label" style="color: rgba(230,126,34,0.8);" aria-hidden="true">So funktioniert's</p>
+      <h2 class="section-title" id="how-title" style="color:white;">In drei Schritten zum neuen Job</h2>
+      <div class="how-grid">
+        <div class="how-step reveal">
+          <div class="how-number" aria-hidden="true">01</div>
+          <div class="how-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          <h3 class="how-title">Branche wählen</h3>
+          <p class="how-desc">Zeig uns, wohin du willst. Pflege, IT, Bau, Sales — wir zeigen dir nur die Felder, in denen Quereinsteiger wirklich gesucht werden. Kein Rauschen, kein Bullshit.</p>
+        </div>
+        <div class="how-step reveal reveal-delay-1">
+          <div class="how-number" aria-hidden="true">02</div>
+          <div class="how-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          </div>
+          <h3 class="how-title">Job finden</h3>
+          <p class="how-desc">Offene Stellen, die explizit Quereinsteiger willkommen heissen. Mit echten Gehältern, Kanton, Einstiegslevel — damit du weisst, woran du bist, bevor du klickst.</p>
+        </div>
+        <div class="how-step reveal reveal-delay-2">
+          <div class="how-number" aria-hidden="true">03</div>
+          <div class="how-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3 class="how-title">Einsteigen</h3>
+          <p class="how-desc">Konkrete Guides, welche Ausbildung du brauchst, was du verdienen wirst und wie du dich positionierst. Plus Community von Menschen, die denselben Weg gegangen sind.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED JOBS ===== -->
+  <section class="jobs-section" aria-labelledby="jobs-title">
+    <div class="container">
+      <div class="jobs-section-header">
+        <div>
+          <p class="section-label" aria-hidden="true">Aktuelle Stellen</p>
+          <h2 class="section-title" id="jobs-title">Jobs, die auf dich warten</h2>
+        </div>
+        <a href="jobs.html" class="btn btn-secondary" data-track="featured-jobs-all">Alle 8 Jobs ansehen</a>
+      </div>
+      <div class="jobs-grid">
+
+        <!-- Job 1: Pflege -->
+        <a href="jobs.html#job-pflege" class="job-card reveal" data-track="job-card-pflege" aria-label="Pflegehelfer/in SRK, Kanton Zürich, CHF 52 bis 60 Tausend">
+          <div class="job-card-top">
+            <div class="job-company-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <span class="badge badge-red">Stark nachgefragt</span>
+          </div>
+          <div>
+            <div class="job-title">Pflegehelfer/in SRK</div>
+            <div class="job-meta">
+              <span class="job-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Kanton Zürich
+              </span>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="badge badge-green">Quereinsteiger willkommen</span>
+            <span class="badge badge-blue">Soforteinstieg</span>
+          </div>
+          <div class="job-card-cta">
+            <div class="job-salary">CHF 52–60k/Jahr</div>
+            <span class="job-cta-link">
+              Ansehen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- Job 2: IT -->
+        <a href="jobs.html#job-it" class="job-card reveal reveal-delay-1" data-track="job-card-it" aria-label="IT-Support Spezialist, Kanton Bern, CHF 55 bis 70 Tausend">
+          <div class="job-card-top">
+            <div class="job-company-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <span class="badge badge-orange">ICT Mangel</span>
+          </div>
+          <div>
+            <div class="job-title">IT-Support Spezialist</div>
+            <div class="job-meta">
+              <span class="job-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Kanton Bern
+              </span>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="badge badge-green">Quereinsteiger willkommen</span>
+            <span class="badge badge-blue">Zertifikat genügt</span>
+          </div>
+          <div class="job-card-cta">
+            <div class="job-salary">CHF 55–70k/Jahr</div>
+            <span class="job-cta-link">
+              Ansehen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- Job 3: Sales -->
+        <a href="jobs.html#job-sales" class="job-card reveal reveal-delay-2" data-track="job-card-sales" aria-label="Account Manager B2B, Kanton Basel, CHF 70 bis 100 Tausend">
+          <div class="job-card-top">
+            <div class="job-company-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <span class="badge badge-blue">Top-Gehalt</span>
+          </div>
+          <div>
+            <div class="job-title">Account Manager B2B</div>
+            <div class="job-meta">
+              <span class="job-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Kanton Basel
+              </span>
+            </div>
+          </div>
+          <div class="job-tags">
+            <span class="badge badge-green">Quereinsteiger willkommen</span>
+            <span class="badge badge-orange">Inkl. Provision</span>
+          </div>
+          <div class="job-card-cta">
+            <div class="job-salary">CHF 70–100k+/Jahr</div>
+            <span class="job-cta-link">
+              Ansehen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LEAD MAGNET ===== -->
+  <section class="lead-magnet" id="lead-magnet" aria-labelledby="lead-title">
+    <div class="container">
+      <div class="lead-inner">
+        <div>
+          <p class="section-label" style="color:rgba(230,126,34,0.8);" aria-hidden="true">Kostenlos</p>
+          <h2 class="lead-title" id="lead-title">Welcher Quereinstieg<br>passt zu <em>dir</em>?</h2>
+          <p class="lead-sub">5 Fragen. 2 Minuten. Eine ehrliche Antwort — kostenlos als PDF direkt in dein Postfach.</p>
+          <p class="lead-sub" style="margin-top:0.5rem; font-size:0.9375rem;">Das Cheatsheet zeigt dir, welche der 10 validierten Einstiegswege zu deiner Situation passen — basierend auf Alter, Vorbildung und Zeithorizont.</p>
+          <p class="lead-trust" aria-label="Datenschutzhinweis">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Kein Spam. Kein Abo-Trick. Abmeldung jederzeit. DSG-konform.
+          </p>
+        </div>
+        <div class="lead-form" role="form" aria-label="Cheatsheet anfordern">
+          <div class="lead-form-title">Cheatsheet holen — kostenlos</div>
+          <div class="lead-form-sub">Trag deine E-Mail ein. Wir schicken es dir sofort.</div>
+          <form id="lead-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="lead-name">Vorname</label>
+              <input class="form-input" type="text" id="lead-name" name="name" placeholder="Dein Vorname" autocomplete="given-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lead-email">E-Mail-Adresse</label>
+              <input class="form-input" type="email" id="lead-email" name="email" placeholder="deine@email.ch" autocomplete="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:0.5rem;" data-track="lead-form-submit">
+              Cheatsheet holen →
+            </button>
+            <p style="font-size:0.75rem; color:rgba(255,255,255,0.35); text-align:center; margin-top:0.75rem;">
+              Durch das Absenden stimmst du unseren <a href="#" style="color:rgba(255,255,255,0.5); text-decoration:underline;">Datenschutzbestimmungen</a> zu.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials" aria-labelledby="testi-title">
+    <div class="container">
+      <p class="section-label" aria-hidden="true">Erfahrungen</p>
+      <h2 class="section-title" id="testi-title">Menschen, die den Schritt gemacht haben</h2>
+      <div class="testimonials-grid">
+
+        <div class="testi-card reveal">
+          <p class="testi-text">«Ich dachte, mit 34 ist ein Berufswechsel zu riskant. Dann habe ich drei Monate den SRK-Kurs gemacht und bin jetzt Pflegehelferin. Das Gehalt ist vergleichbar, aber ich gehe morgens anders zur Arbeit.»</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background: var(--blue);" aria-hidden="true">S</div>
+            <div>
+              <div class="testi-name">Sarah M., 34</div>
+              <div class="testi-role">Zürich</div>
+              <div class="testi-arrow" aria-label="Von Einzelhandel zu Pflege">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                Einzelhandel → Pflege
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal reveal-delay-1">
+          <p class="testi-text">«Als Maurer dachte ich, Projektkoordinator sei nichts für mich. Aber genau mein Bauhintergrund hat mir den Job gebracht — ich kenne die Probleme, die andere im Büro nicht sehen.»</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background: var(--orange);" aria-hidden="true">M</div>
+            <div>
+              <div class="testi-name">Marco B., 42</div>
+              <div class="testi-role">Bern</div>
+              <div class="testi-arrow" aria-label="Von Handwerk zu Projektkoordinator">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                Handwerk → Projektkoordinator
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal reveal-delay-2">
+          <p class="testi-text">«Die verkürzte FaGe-Ausbildung war intensiv. Aber das Spital hat während der Ausbildung bezahlt und mir direkt danach eine Festanstellung angeboten. So läuft das, wenn eine Branche wirklich sucht.»</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background: var(--green);" aria-hidden="true">L</div>
+            <div>
+              <div class="testi-name">Lea K., 38</div>
+              <div class="testi-role">Basel</div>
+              <div class="testi-arrow" aria-label="Von Verwaltung zu Pflegefachfrau">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                Verwaltung → Pflegefachfrau FaGe
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LATEST ARTICLES ===== -->
+  <section class="articles-section" aria-labelledby="articles-title">
+    <div class="container">
+      <div class="articles-header">
+        <div>
+          <p class="section-label" aria-hidden="true">Wissen</p>
+          <h2 class="section-title" id="articles-title">Guides, die wirklich helfen</h2>
+        </div>
+        <a href="blog.html" class="btn-ghost" data-track="articles-see-all">Alle Artikel →</a>
+      </div>
+      <div class="articles-grid">
+        <a href="blog.html" class="article-card reveal" data-track="article-card-top10" aria-label="Artikel: Die 10 besten Jobs für Quereinsteiger Schweiz 2026">
+          <div class="article-thumb">
+            <div class="article-thumb-text">Die 10 besten Jobs für Quereinsteiger Schweiz 2026</div>
+          </div>
+          <div class="article-card-body">
+            <div class="article-meta">
+              <span class="badge badge-orange">Neu</span>
+              <span class="article-date">Februar 2026</span>
+              <span class="article-read-time">· 8 Min. Lesezeit</span>
+            </div>
+            <h3 class="article-title">Die 10 besten Jobs für Quereinsteiger Schweiz 2026</h3>
+            <p class="article-excerpt">Datenbasiert, ehrlich und konkret: Welche 10 Berufe sind 2026 wirklich für Quereinsteiger offen — mit validierten Gehältern, echten Einstiegswegen und Quellenangaben.</p>
+            <span class="article-cta">
+              Artikel lesen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+        <a href="blog.html" class="article-card reveal reveal-delay-1" data-track="article-card-lehrer" aria-label="Artikel: Quereinstieg Lehrperson Schweiz">
+          <div class="article-thumb" style="height: 140px; background: linear-gradient(135deg, #1A2332 0%, #2D3748 60%, #374151 100%);">
+            <div class="article-thumb-text" style="font-size:1rem;">Quereinstieg Lehrperson Schweiz: So funktioniert's</div>
+          </div>
+          <div class="article-card-body">
+            <div class="article-meta">
+              <span class="article-date">Februar 2026</span>
+              <span class="article-read-time">· 5 Min. Lesezeit</span>
+            </div>
+            <h3 class="article-title">Quereinstieg Lehrperson Schweiz: So funktioniert's</h3>
+            <p class="article-excerpt">480 Menschen suchen jeden Monat nach diesem Weg. Hier sind die konkreten Programme, Kosten und Voraussetzungen — nach Kanton aufgeschlüsselt.</p>
+            <span class="article-cta">
+              Artikel lesen
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer" id="ueber-uns" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><span>der</span>quereinstieg.ch</div>
+        <p class="footer-tagline">Der direkte Weg in deinen neuen Job.</p>
+        <p class="footer-data-note">Alle Daten basieren auf verifizierten Quellen: BFS (Bundesamt für Statistik), Adecco Fachkräftemangel-Index 2025, ZHAW, ICT-Berufsbildung Schweiz, XING Arbeitsmarktreport, Salarium.ch. Zuletzt aktualisiert: Februar 2026.</p>
+        <p style="font-size:0.75rem; color:rgba(255,255,255,0.3);">DSG-konform · Kein Tracking ohne Einwilligung</p>
+      </div>
+      <div>
+        <div class="footer-heading">Jobs</div>
+        <ul class="footer-links" role="list">
+          <li><a href="jobs.html#pflege">Pflege &amp; Gesundheit</a></li>
+          <li><a href="jobs.html#elektro">Elektro &amp; Handwerk</a></li>
+          <li><a href="jobs.html#bau">Bau &amp; Architektur</a></li>
+          <li><a href="jobs.html#it">IT &amp; Tech</a></li>
+          <li><a href="jobs.html#sales">Sales &amp; Vertrieb</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Wissen</div>
+        <ul class="footer-links" role="list">
+          <li><a href="blog.html">Blog &amp; Guides</a></li>
+          <li><a href="blog.html">Top 10 Jobs 2026</a></li>
+          <li><a href="blog.html">Quereinstieg Lehrperson</a></li>
+          <li><a href="#lead-magnet">Cheatsheet (gratis)</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Plattform</div>
+        <ul class="footer-links" role="list">
+          <li><a href="#ueber-uns">Über derquereinstieg.ch</a></li>
+          <li><a href="#">Inserat aufgeben</a></li>
+          <li><a href="#">Datenschutz (DSG)</a></li>
+          <li><a href="#">Impressum</a></li>
+          <li><a href="#">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 derquereinstieg.ch · Alle Rechte vorbehalten</p>
+      <p>Erstellt mit echten Daten für echte Menschen.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Schema: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Welche Jobs sind für Quereinsteiger in der Schweiz 2026 am zugänglichsten?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Die zugänglichsten Jobs für Quereinsteiger 2026 sind: Pflegehelfer/in SRK (3 Monate Ausbildung), IT-Support/Helpdesk (CompTIA A+ Zertifikat), Sales B2B (Branchenwissen ist der Einstieg) und Performance Marketing (Google/Meta-Zertifikate gratis)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "In welchen Branchen herrscht 2025 Fachkräftemangel in der Schweiz?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Laut Adecco Fachkräftemangel-Index 2025 zeigen nur noch 4 von 32 Berufsgruppen klaren Mangel: Gesundheitsberufe, Bauführung, technische Fachkräfte und Elektronikberufe."
+      }
+    }
+  ]
+}
+</script>
+
+<script>
+  // ---- Scroll: nav shadow ----
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // ---- Mobile menu ----
+  const toggle = document.getElementById('mobile-toggle');
+  const navLinks = document.getElementById('nav-links');
+  toggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  // ---- Intersection Observer: reveal animations ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ---- Lead form ----
+  const leadForm = document.getElementById('lead-form');
+  leadForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = leadForm.querySelector('button[type="submit"]');
+    btn.textContent = '✓ Cheatsheet wird gesendet…';
+    btn.style.background = 'var(--green)';
+    btn.disabled = true;
+    // GA4 event hook: gtag('event', 'lead_form_submit', { method: 'cheatsheet' });
+    setTimeout(() => {
+      btn.textContent = '✓ Geschickt! Schau in dein Postfach.';
+    }, 1500);
+  });
+
+  // ---- Analytics tracking stub ----
+  document.querySelectorAll('[data-track]').forEach(el => {
+    el.addEventListener('click', () => {
+      const event = el.dataset.track;
+      // GA4: gtag('event', 'click', { event_category: 'CTA', event_label: event });
+      console.debug('[track]', event);
+    });
+  });
+
+  // ---- Interactive Canton Map ----
+  (function() {
+    const tooltip = document.getElementById('mapTooltip');
+    const ttCanton = document.getElementById('ttCanton');
+    const ttJobs = document.getElementById('ttJobs');
+    const ttDemand = document.getElementById('ttDemand');
+    const mapWrap = document.querySelector('.map-wrap');
+    const cantons = document.querySelectorAll('.canton');
+    let activeEl = null;
+
+    function jobLabel(n) {
+      if (n === 0) return 'Keine offenen Stellen aktuell';
+      if (n === 1) return '1 offene Stelle';
+      return n + ' offene Stellen';
+    }
+
+    function showTooltip(el, x, y) {
+      const name   = el.dataset.name;
+      const jobs   = parseInt(el.dataset.jobs) || 0;
+      const demand = el.dataset.demand;
+      ttCanton.textContent = name;
+      ttJobs.textContent   = jobLabel(jobs);
+      ttDemand.textContent = demand;
+      tooltip.style.display = 'block';
+      tooltip.style.left    = x + 'px';
+      tooltip.style.top     = y + 'px';
+    }
+
+    cantons.forEach(el => {
+      el.addEventListener('mouseenter', function(e) {
+        const rect = mapWrap.getBoundingClientRect();
+        const svgEl = mapWrap.querySelector('svg');
+        const svgRect = svgEl.getBoundingClientRect();
+        // Get bbox center of polygon in SVG space, convert to page
+        const bbox = el.getBBox();
+        const scaleX = svgRect.width  / 610;
+        const scaleY = svgRect.height / 370;
+        const cx = svgRect.left + bbox.x * scaleX + (bbox.width * scaleX) / 2 - rect.left;
+        const cy = svgRect.top  + bbox.y * scaleY - rect.top;
+        activeEl = el;
+        el.classList.add('active');
+        showTooltip(el, cx, cy);
+      });
+      el.addEventListener('mouseleave', function() {
+        el.classList.remove('active');
+        tooltip.style.display = 'none';
+        activeEl = null;
+      });
+      el.addEventListener('click', function() {
+        const code = el.dataset.code;
+        // GA4: gtag('event', 'map_canton_click', { canton: code });
+        window.location.href = 'jobs.html?kanton=' + code;
+      });
+      el.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          window.location.href = 'jobs.html?kanton=' + el.dataset.code;
+        }
+      });
+    });
+
+    // Hotspot sidebar clicks highlight canton on map
+    document.querySelectorAll('.map-hotspot').forEach(hs => {
+      hs.addEventListener('click', function() {
+        const code = hs.dataset.kanton;
+        const canton = document.getElementById('c-' + code);
+        if (canton) {
+          canton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          canton.classList.add('active');
+          setTimeout(() => canton.classList.remove('active'), 2000);
+        }
+        window.location.href = 'jobs.html?kanton=' + code;
+      });
+      hs.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          window.location.href = 'jobs.html?kanton=' + hs.dataset.kanton;
+        }
+      });
+    });
+  })();
+
+  // ---- Exit intent hook ----
+  let exitTriggered = false;
+  document.addEventListener('mouseleave', (e) => {
+    if (!exitTriggered && e.clientY <= 0) {
+      exitTriggered = true;
+      // Hook: show exit-intent popup
+      // GA4: gtag('event', 'exit_intent');
+      console.debug('[exit-intent] triggered');
+    }
+  });
+</script>
+
+</body>
+</html>

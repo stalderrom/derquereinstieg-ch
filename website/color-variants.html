@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farbvarianten — derquereinstieg.ch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&family=Poppins:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #F0EDEA;
+      color: #1A2332;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      background: #1A2332;
+      color: white;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .page-header p {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9375rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── Nav tabs ── */
+    .variant-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #1A2332;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .variant-nav::-webkit-scrollbar { display: none; }
+    .variant-tab {
+      flex-shrink: 0;
+      padding: 0.875rem 1.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.45);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 180ms ease;
+      white-space: nowrap;
+      border: none;
+      background: none;
+    }
+    .variant-tab.active,
+    .variant-tab:hover {
+      color: white;
+    }
+    .variant-tab.active { border-bottom: 2px solid white; }
+    .variant-tab .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+    }
+
+    /* ── Variant panels ── */
+    .variant-panel { display: none; }
+    .variant-panel.active { display: block; }
+
+    /* ── Preview components ── */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    @media (max-width: 700px) {
+      .preview-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Mini Nav */
+    .mini-nav {
+      padding: 0 2rem;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid;
+    }
+    .mini-nav-logo { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.9rem; }
+    .mini-nav-cta {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.875rem;
+      border-radius: 999px;
+      color: white;
+    }
+
+    /* Mini Hero */
+    .mini-hero {
+      padding: 2.5rem 2rem 2rem;
+    }
+    .mini-eyebrow {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .mini-headline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .mini-sub {
+      font-size: 0.875rem;
+      opacity: 0.65;
+      margin-bottom: 1.5rem;
+      line-height: 1.55;
+    }
+    .mini-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .mini-btn-primary {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      border-radius: 999px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .mini-btn-ghost {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      opacity: 0.6;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+
+    /* Stats strip */
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .mini-stat {
+      padding: 1rem;
+      border-right: 1px solid;
+      text-align: center;
+    }
+    .mini-stat:last-child { border-right: none; }
+    .mini-stat-num {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 0.2rem;
+      line-height: 1;
+    }
+    .mini-stat-label { font-size: 0.65rem; opacity: 0.6; line-height: 1.3; }
+
+    /* Cards side */
+    .mini-cards-panel { padding: 1.5rem; }
+    .mini-cards-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    .mini-card {
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border: 1px solid;
+    }
+    .mini-card-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .mini-card-sub { font-size: 0.75rem; opacity: 0.6; margin-bottom: 0.6rem; }
+    .mini-card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .mini-tag {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .mini-card-cta {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+      display: inline-block;
+    }
+
+    /* Lead magnet strip */
+    .mini-lead {
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .mini-lead-text h3 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+    .mini-lead-text p { font-size: 0.75rem; opacity: 0.65; }
+    .mini-lead-form {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .mini-lead-input {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 999px;
+      border: 1.5px solid;
+      background: transparent;
+      color: inherit;
+    }
+    .mini-lead-submit {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Palette swatches */
+    .swatch-row {
+      display: flex;
+      padding: 1rem 2rem;
+      gap: 0.5rem;
+      align-items: center;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .swatch:hover::after {
+      content: attr(title);
+      position: absolute;
+      bottom: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1A2332;
+      color: white;
+      font-size: 0.625rem;
+      font-family: monospace;
+      padding: 3px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .swatch-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      opacity: 0.5;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Reasoning note */
+    .variant-note {
+      padding: 1.25rem 2rem;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .variant-note strong { font-weight: 700; }
+    .variant-note em { opacity: 0.6; font-style: normal; font-size: 0.75rem; }
+
+    /* ═══════════════════════════════════════
+       VARIANT 1 — Aktuell: Blau + Orange
+    ═══════════════════════════════════════ */
+    .v1 { --p: #2E5C8A; --a: #E67E22; --d: #1A2332; --bg: #F8F6F2; --bg2: #EEE9E1; --bd: #E5E0D8; --white: #FFFFFF; }
+
+    .v1 .mini-nav   { background: rgba(248,246,242,0.97); border-color: var(--bd); }
+    .v1 .mini-nav-logo span { color: var(--a); }
+    .v1 .mini-nav-cta { background: var(--a); }
+    .v1 .mini-hero  { background: var(--d); color: white; }
+    .v1 .mini-eyebrow { color: var(--a); }
+    .v1 .mini-btn-primary { background: var(--a); }
+    .v1 .mini-btn-ghost { color: rgba(255,255,255,0.6); }
+    .v1 .mini-stats { background: var(--p); color: white; }
+    .v1 .mini-stat  { border-color: rgba(255,255,255,0.15); }
+    .v1 .mini-stat-num { color: white; }
+    .v1 .mini-cards-panel { background: var(--bg); }
+    .v1 .mini-card  { background: var(--white); border-color: var(--bd); }
+    .v1 .mini-card-title { color: var(--d); }
+    .v1 .mini-tag.demand { background: rgba(230,126,34,0.12); color: var(--a); }
+    .v1 .mini-tag.entry  { background: rgba(46,92,138,0.10); color: var(--p); }
+    .v1 .mini-card-cta { color: var(--p); }
+    .v1 .mini-lead  { background: var(--p); color: white; }
+    .v1 .mini-lead-input { border-color: rgba(255,255,255,0.3); color: white; }
+    .v1 .mini-lead-input::placeholder { color: rgba(255,255,255,0.4); }
+    .v1 .mini-lead-submit { background: var(--a); }
+
+    /* ═══════════════════════════════════════
+       VARIANT 2 — Petrol + Terrakotta
+       Mehr Eigenständigkeit, trotzdem seriös
+    ═══════════════════════════════════════ */
+    .v2 { --p: #1B5F72; --a: #C25A35; --d: #152028; --bg: #F5F2EE; --bg2: #EAE5DF; --bd: #DDD8D0; --white: #FFFFFF; }
+
+    .v2 .mini-nav   { background: rgba(245,242,238,0.97); border-color: var(--bd); }
+    .v2 .mini-nav-logo { color: var(--d); }
+    .v2 .mini-nav-logo span { color: var(--a); }
+    .v2 .mini-nav-cta { background: var(--a); }
+    .v2 .mini-hero  { background: var(--d); color: white; }
+    .v2 .mini-eyebrow { color: #D4855A; }
+    .v2 .mini-btn-primary { background: var(--a); }
+    .v2 .mini-btn-ghost { color: rgba(255,255,255,0.55); }
+    .v2 .mini-stats { background: var(--p); color: white; }
+    .v2 .mini-stat  { border-color: rgba(255,255,255,0.15); }
+    .v2 .mini-stat-num { color: white; }
+    .v2 .mini-cards-panel { background: var(--bg); }
+    .v2 .mini-card  { background: var(--white); border-color: var(--bd); }
+    .v2 .mini-card-title { color: var(--d); }
+    .v2 .mini-tag.demand { background: rgba(194,90,53,0.12); color: var(--a); }
+    .v2 .mini-tag.entry  { background: rgba(27,95,114,0.10); color: var(--p); }
+    .v2 .mini-card-cta { color: var(--p); }
+    .v2 .mini-lead  { background: var(--p); color: white; }
+    .v2 .mini-lead-input { border-color: rgba(255,255,255,0.3); color: white; }
+    .v2 .mini-lead-input::placeholder { color: rgba(255,255,255,0.4); }
+    .v2 .mini-lead-submit { background: var(--a); }
+
+    /* ═══════════════════════════════════════
+       VARIANT 3 — Schiefergrau + Senfgelb
+       Editorial, NZZ-Feeling, mutig
+    ═══════════════════════════════════════ */
+    .v3 { --p: #2C3E50; --a: #C9941A; --d: #1A2530; --bg: #F7F5F0; --bg2: #ECE9E2; --bd: #E0DCD4; --white: #FFFFFF; }
+
+    .v3 .mini-nav   { background: rgba(247,245,240,0.97); border-color: var(--bd); }
+    .v3 .mini-nav-logo { color: var(--d); }
+    .v3 .mini-nav-logo span { color: var(--a); }
+    .v3 .mini-nav-cta { background: var(--a); }
+    .v3 .mini-hero  { background: var(--d); color: white; }
+    .v3 .mini-eyebrow { color: var(--a); }
+    .v3 .mini-btn-primary { background: var(--a); }
+    .v3 .mini-btn-ghost { color: rgba(255,255,255,0.55); }
+    .v3 .mini-stats { background: var(--p); color: white; }
+    .v3 .mini-stat  { border-color: rgba(255,255,255,0.15); }
+    .v3 .mini-stat-num { color: #F0C050; }
+    .v3 .mini-cards-panel { background: var(--bg); }
+    .v3 .mini-card  { background: var(--white); border-color: var(--bd); }
+    .v3 .mini-card-title { color: var(--d); }
+    .v3 .mini-tag.demand { background: rgba(201,148,26,0.13); color: #A07310; }
+    .v3 .mini-tag.entry  { background: rgba(44,62,80,0.09); color: var(--p); }
+    .v3 .mini-card-cta { color: var(--p); }
+    .v3 .mini-lead  { background: var(--p); color: white; }
+    .v3 .mini-lead-input { border-color: rgba(255,255,255,0.3); color: white; }
+    .v3 .mini-lead-input::placeholder { color: rgba(255,255,255,0.4); }
+    .v3 .mini-lead-submit { background: var(--a); }
+
+    /* ═══════════════════════════════════════
+       VARIANT 4 — Waldgrün + Warmsand
+       Wachstum, Erneuerung, weniger corporate
+    ═══════════════════════════════════════ */
+    .v4 { --p: #2E5535; --a: #C9873A; --d: #1B2D1F; --bg: #F4F2EC; --bg2: #E8E4DA; --bd: #DAD5C8; --white: #FDFCF8; }
+
+    .v4 .mini-nav   { background: rgba(244,242,236,0.97); border-color: var(--bd); }
+    .v4 .mini-nav-logo { color: var(--d); }
+    .v4 .mini-nav-logo span { color: var(--a); }
+    .v4 .mini-nav-cta { background: var(--a); }
+    .v4 .mini-hero  { background: var(--d); color: white; }
+    .v4 .mini-eyebrow { color: #C9873A; }
+    .v4 .mini-btn-primary { background: var(--a); }
+    .v4 .mini-btn-ghost { color: rgba(255,255,255,0.55); }
+    .v4 .mini-stats { background: var(--p); color: white; }
+    .v4 .mini-stat  { border-color: rgba(255,255,255,0.15); }
+    .v4 .mini-stat-num { color: #F0D080; }
+    .v4 .mini-cards-panel { background: var(--bg); }
+    .v4 .mini-card  { background: var(--white); border-color: var(--bd); }
+    .v4 .mini-card-title { color: var(--d); }
+    .v4 .mini-tag.demand { background: rgba(201,135,58,0.13); color: #9E631A; }
+    .v4 .mini-tag.entry  { background: rgba(46,85,53,0.10); color: var(--p); }
+    .v4 .mini-card-cta { color: var(--p); }
+    .v4 .mini-lead  { background: #243B29; color: white; }
+    .v4 .mini-lead-input { border-color: rgba(255,255,255,0.3); color: white; }
+    .v4 .mini-lead-input::placeholder { color: rgba(255,255,255,0.4); }
+    .v4 .mini-lead-submit { background: var(--a); }
+
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Farbvarianten — derquereinstieg.ch</h1>
+  <p>4 Paletten mit denselben UI-Komponenten. Tab wechseln zum Vergleichen.</p>
+</div>
+
+<!-- Tabs -->
+<nav class="variant-nav" role="tablist">
+  <button class="variant-tab active" onclick="showVariant(1, this)" role="tab" aria-selected="true">
+    <span class="dot" style="background:#2E5C8A"></span>
+    Aktuell — Blau + Orange
+  </button>
+  <button class="variant-tab" onclick="showVariant(2, this)" role="tab">
+    <span class="dot" style="background:#1B5F72"></span>
+    Petrol + Terrakotta
+  </button>
+  <button class="variant-tab" onclick="showVariant(3, this)" role="tab">
+    <span class="dot" style="background:#2C3E50"></span>
+    Schiefergrau + Senf
+  </button>
+  <button class="variant-tab" onclick="showVariant(4, this)" role="tab">
+    <span class="dot" style="background:#2E5535"></span>
+    Waldgrün + Sand
+  </button>
+</nav>
+
+
+<!-- ── VARIANT 1: Aktuell ── -->
+<div class="variant-panel active" id="variant-1">
+  <div class="preview-grid v1">
+
+    <!-- Left: Nav + Hero + Stats -->
+    <div>
+      <div class="mini-nav">
+        <div class="mini-nav-logo">der<span>quereinstieg</span>.ch</div>
+        <div class="mini-nav-cta">Jobs entdecken</div>
+      </div>
+      <div class="mini-hero">
+        <div class="mini-eyebrow">Quereinsteiger Plattform Schweiz</div>
+        <div class="mini-headline">Dein Quereinstieg.<br>Dein Weg.<br><em style="font-style:italic;opacity:0.85;">Kein Bullshit.</em></div>
+        <div class="mini-sub">12.100 Menschen suchen jeden Monat. Die besten Chancen findest du hier.</div>
+        <div class="mini-btns">
+          <button class="mini-btn-primary">Jobs entdecken →</button>
+          <span class="mini-btn-ghost">Welcher Job passt zu mir?</span>
+        </div>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-num">41%</div>
+          <div class="mini-stat-label">denken über<br>Wechsel nach</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">34.5%</div>
+          <div class="mini-stat-label">wechseln auch<br>die Branche</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">4/32</div>
+          <div class="mini-stat-label">Berufsgruppen<br>mit Mangel</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">14.7%</div>
+          <div class="mini-stat-label">wechselten<br>2023 den Job</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Cards + Lead -->
+    <div>
+      <div class="mini-cards-panel">
+        <div class="mini-cards-title">Aktuelle Stellen</div>
+        <div class="mini-card">
+          <div class="mini-card-title">Pflegehelfer/in SRK</div>
+          <div class="mini-card-sub">Spitex Zürich · CHF 52–60k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">Stark nachgefragt</span>
+            <span class="mini-tag entry">Soforteinstieg</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-title">IT-Support Spezialist</div>
+          <div class="mini-card-sub">Tech KMU Basel · CHF 58–68k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">40.000 fehlend</span>
+            <span class="mini-tag entry">Zertifikat genügt</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+      </div>
+      <div class="mini-lead">
+        <div class="mini-lead-text">
+          <h3>Welcher Quereinstieg passt?</h3>
+          <p>5 Fragen · 2 Minuten · Kostenlos</p>
+        </div>
+        <div class="mini-lead-form">
+          <input class="mini-lead-input" placeholder="deine@email.ch" type="email">
+          <button class="mini-lead-submit">Holen</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="swatch-row v1">
+    <span class="swatch" style="background:#2E5C8A" title="#2E5C8A — Blau"></span>
+    <span class="swatch" style="background:#E67E22" title="#E67E22 — Orange"></span>
+    <span class="swatch" style="background:#1A2332" title="#1A2332 — Dark"></span>
+    <span class="swatch" style="background:#F8F6F2;border:1px solid #ddd" title="#F8F6F2 — Creme"></span>
+    <span class="swatch" style="background:#27AE60" title="#27AE60 — Grün"></span>
+    <span class="swatch-label">Aktuell — Warm Blau + Orange</span>
+  </div>
+  <div class="variant-note v1" style="background:#F8F6F2">
+    <strong>Charakter:</strong> Professionell, vertrauenswürdig, bewährt.<br>
+    <strong>Stärken:</strong> Hoher Kontrast, klare CTAs, Blau-Orange funktioniert universell.<br>
+    <strong>Schwäche:</strong> Booking.com, Amazon, viele HR-Plattformen nutzen dasselbe Paar. <em>Wenig Differenzierung im Wettbewerb.</em>
+  </div>
+</div>
+
+
+<!-- ── VARIANT 2: Petrol + Terrakotta ── -->
+<div class="variant-panel" id="variant-2">
+  <div class="preview-grid v2">
+    <div>
+      <div class="mini-nav">
+        <div class="mini-nav-logo">der<span>quereinstieg</span>.ch</div>
+        <div class="mini-nav-cta">Jobs entdecken</div>
+      </div>
+      <div class="mini-hero">
+        <div class="mini-eyebrow">Quereinsteiger Plattform Schweiz</div>
+        <div class="mini-headline">Dein Quereinstieg.<br>Dein Weg.<br><em style="font-style:italic;opacity:0.85;">Kein Bullshit.</em></div>
+        <div class="mini-sub">12.100 Menschen suchen jeden Monat. Die besten Chancen findest du hier.</div>
+        <div class="mini-btns">
+          <button class="mini-btn-primary">Jobs entdecken →</button>
+          <span class="mini-btn-ghost">Welcher Job passt zu mir?</span>
+        </div>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-num">41%</div>
+          <div class="mini-stat-label">denken über<br>Wechsel nach</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">34.5%</div>
+          <div class="mini-stat-label">wechseln auch<br>die Branche</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">4/32</div>
+          <div class="mini-stat-label">Berufsgruppen<br>mit Mangel</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">14.7%</div>
+          <div class="mini-stat-label">wechselten<br>2023 den Job</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mini-cards-panel">
+        <div class="mini-cards-title">Aktuelle Stellen</div>
+        <div class="mini-card">
+          <div class="mini-card-title">Pflegehelfer/in SRK</div>
+          <div class="mini-card-sub">Spitex Zürich · CHF 52–60k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">Stark nachgefragt</span>
+            <span class="mini-tag entry">Soforteinstieg</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-title">IT-Support Spezialist</div>
+          <div class="mini-card-sub">Tech KMU Basel · CHF 58–68k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">40.000 fehlend</span>
+            <span class="mini-tag entry">Zertifikat genügt</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+      </div>
+      <div class="mini-lead">
+        <div class="mini-lead-text">
+          <h3>Welcher Quereinstieg passt?</h3>
+          <p>5 Fragen · 2 Minuten · Kostenlos</p>
+        </div>
+        <div class="mini-lead-form">
+          <input class="mini-lead-input" placeholder="deine@email.ch" type="email">
+          <button class="mini-lead-submit">Holen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="swatch-row v2" style="background:#F5F2EE">
+    <span class="swatch" style="background:#1B5F72" title="#1B5F72 — Petrol"></span>
+    <span class="swatch" style="background:#C25A35" title="#C25A35 — Terrakotta"></span>
+    <span class="swatch" style="background:#152028" title="#152028 — Dark"></span>
+    <span class="swatch" style="background:#F5F2EE;border:1px solid #ddd" title="#F5F2EE — Warm Sand"></span>
+    <span class="swatch" style="background:#3A9E6A" title="#3A9E6A — Grün"></span>
+    <span class="swatch-label">Petrol + Terrakotta</span>
+  </div>
+  <div class="variant-note v2" style="background:#F5F2EE">
+    <strong>Charakter:</strong> Eigenständig, zeitgemäss, sophisticated ohne steif zu wirken.<br>
+    <strong>Stärken:</strong> Petrol differenziert stark von Mitbewerb. Terrakotta ist wärmer und menschlicher als Orange — passt gut zum Anti-Hustle-Ton. Wenig gesehen in CH-HR-Kontext.<br>
+    <strong>Schwäche:</strong> Etwas weniger kontraststark als Orange. CTAs müssen testen. <em>Für Nutzer, die das Andere wollen.</em>
+  </div>
+</div>
+
+
+<!-- ── VARIANT 3: Schiefergrau + Senf ── -->
+<div class="variant-panel" id="variant-3">
+  <div class="preview-grid v3">
+    <div>
+      <div class="mini-nav">
+        <div class="mini-nav-logo">der<span>quereinstieg</span>.ch</div>
+        <div class="mini-nav-cta">Jobs entdecken</div>
+      </div>
+      <div class="mini-hero">
+        <div class="mini-eyebrow">Quereinsteiger Plattform Schweiz</div>
+        <div class="mini-headline">Dein Quereinstieg.<br>Dein Weg.<br><em style="font-style:italic;opacity:0.85;">Kein Bullshit.</em></div>
+        <div class="mini-sub">12.100 Menschen suchen jeden Monat. Die besten Chancen findest du hier.</div>
+        <div class="mini-btns">
+          <button class="mini-btn-primary">Jobs entdecken →</button>
+          <span class="mini-btn-ghost">Welcher Job passt zu mir?</span>
+        </div>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-num">41%</div>
+          <div class="mini-stat-label">denken über<br>Wechsel nach</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">34.5%</div>
+          <div class="mini-stat-label">wechseln auch<br>die Branche</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">4/32</div>
+          <div class="mini-stat-label">Berufsgruppen<br>mit Mangel</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">14.7%</div>
+          <div class="mini-stat-label">wechselten<br>2023 den Job</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mini-cards-panel">
+        <div class="mini-cards-title">Aktuelle Stellen</div>
+        <div class="mini-card">
+          <div class="mini-card-title">Pflegehelfer/in SRK</div>
+          <div class="mini-card-sub">Spitex Zürich · CHF 52–60k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">Stark nachgefragt</span>
+            <span class="mini-tag entry">Soforteinstieg</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-title">IT-Support Spezialist</div>
+          <div class="mini-card-sub">Tech KMU Basel · CHF 58–68k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">40.000 fehlend</span>
+            <span class="mini-tag entry">Zertifikat genügt</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+      </div>
+      <div class="mini-lead">
+        <div class="mini-lead-text">
+          <h3>Welcher Quereinstieg passt?</h3>
+          <p>5 Fragen · 2 Minuten · Kostenlos</p>
+        </div>
+        <div class="mini-lead-form">
+          <input class="mini-lead-input" placeholder="deine@email.ch" type="email">
+          <button class="mini-lead-submit">Holen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="swatch-row v3" style="background:#F7F5F0">
+    <span class="swatch" style="background:#2C3E50" title="#2C3E50 — Schiefergrau"></span>
+    <span class="swatch" style="background:#C9941A" title="#C9941A — Senfgelb"></span>
+    <span class="swatch" style="background:#1A2530" title="#1A2530 — Dark"></span>
+    <span class="swatch" style="background:#F7F5F0;border:1px solid #ddd" title="#F7F5F0 — Pergament"></span>
+    <span class="swatch" style="background:#2E8B5A" title="#2E8B5A — Grün"></span>
+    <span class="swatch-label">Schiefergrau + Senfgelb</span>
+  </div>
+  <div class="variant-note v3" style="background:#F7F5F0">
+    <strong>Charakter:</strong> Editorial, journalistisch, NZZ / Das Magazin-Feeling.<br>
+    <strong>Stärken:</strong> Sehr ungewöhnlich für eine Job-Plattform — starke Differenzierung. Senfgelb auf dunklem Grau ist markant und erinnerungswürdig. Unterstreicht den Content-first-Ansatz.<br>
+    <strong>Schwäche:</strong> Senfgelb kann bei Accessibility problematisch sein (Kontrast auf hell). Nicht alle lesen «Karriere» in diesen Farben. <em>Für eine Plattform, die sich als Medien-Brand versteht.</em>
+  </div>
+</div>
+
+
+<!-- ── VARIANT 4: Waldgrün + Sand ── -->
+<div class="variant-panel" id="variant-4">
+  <div class="preview-grid v4">
+    <div>
+      <div class="mini-nav">
+        <div class="mini-nav-logo">der<span>quereinstieg</span>.ch</div>
+        <div class="mini-nav-cta">Jobs entdecken</div>
+      </div>
+      <div class="mini-hero">
+        <div class="mini-eyebrow">Quereinsteiger Plattform Schweiz</div>
+        <div class="mini-headline">Dein Quereinstieg.<br>Dein Weg.<br><em style="font-style:italic;opacity:0.85;">Kein Bullshit.</em></div>
+        <div class="mini-sub">12.100 Menschen suchen jeden Monat. Die besten Chancen findest du hier.</div>
+        <div class="mini-btns">
+          <button class="mini-btn-primary">Jobs entdecken →</button>
+          <span class="mini-btn-ghost">Welcher Job passt zu mir?</span>
+        </div>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-num">41%</div>
+          <div class="mini-stat-label">denken über<br>Wechsel nach</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">34.5%</div>
+          <div class="mini-stat-label">wechseln auch<br>die Branche</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">4/32</div>
+          <div class="mini-stat-label">Berufsgruppen<br>mit Mangel</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">14.7%</div>
+          <div class="mini-stat-label">wechselten<br>2023 den Job</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mini-cards-panel">
+        <div class="mini-cards-title">Aktuelle Stellen</div>
+        <div class="mini-card">
+          <div class="mini-card-title">Pflegehelfer/in SRK</div>
+          <div class="mini-card-sub">Spitex Zürich · CHF 52–60k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">Stark nachgefragt</span>
+            <span class="mini-tag entry">Soforteinstieg</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-title">IT-Support Spezialist</div>
+          <div class="mini-card-sub">Tech KMU Basel · CHF 58–68k</div>
+          <div class="mini-card-tags">
+            <span class="mini-tag demand">40.000 fehlend</span>
+            <span class="mini-tag entry">Zertifikat genügt</span>
+          </div>
+          <div class="mini-card-cta">Stelle ansehen →</div>
+        </div>
+      </div>
+      <div class="mini-lead">
+        <div class="mini-lead-text">
+          <h3>Welcher Quereinstieg passt?</h3>
+          <p>5 Fragen · 2 Minuten · Kostenlos</p>
+        </div>
+        <div class="mini-lead-form">
+          <input class="mini-lead-input" placeholder="deine@email.ch" type="email">
+          <button class="mini-lead-submit">Holen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="swatch-row v4" style="background:#F4F2EC">
+    <span class="swatch" style="background:#2E5535" title="#2E5535 — Waldgrün"></span>
+    <span class="swatch" style="background:#C9873A" title="#C9873A — Warmsand"></span>
+    <span class="swatch" style="background:#1B2D1F" title="#1B2D1F — Dark"></span>
+    <span class="swatch" style="background:#F4F2EC;border:1px solid #ddd" title="#F4F2EC — Naturcreme"></span>
+    <span class="swatch" style="background:#5A9E4A" title="#5A9E4A — Hellgrün"></span>
+    <span class="swatch-label">Waldgrün + Warmsand</span>
+  </div>
+  <div class="variant-note v4" style="background:#F4F2EC">
+    <strong>Charakter:</strong> Organisch, erneuernd, nah an der Natur — Aufbruch ohne Aggression.<br>
+    <strong>Stärken:</strong> Grün = Wachstum, Neuanfang, Hoffnung — semantisch perfekt für Quereinstieg. Sehr warm und einladend. Kaum eine Schweizer Job-Plattform nutzt Grün als Primärfarbe.<br>
+    <strong>Schwäche:</strong> Kann je nach Ton Richtung «Bioprodukte» oder «Umwelt-NGO» kippen. Braucht präzise Auswahl. <em>Für eine Plattform mit klarem menschlichen Kern.</em>
+  </div>
+</div>
+
+<script>
+  function showVariant(n, btn) {
+    document.querySelectorAll('.variant-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.variant-tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    document.getElementById('variant-' + n).classList.add('active');
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+  }
+</script>
+</body>
+</html>
