@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blue:        #2E5C8A;
+  --color-blue-dark:   #1e3f63;
+  --color-orange:      #E67E22;
+  --color-orange-dark: #c96a12;
+  --color-dark:        #1A2332;
+  --color-cream:       #F8F6F2;
+  --color-muted:       #6B7280;
+  --color-border:      #E5E0D8;
+
+  --max-width-content: 760px;
+  --max-width-wide:    1240px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-cream);
+    color: #374151;
+  }
+}
