@@ -3,11 +3,26 @@ import Link from 'next/link'
 import { client } from '@/lib/sanity/client'
 import SwissMapPlaceholder from '@/components/ui/SwissMapPlaceholder'
 
-// ─── SEO via Sanity (nur Metadaten) ───────────────────────────────────────────
-async function getSeoData() {
+// ─── Sanity: Homepage-Daten ────────────────────────────────────────────────────
+interface HomepageData {
+  heroEyebrow?: string
+  heroTitle?: string
+  heroSubtitle?: string
+  heroTagline?: string
+  heroCtaText?: string
+  heroCtaUrl?: string
+  seoTitle?: string
+  seoDescription?: string
+}
+
+async function getHomepageData(): Promise<HomepageData | null> {
   try {
-    return await client.fetch<{ seoTitle?: string; seoDescription?: string }>(
-      `*[_type == "homepage" && _id == "homepage"][0]{ seoTitle, seoDescription }`,
+    return await client.fetch<HomepageData>(
+      `*[_type == "homepage" && _id == "homepage"][0]{
+        heroEyebrow, heroTitle, heroSubtitle, heroTagline,
+        heroCtaText, heroCtaUrl,
+        seoTitle, seoDescription
+      }`,
       {},
       { next: { revalidate: 3600 } }
     )
@@ -17,7 +32,7 @@ async function getSeoData() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getSeoData()
+  const data = await getHomepageData()
   return {
     title:
       data?.seoTitle ??
@@ -77,7 +92,16 @@ const BLOG_ARTICLES = [
 ]
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
-export default function HomePage() {
+export default async function HomePage() {
+  const cms = await getHomepageData()
+
+  const heroEyebrow  = cms?.heroEyebrow  ?? 'Die Plattform für Quereinsteiger in der Schweiz'
+  const heroTitle    = cms?.heroTitle    ?? 'Quereinsteiger Jobs Schweiz'
+  const heroSubtitle = cms?.heroSubtitle ?? '425 Stellen. Alle mit explizitem Quereinstieg-Willkommen.'
+  const heroTagline  = cms?.heroTagline  ?? 'Ehrliche Einstiegswege, validierte Daten, kein Bullshit.'
+  const heroCtaText  = cms?.heroCtaText  ?? 'Jobs entdecken'
+  const heroCtaUrl   = cms?.heroCtaUrl   ?? '/jobs'
+
   return (
     <>
       {/* ① HERO ─────────────────────────────────────────────────────────────── */}
@@ -85,23 +109,23 @@ export default function HomePage() {
         <div className="max-w-wide mx-auto px-6">
           <div className="max-w-2xl">
             <p className="text-orange text-xs font-bold uppercase tracking-widest mb-5">
-              Die Plattform für Quereinsteiger in der Schweiz
+              {heroEyebrow}
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-5">
-              Quereinsteiger Jobs Schweiz
+              {heroTitle}
             </h1>
             <p className="text-lg md:text-xl text-white/65 leading-relaxed mb-2">
-              425 Stellen. Alle mit explizitem Quereinstieg-Willkommen.
+              {heroSubtitle}
             </p>
             <p className="text-base text-white/45 leading-relaxed mb-10">
-              Ehrliche Einstiegswege, validierte Daten, kein Bullshit.
+              {heroTagline}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/jobs"
+                href={heroCtaUrl as '/jobs'}
                 className="inline-flex items-center gap-2 bg-orange hover:bg-orange-dark text-white font-semibold px-6 py-3 rounded-md transition-colors"
               >
-                Jobs entdecken
+                {heroCtaText}
                 <span aria-hidden="true">→</span>
               </Link>
               <Link

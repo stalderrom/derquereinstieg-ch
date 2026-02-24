@@ -27,8 +27,12 @@ export default defineConfig({
               ),
             S.divider(),
             S.listItem()
-              .title('Seiten')
-              .child(S.documentTypeList('page').title('Seiten')),
+              .title('Branchen-Seiten')
+              .child(S.documentTypeList('branchenSeite').title('Branchen-Seiten')),
+            S.divider(),
+            S.listItem()
+              .title('Weitere Seiten')
+              .child(S.documentTypeList('page').title('Weitere Seiten')),
           ]),
     }),
   ],

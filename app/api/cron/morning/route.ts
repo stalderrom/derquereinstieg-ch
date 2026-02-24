@@ -26,7 +26,7 @@ function checkAuth(req: NextRequest): boolean {
   return auth === `Bearer ${secret}`
 }
 
-async function isJobStillActive(url: string): Promise<boolean> {
+async function isJobStillActive(url: string): Promise<boolean | null> {
   try {
     const res = await axios.get<string>(url, {
       timeout: 7_000,
@@ -36,22 +36,23 @@ async function isJobStillActive(url: string): Promise<boolean> {
     })
 
     if (res.status === 404 || res.status === 410) return false
-    if (res.status >= 500) return true
-
-    const isJobCloud = url.includes('jobscout24') || url.includes('jobs.ch')
-    if (isJobCloud) {
-      const html = typeof res.data === 'string' ? res.data : ''
-      return html.includes('"JobPosting"')
-    }
+    if (res.status >= 500) return null // Temporärer Fehler → nicht deaktivieren
 
     if (url.includes('adzuna')) {
       const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
       if (finalUrl.includes('/search') || finalUrl.includes('/jobs?')) return false
     }
 
+    const isJobDetailUrl = /\/(?:stelle|job)\/[\w-]{8,}/i.test(url)
+    if (isJobDetailUrl) {
+      const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
+      const finalIsDetail = /\/(?:stelle|job)\/[\w-]{8,}/i.test(finalUrl)
+      if (!finalIsDetail && finalUrl !== url) return false
+    }
+
     return res.status < 400
   } catch {
-    return false
+    return null // Timeout → nicht deaktivieren
   }
 }
 
@@ -93,11 +94,11 @@ export async function GET(req: NextRequest) {
       // Sicherheits-Timeout: nicht mehr als 240s für Verifikation (60s Reserve für Scan)
       if (Date.now() - startedAt > 240_000) break
 
-      const stillActive = await isJobStillActive(job.source_url)
-      if (stillActive) {
+      const status = await isJobStillActive(job.source_url)
+      if (status === true) {
         await updateJobVerified(job.id)
         verified++
-      } else {
+      } else if (status === false) {
         await deactivateJob(job.id)
         removed++
       }

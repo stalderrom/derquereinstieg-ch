@@ -9,6 +9,7 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm text-white/70">
           <Link href="/jobs" className="hover:text-white transition-colors">Jobs</Link>
+          <Link href="/quereinstieg-guide" className="hover:text-white transition-colors">Guide</Link>
           <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
         </nav>
         <div className="flex items-center gap-3">

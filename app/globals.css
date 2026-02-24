@@ -94,3 +94,229 @@
   --color-cream:       #F9F4EC;
   --color-border:      #E8DEC8;
 }
+
+/* V8: Night sands — warm, geerdet, organisch */
+[data-theme="v8"] {
+  --color-dark:        #574A24;
+  --color-orange:      #9A8040;
+  --color-orange-dark: #7A6430;
+  --color-blue:        #80775C;
+  --color-cream:       #FEF6E8;
+  --color-border:      #E8D8A0;
+}
+
+/* V9: Calm blue — ruhig, vertrauensvoll, professionell */
+[data-theme="v9"] {
+  --color-dark:        #2C4A5C;
+  --color-orange:      #2D9ECC;
+  --color-orange-dark: #237EAA;
+  --color-blue:        #517891;
+  --color-cream:       #F0F6FA;
+  --color-border:      #C5DCE8;
+}
+
+/* V10: Ocean tide — frisch, dynamisch, modern */
+[data-theme="v10"] {
+  --color-dark:        #004444;
+  --color-orange:      #008E8E;
+  --color-orange-dark: #007272;
+  --color-blue:        #4052D6;
+  --color-cream:       #F0FAFA;
+  --color-border:      #B8E0E0;
+}
+
+/* V11: Eucalyptus grove — natürlich, friedlich, authentisch */
+[data-theme="v11"] {
+  --color-dark:        #2E4430;
+  --color-orange:      #526E3A;
+  --color-orange-dark: #3D5A2A;
+  --color-blue:        #4B6E48;
+  --color-cream:       #F2F0EF;
+  --color-border:      #D4D0BC;
+}
+
+/* V12: Coral + Purple — lebendig, mutig */
+[data-theme="v12"] {
+  --color-dark:        #6A2C70;
+  --color-orange:      #C85A30;
+  --color-orange-dark: #A04020;
+  --color-blue:        #B83B5E;
+  --color-cream:       #FEF8F0;
+  --color-border:      #F0D8C8;
+}
+
+/* V13: Burnt Sienna — warm, geerdet */
+[data-theme="v13"] {
+  --color-dark:        #5C2810;
+  --color-orange:      #C04020;
+  --color-orange-dark: #A03010;
+  --color-blue:        #A0522D;
+  --color-cream:       #F9F3EC;
+  --color-border:      #E8D0B8;
+}
+
+/* V14: Zesty Lemon — frisch, energetisch */
+[data-theme="v14"] {
+  --color-dark:        #5A5A10;
+  --color-orange:      #8A8820;
+  --color-orange-dark: #6A6810;
+  --color-blue:        #7A7818;
+  --color-cream:       #FEFCE8;
+  --color-border:      #E8E4A8;
+}
+
+/* V15: Sunny Day — kontrastreich, lebendig */
+[data-theme="v15"] {
+  --color-dark:        #1A0090;
+  --color-orange:      #C88800;
+  --color-orange-dark: #A87000;
+  --color-blue:        #007EFF;
+  --color-cream:       #FFFCEF;
+  --color-border:      #E8E0C0;
+}
+
+/* V16: Cobalt Sky — professionell, klar */
+[data-theme="v16"] {
+  --color-dark:        #000080;
+  --color-orange:      #0070CC;
+  --color-orange-dark: #005AA8;
+  --color-blue:        #0047AB;
+  --color-cream:       #F0F4FA;
+  --color-border:      #C0D4E8;
+}
+
+/* V17: Quite Clear — elegant, kontrastvoll */
+[data-theme="v17"] {
+  --color-dark:        #0E3025;
+  --color-orange:      #4D1717;
+  --color-orange-dark: #3A1010;
+  --color-blue:        #174D38;
+  --color-cream:       #F2F2F2;
+  --color-border:      #DCDCDC;
+}
+
+/* ── SUNNY DAY (#FFBF00 · #807040 · #007EFF · #2400FF) ── */
+
+/* V18: Sunny Day A — Nacht: Tiefblau bg · Bernstein CTA · Hellblau sekundär */
+[data-theme="v18"] {
+  --color-dark:        #2400FF;
+  --color-orange:      #FFBF00;
+  --color-orange-dark: #E0A800;
+  --color-blue:        #007EFF;
+  --color-cream:       #F8F8FF;
+  --color-border:      #D0D0F8;
+}
+
+/* V19: Sunny Day B — Erde: Olive bg · Tiefblau CTA · Hellblau sekundär */
+[data-theme="v19"] {
+  --color-dark:        #807040;
+  --color-orange:      #2400FF;
+  --color-orange-dark: #1800CC;
+  --color-blue:        #007EFF;
+  --color-cream:       #FDFAF2;
+  --color-border:      #E0D8B8;
+}
+
+/* V20: Sunny Day C — Ozean: Tiefblau bg · Hellblau CTA · Bernstein sekundär */
+[data-theme="v20"] {
+  --color-dark:        #2400FF;
+  --color-orange:      #007EFF;
+  --color-orange-dark: #005BCC;
+  --color-blue:        #FFBF00;
+  --color-cream:       #F0F4FF;
+  --color-border:      #C8D8F8;
+}
+
+/* V21: Sunny Day D — Herbst: Olive bg · Hellblau CTA · Tiefblau sekundär */
+[data-theme="v21"] {
+  --color-dark:        #807040;
+  --color-orange:      #007EFF;
+  --color-orange-dark: #005BCC;
+  --color-blue:        #2400FF;
+  --color-cream:       #FDFAF0;
+  --color-border:      #DDDAB8;
+}
+
+/* ── SUNSET (#F9ED69 · #F08A5D · #B83B5E · #6A2C70) ── */
+
+/* V22: Sunset A — Violett: Lila bg · Coral CTA · Rose sekundär */
+[data-theme="v22"] {
+  --color-dark:        #6A2C70;
+  --color-orange:      #F08A5D;
+  --color-orange-dark: #D07040;
+  --color-blue:        #B83B5E;
+  --color-cream:       #FFF8F4;
+  --color-border:      #F0D8C8;
+}
+
+/* V23: Sunset B — Rosa: Rose bg · Lila CTA · Coral sekundär */
+[data-theme="v23"] {
+  --color-dark:        #B83B5E;
+  --color-orange:      #6A2C70;
+  --color-orange-dark: #521F58;
+  --color-blue:        #F08A5D;
+  --color-cream:       #FFF4F6;
+  --color-border:      #F0C8D8;
+}
+
+/* V24: Sunset C — Pflaume: Lila bg · Rose CTA · Coral sekundär */
+[data-theme="v24"] {
+  --color-dark:        #6A2C70;
+  --color-orange:      #B83B5E;
+  --color-orange-dark: #9A2A48;
+  --color-blue:        #F08A5D;
+  --color-cream:       #FDF4FF;
+  --color-border:      #E8C8F0;
+}
+
+/* V25: Sunset D — Coral: Rose bg · Coral CTA · Lila sekundär */
+[data-theme="v25"] {
+  --color-dark:        #B83B5E;
+  --color-orange:      #F08A5D;
+  --color-orange-dark: #D07040;
+  --color-blue:        #6A2C70;
+  --color-cream:       #FFF5F2;
+  --color-border:      #F0D0C8;
+}
+
+/* ── QUER (#4B2EFF · #B6FF00 · #F6F6F4 · #111111) ── */
+
+/* V26: Quer A — Tech: Charcoal bg · Violet CTA · Lime sekundär */
+[data-theme="v26"] {
+  --color-dark:        #111111;
+  --color-orange:      #4B2EFF;
+  --color-orange-dark: #2A1ECC;
+  --color-blue:        #B6FF00;
+  --color-cream:       #F6F6F4;
+  --color-border:      #E0E0DC;
+}
+
+/* V27: Quer B — Neon: Violet bg · Lime CTA · Charcoal sekundär */
+[data-theme="v27"] {
+  --color-dark:        #4B2EFF;
+  --color-orange:      #B6FF00;
+  --color-orange-dark: #90CC00;
+  --color-blue:        #111111;
+  --color-cream:       #F6F6F4;
+  --color-border:      #E8F0D8;
+}
+
+/* V28: Quer C — Dunkel: Charcoal bg · Lime CTA · Violet sekundär */
+[data-theme="v28"] {
+  --color-dark:        #111111;
+  --color-orange:      #B6FF00;
+  --color-orange-dark: #90CC00;
+  --color-blue:        #4B2EFF;
+  --color-cream:       #F6F6F4;
+  --color-border:      #E0E0DC;
+}
+
+/* V29: Quer D — Invert: Violet bg · Charcoal CTA · Lime sekundär */
+[data-theme="v29"] {
+  --color-dark:        #4B2EFF;
+  --color-orange:      #111111;
+  --color-orange-dark: #222222;
+  --color-blue:        #B6FF00;
+  --color-cream:       #F6F6F4;
+  --color-border:      #D8D8F8;
+}

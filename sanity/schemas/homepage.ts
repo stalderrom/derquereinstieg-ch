@@ -7,17 +7,30 @@ export default defineType({
   fields: [
     // --- Hero ---
     defineField({
+      name: 'heroEyebrow',
+      title: 'Hero Eyebrow (Zeile über dem Titel)',
+      type: 'string',
+      description: 'Kleine Zeile in Orange über dem H1, z.B. "Die Plattform für Quereinsteiger in der Schweiz"',
+    }),
+    defineField({
       name: 'heroTitle',
-      title: 'Hero Titel',
+      title: 'Hero Titel (H1)',
       type: 'string',
       description: 'Haupttitel im Hero-Bereich',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'heroSubtitle',
-      title: 'Hero Untertitel',
+      title: 'Hero Untertitel (Zeile 1)',
       type: 'text',
-      rows: 3,
+      rows: 2,
+      description: 'Erste Zeile unter dem Titel, etwas heller',
+    }),
+    defineField({
+      name: 'heroTagline',
+      title: 'Hero Tagline (Zeile 2)',
+      type: 'string',
+      description: 'Zweite Zeile unter dem Titel, noch dezenter, z.B. "Ehrliche Einstiegswege, validierte Daten, kein Bullshit."',
     }),
     defineField({
       name: 'heroCtaText',

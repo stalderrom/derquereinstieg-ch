@@ -8,49 +8,44 @@ const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (
 // HEAD-Requests reichen nicht: job-portale wie jobs.ch / jobscout24 geben bei
 // gelöschten Inseraten 200 zurück (Weiterleitung auf Suchseite statt 404).
 // Deshalb: GET + Redirect-Erkennung + JSON-LD-Prüfung.
-async function isJobStillActive(url: string): Promise<boolean> {
+// Rückgabewerte:
+//   true  → Job ist aktiv
+//   false → Job ist definitiv weg (404/410 oder bestätigte Weiterleitung)
+//   null  → unbekannt (Timeout, Netzwerkfehler) → nicht deaktivieren
+async function checkJobStatus(url: string): Promise<boolean | null> {
   try {
     const res = await axios.get<string>(url, {
-      timeout: 8_000,
+      timeout: 10_000,
       maxRedirects: 5,
       headers: { 'User-Agent': UA },
-      validateStatus: () => true, // Kein throw bei 4xx/5xx
+      validateStatus: () => true,
     })
 
-    // Klares 404 / Server-Fehler → weg
+    // Eindeutig gelöscht
     if (res.status === 404 || res.status === 410) return false
-    if (res.status >= 500) return true // Server-Fehler ≠ Job gelöscht, nicht deaktivieren
 
-    // Für jobscout24 / jobs.ch / jobcloud-Portale:
-    // Wenn die Seite kein JSON-LD JobPosting mehr enthält, wurde das Inserat
-    // wahrscheinlich auf eine Suchseite umgeleitet.
-    const isJobCloud = url.includes('jobscout24') || url.includes('jobs.ch')
-    if (isJobCloud) {
-      const html = typeof res.data === 'string' ? res.data : ''
-      const hasJobPosting = html.includes('"JobPosting"')
-      return hasJobPosting
-    }
+    // Server-Fehler = nicht deaktivieren (temporäres Problem)
+    if (res.status >= 500) return null
 
-    // Für Adzuna-Redirect-URLs: finale URL prüfen
+    // Für Adzuna: finale URL prüfen
     if (url.includes('adzuna')) {
       const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
-      // Adzuna leitet gelöschte Jobs auf die Suche um (/search oder /jobs?)
       if (finalUrl.includes('/search') || finalUrl.includes('/jobs?')) return false
     }
 
-    // Allgemein: wenn die ursprüngliche URL eine Detail-Seite war
-    // und die finale URL auf eine Listen-/Suchseite zeigt → weg
-    const isDetailUrl = /\/(stelle|job|jobs?)\/[\w-]{8,}/i.test(url)
-    if (isDetailUrl) {
+    // Für jobscout24 / jobs.ch: Job-Detail-URL muss erhalten bleiben
+    // (gelöschte Jobs werden auf Suchseite umgeleitet → finale URL ändert sich)
+    const isJobDetailUrl = /\/(?:stelle|job)\/[\w-]{8,}/i.test(url)
+    if (isJobDetailUrl) {
       const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
-      const finalIsDetail = /\/(stelle|job|jobs?)\/[\w-]{8,}/i.test(finalUrl)
+      const finalIsDetail = /\/(?:stelle|job)\/[\w-]{8,}/i.test(finalUrl)
       if (!finalIsDetail && finalUrl !== url) return false
     }
 
     return res.status < 400
   } catch {
-    // Timeout, connection refused → als offline werten
-    return false
+    // Timeout oder Netzwerkfehler → Status unbekannt, nicht deaktivieren
+    return null
   }
 }
 
@@ -67,15 +62,17 @@ export async function POST() {
     let removed = 0
 
     for (const job of activeJobs) {
-      const stillActive = await isJobStillActive(job.source_url)
+      const status = await checkJobStatus(job.source_url)
 
-      if (stillActive) {
+      if (status === true) {
         await updateJobVerified(job.id)
         verified++
-      } else {
+      } else if (status === false) {
+        // Nur bei bestätigtem 404/410 oder Redirect deaktivieren
         await deactivateJob(job.id)
         removed++
       }
+      // status === null → Timeout/Fehler → unverändert lassen
 
       // Kurze Pause um Portale nicht zu überlasten
       await new Promise(r => setTimeout(r, 200))

@@ -4,34 +4,6 @@ import { useEffect, useState } from 'react'
 
 const THEMES = [
   {
-    id: 'v1',
-    label: 'Blau + Orange',
-    description: 'Professionell, bewährt',
-    swatch: '#E67E22',
-    bg: '#1A2332',
-  },
-  {
-    id: 'v2',
-    label: 'Petrol + Terrakotta',
-    description: 'Eigenständig, zeitgemäss',
-    swatch: '#C25A35',
-    bg: '#152028',
-  },
-  {
-    id: 'v3',
-    label: 'Schiefergrau + Senf',
-    description: 'Editorial, NZZ-Feeling',
-    swatch: '#C9941A',
-    bg: '#1A2530',
-  },
-  {
-    id: 'v4',
-    label: 'Waldgrün + Sand',
-    description: 'Organisch, Neuanfang',
-    swatch: '#C9873A',
-    bg: '#1B2D1F',
-  },
-  {
     id: 'v5',
     label: 'Indigo + Türkis',
     description: 'Modern, eigenständig',
@@ -52,14 +24,171 @@ const THEMES = [
     swatch: '#D4AA30',
     bg: '#5C2A18',
   },
+  {
+    id: 'v8',
+    label: 'Night sands',
+    description: 'Warm, organisch',
+    swatch: '#CBBD93',
+    bg: '#574A24',
+  },
+  {
+    id: 'v9',
+    label: 'Calm blue',
+    description: 'Ruhig, vertrauensvoll',
+    swatch: '#57B9FF',
+    bg: '#2C4A5C',
+  },
+  {
+    id: 'v10',
+    label: 'Ocean tide',
+    description: 'Frisch, dynamisch',
+    swatch: '#00D1D1',
+    bg: '#004444',
+  },
+  {
+    id: 'v11',
+    label: 'Eucalyptus grove',
+    description: 'Natürlich, authentisch',
+    swatch: '#B2AC88',
+    bg: '#2E4430',
+  },
+  {
+    id: 'v12',
+    label: 'Coral + Purple',
+    description: 'Lebendig, mutig',
+    swatch: '#F08A5D',
+    bg: '#6A2C70',
+  },
+  {
+    id: 'v13',
+    label: 'Burnt Sienna',
+    description: 'Warm, geerdet',
+    swatch: '#E35336',
+    bg: '#5C2810',
+  },
+  {
+    id: 'v14',
+    label: 'Zesty Lemon',
+    description: 'Frisch, energetisch',
+    swatch: '#D6D58B',
+    bg: '#5A5A10',
+  },
+  {
+    id: 'v15',
+    label: 'Sunny Day',
+    description: 'Kontrastreich, lebendig',
+    swatch: '#FFBF00',
+    bg: '#1A0090',
+  },
+  {
+    id: 'v16',
+    label: 'Cobalt Sky',
+    description: 'Professionell, klar',
+    swatch: '#82C8E5',
+    bg: '#000080',
+  },
+  {
+    id: 'v17',
+    label: 'Quite Clear',
+    description: 'Elegant, kontrastvoll',
+    swatch: '#4D1717',
+    bg: '#0E3025',
+  },
+  // ── Sunny Day (#FFBF00 · #807040 · #007EFF · #2400FF) ──
+  {
+    id: 'v18',
+    label: 'Sunny Day A',
+    description: 'Nacht: Tiefblau + Bernstein',
+    swatch: '#FFBF00',
+    bg: '#2400FF',
+  },
+  {
+    id: 'v19',
+    label: 'Sunny Day B',
+    description: 'Erde: Olive + Tiefblau',
+    swatch: '#2400FF',
+    bg: '#807040',
+  },
+  {
+    id: 'v20',
+    label: 'Sunny Day C',
+    description: 'Ozean: Tiefblau + Hellblau',
+    swatch: '#007EFF',
+    bg: '#2400FF',
+  },
+  {
+    id: 'v21',
+    label: 'Sunny Day D',
+    description: 'Herbst: Olive + Hellblau',
+    swatch: '#007EFF',
+    bg: '#807040',
+  },
+  // ── Sunset (#F9ED69 · #F08A5D · #B83B5E · #6A2C70) ──
+  {
+    id: 'v22',
+    label: 'Sunset A',
+    description: 'Violett: Lila + Coral',
+    swatch: '#F08A5D',
+    bg: '#6A2C70',
+  },
+  {
+    id: 'v23',
+    label: 'Sunset B',
+    description: 'Rosa: Rose + Lila',
+    swatch: '#6A2C70',
+    bg: '#B83B5E',
+  },
+  {
+    id: 'v24',
+    label: 'Sunset C',
+    description: 'Pflaume: Lila + Rose',
+    swatch: '#B83B5E',
+    bg: '#6A2C70',
+  },
+  {
+    id: 'v25',
+    label: 'Sunset D',
+    description: 'Coral: Rose + Coral',
+    swatch: '#F08A5D',
+    bg: '#B83B5E',
+  },
+  // ── Quer (#4B2EFF · #B6FF00 · #F6F6F4 · #111111) ──
+  {
+    id: 'v26',
+    label: 'Quer A',
+    description: 'Tech: Charcoal + Violet',
+    swatch: '#4B2EFF',
+    bg: '#111111',
+  },
+  {
+    id: 'v27',
+    label: 'Quer B',
+    description: 'Neon: Violet + Lime',
+    swatch: '#B6FF00',
+    bg: '#4B2EFF',
+  },
+  {
+    id: 'v28',
+    label: 'Quer C',
+    description: 'Dunkel: Charcoal + Lime',
+    swatch: '#B6FF00',
+    bg: '#111111',
+  },
+  {
+    id: 'v29',
+    label: 'Quer D',
+    description: 'Invert: Violet + Charcoal',
+    swatch: '#111111',
+    bg: '#4B2EFF',
+  },
 ]
 
 export default function ThemeSwitcher() {
-  const [active, setActive] = useState('v1')
+  const [active, setActive] = useState('v5')
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme') ?? 'v1'
+    const saved = localStorage.getItem('theme') ?? 'v5'
     setActive(saved)
     document.documentElement.setAttribute('data-theme', saved)
   }, [])
@@ -76,7 +205,7 @@ export default function ThemeSwitcher() {
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2">
       {open && (
-        <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-3 flex flex-col gap-1 w-[220px]">
+        <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-3 flex flex-col gap-1 w-[220px] max-h-[70vh] overflow-y-auto">
           <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-2 pb-1">
             Branding
           </p>
@@ -114,7 +243,7 @@ export default function ThemeSwitcher() {
         style={{
           background: current
             ? `linear-gradient(135deg, ${current.bg} 55%, ${current.swatch} 55%)`
-            : '#1A2332',
+            : '#252D7A',
         }}
       />
     </div>

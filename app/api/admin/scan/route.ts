@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSources, markSourceScanned, reGeocodeJobs } from '@/lib/jobs/storage'
+import { getSources, markSourceScanned, reGeocodeJobs, reactivateJob, deleteJob } from '@/lib/jobs/storage'
 import { scrapeCareerPage } from '@/lib/jobs/scraper'
 import { scrapePortals } from '@/lib/jobs/portal-scraper'
 import { fetchFromApis } from '@/lib/jobs/api-sources'
@@ -9,7 +9,7 @@ import { deduplicateJobs } from '@/lib/jobs/dedup'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}))
-    const mode: string = body.mode ?? 'all' // 'all' | 'career' | 'portals' | 'apis' | 're-geocode' | 'detail-geocode' | 'dedup'
+    const mode: string = body.mode ?? 'all' // 'all' | 'career' | 'portals' | 'apis' | 're-geocode' | 'detail-geocode' | 'dedup' | 'rescue'
 
     const results: Record<string, unknown> = {}
 
@@ -56,6 +56,54 @@ export async function POST(req: NextRequest) {
     // Dedup: Berechnet dedup_keys für alle bestehenden Jobs, deaktiviert Duplikate
     if (mode === 'dedup') {
       results.dedup = await deduplicateJobs()
+    }
+
+    // Rescue: Re-aktiviert heute fälschlicherweise deaktivierte Jobs (200-Status)
+    // und löscht Schrott-Importe (Kategorie-Seiten, keine echten Inserate)
+    if (mode === 'rescue') {
+      const supabase = await (await import('@/lib/supabase/server')).createClient()
+      const today = new Date().toISOString().slice(0, 10)
+
+      // Heute deaktivierte Jobs laden
+      const { data: deactivated } = await supabase
+        .from('stellenanzeigen')
+        .select('id, source_url, title')
+        .eq('is_active', false)
+        .gte('removed_at', today)
+
+      let reactivated = 0
+      let deleted = 0
+
+      for (const job of deactivated ?? []) {
+        // Schrott-Importe: Kategorie-URLs oder Nicht-Deutsch-Englisch Seiten → löschen
+        const isGarbage = /\/(?:de|fr|en)\/jobs\/[^/]+\/?$/.test(job.source_url)
+          || /\/(?:fr|en)\/jobs\//.test(job.source_url)
+          || /bewerbungsratgeber/.test(job.source_url)
+
+        if (isGarbage) {
+          await deleteJob(job.id)
+          deleted++
+          continue
+        }
+
+        // Echten Job prüfen — bei 200 re-aktivieren
+        try {
+          const res = await (await import('axios')).default.head(job.source_url, {
+            timeout: 8_000,
+            maxRedirects: 5,
+            headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36' },
+            validateStatus: () => true,
+          })
+          if (res.status >= 200 && res.status < 400) {
+            await reactivateJob(job.id)
+            reactivated++
+          }
+        } catch { /* bleibt deaktiviert */ }
+
+        await new Promise(r => setTimeout(r, 150))
+      }
+
+      results.rescue = { checked: deactivated?.length ?? 0, reactivated, deleted }
     }
 
     return NextResponse.json({ success: true, results })

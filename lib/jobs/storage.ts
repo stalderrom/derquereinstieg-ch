@@ -60,6 +60,15 @@ export async function createJob(
   return data
 }
 
+export async function reactivateJob(id: string): Promise<void> {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('stellenanzeigen')
+    .update({ is_active: true, removed_at: null, last_verified_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) throw new Error(error.message)
+}
+
 export async function deactivateJob(id: string): Promise<void> {
   const supabase = await createClient()
   const { error } = await supabase
