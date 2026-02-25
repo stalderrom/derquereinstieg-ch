@@ -13,6 +13,7 @@ const NAV_ITEMS: { href: Route; label: string; icon: string }[] = [
   { href: '/admin/sources' as Route, label: 'Quellen', icon: '⬡' },
   { href: '/admin/scan' as Route, label: 'Scan', icon: '⟳' },
   { href: '/admin/map' as Route, label: 'Karte', icon: '◎' },
+  { href: '/admin/analytics' as Route, label: 'Analytics', icon: '▦' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
