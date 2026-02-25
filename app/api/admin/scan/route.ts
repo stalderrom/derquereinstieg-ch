@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSources, markSourceScanned, reGeocodeJobs, reactivateJob, deleteJob } from '@/lib/jobs/storage'
+import { getSources, markSourceScanned, reGeocodeJobs, reactivateJob, deleteJob, cleanupGarbageTitles } from '@/lib/jobs/storage'
 import { scrapeCareerPage } from '@/lib/jobs/scraper'
 import { scrapePortals } from '@/lib/jobs/portal-scraper'
 import { fetchFromApis } from '@/lib/jobs/api-sources'
@@ -9,7 +9,7 @@ import { deduplicateJobs } from '@/lib/jobs/dedup'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}))
-    const mode: string = body.mode ?? 'all' // 'all' | 'career' | 'portals' | 'apis' | 're-geocode' | 'detail-geocode' | 'dedup' | 'rescue'
+    const mode: string = body.mode ?? 'all' // 'all' | 'career' | 'portals' | 'apis' | 're-geocode' | 'detail-geocode' | 'dedup' | 'rescue' | 'cleanup-titles'
 
     const results: Record<string, unknown> = {}
 
@@ -104,6 +104,11 @@ export async function POST(req: NextRequest) {
       }
 
       results.rescue = { checked: deactivated?.length ?? 0, reactivated, deleted }
+    }
+
+    // Cleanup: Bereinigt Scraper-Garbage in Titeln (z.B. jobscout24 Karten-Text)
+    if (mode === 'cleanup-titles') {
+      results.cleanupTitles = await cleanupGarbageTitles()
     }
 
     return NextResponse.json({ success: true, results })

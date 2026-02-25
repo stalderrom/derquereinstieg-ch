@@ -230,6 +230,39 @@ export default function ScanPage() {
         )}
       </div>
 
+      {/* Cleanup section */}
+      <div style={{ background: '#161b27', border: '1px solid #1e2a3a', borderRadius: 12, padding: 24, marginBottom: 20 }}>
+        <h2 style={{ fontSize: 15, fontWeight: 600, color: '#cbd5e1', margin: '0 0 8px' }}>
+          Titel bereinigen
+        </h2>
+        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
+          Findet Scraper-Garbage in Titeln (z.B. &ldquo;Letzten Monat&hellip;Arbeitsort:&hellip;&rdquo;),
+          extrahiert den echten Titel und löscht unrettbare Einträge.
+        </p>
+        <button
+          onClick={async () => {
+            setScanning(true)
+            addLog('Starte Titel-Bereinigung...')
+            try {
+              const res = await fetch('/api/admin/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: 'cleanup-titles' }),
+              })
+              const json = await res.json()
+              const r = json.results?.cleanupTitles
+              addLog(`Bereinigt: ${r?.cleaned ?? 0} · Gelöscht: ${r?.deleted ?? 0} · Übersprungen: ${r?.skipped ?? 0}`)
+              if (r?.log?.length) r.log.forEach((l: string) => addLog(l))
+            } catch (e) { addLog(`Fehler: ${String(e)}`) }
+            finally { setScanning(false) }
+          }}
+          disabled={isRunning}
+          style={btnStyle('#7c3aed', isRunning)}
+        >
+          {scanning ? 'Läuft...' : 'Titel bereinigen'}
+        </button>
+      </div>
+
       {/* Verify section */}
       <div style={{ background: '#161b27', border: '1px solid #1e2a3a', borderRadius: 12, padding: 24, marginBottom: 20 }}>
         <h2 style={{ fontSize: 15, fontWeight: 600, color: '#cbd5e1', margin: '0 0 8px' }}>

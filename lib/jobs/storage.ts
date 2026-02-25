@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Stellenanzeige, JobSource, ApiFetchLog, VerificationLog } from '@/types/database'
 import { detectCanton, cantonToRegion, type RegionName } from './geo'
 import { computeDedupKey } from './dedup'
+import { cleanJobTitle } from './title-cleaner'
 
 // ─── Stellenanzeigen ──────────────────────────────────────────────────────────
 
@@ -218,6 +219,60 @@ export async function logVerification(
     .from('verification_log')
     .upsert(entry, { onConflict: 'date' })
   if (error) throw new Error(error.message)
+}
+
+// ─── Garbage-Titel bereinigen ─────────────────────────────────────────────────
+
+// Findet Jobs mit Scraper-Garbage im Titel, versucht den echten Titel zu
+// extrahieren und aktualisiert die DB — löscht nur wenn kein Titel übrig bleibt.
+export async function cleanupGarbageTitles(): Promise<{
+  cleaned: number
+  deleted: number
+  skipped: number
+  log: string[]
+}> {
+  const supabase = await createClient()
+  const { isGarbageTitle } = await import('./title-cleaner')
+
+  // Alle aktiven und inaktiven Jobs laden (Garbage kann überall sein)
+  const { data, error } = await supabase
+    .from('stellenanzeigen')
+    .select('id, title, is_active')
+
+  if (error) throw new Error(error.message)
+
+  let cleaned = 0
+  let deleted = 0
+  let skipped = 0
+  const log: string[] = []
+
+  for (const job of data ?? []) {
+    if (!isGarbageTitle(job.title ?? '')) { skipped++; continue }
+
+    const newTitle = cleanJobTitle(job.title ?? '')
+
+    if (newTitle.length >= 8) {
+      // Titel konnte gerettet werden → aktualisieren
+      const { error: upErr } = await supabase
+        .from('stellenanzeigen')
+        .update({ title: newTitle })
+        .eq('id', job.id)
+
+      if (!upErr) {
+        log.push(`✓ "${job.title?.slice(0, 60)}" → "${newTitle}"`)
+        cleaned++
+      } else {
+        skipped++
+      }
+    } else {
+      // Kein verwertbarer Titel — Job löschen
+      await supabase.from('stellenanzeigen').delete().eq('id', job.id)
+      log.push(`✗ deleted: "${job.title?.slice(0, 80)}"`)
+      deleted++
+    }
+  }
+
+  return { cleaned, deleted, skipped, log }
 }
 
 // ─── Re-Geocoding ─────────────────────────────────────────────────────────────

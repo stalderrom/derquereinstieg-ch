@@ -4,6 +4,7 @@ import axios from 'axios'
 import * as cheerio from 'cheerio'
 import { detectCanton, cantonToRegion } from './geo'
 import { createJob } from './storage'
+import { cleanJobTitle } from './title-cleaner'
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 
@@ -158,6 +159,11 @@ function isValidJobTitle(title: string): boolean {
   if (/^jetzt bewerben/.test(t)) return false   // Bewerbungs-Button
   if (/\bjobs\s*$/.test(t)) return false        // Kategorie-Links wie "Steuerberater Jobs"
   if (/\bstellen\s*$/.test(t)) return false     // Kategorie-Links wie "IT Stellen"
+  // Scraper-Garbage-Erkennung (Sicherheitsnetz, falls cleanJobTitle nicht greift)
+  if (t.includes('arbeitsort:')) return false
+  if (t.includes('pensum:')) return false
+  if (t.includes('vertragsart:')) return false
+  if (t.includes('ist der job relevant')) return false
   return true
 }
 
@@ -216,8 +222,9 @@ async function scrapeJobScout24(term: string): Promise<PortalJob[]> {
     const $ = cheerio.load(html)
     $('[data-cy="job-link"]').each((_, el) => {
       const href = $(el).attr('href') ?? ''
-      const title = $(el).find('[data-cy="job-title"], h2, h3').first().text().trim()
+      const rawTitle = $(el).find('[data-cy="job-title"], h2, h3').first().text().trim()
         || $(el).attr('title')?.trim() || ''
+      const title = cleanJobTitle(rawTitle)
       const company = $(el).find('[data-cy="company-name"]').first().text().trim()
       const location = $(el).find('[data-cy="job-location"]').first().text().trim()
 
@@ -231,8 +238,9 @@ async function scrapeJobScout24(term: string): Promise<PortalJob[]> {
       $('a[href]').each((_, el) => {
         const href = $(el).attr('href') ?? ''
         if (!isJobDetailUrl(href)) return
-        const title = $(el).find('h2, h3').first().text().trim()
+        const rawTitle = $(el).find('h2, h3').first().text().trim()
           || $(el).attr('title')?.trim() || ''
+        const title = cleanJobTitle(rawTitle)
         const company = $(el).find('[class*="company"]').first().text().trim()
         const location = $(el).find('[class*="location"]').first().text().trim()
         if (!isValidJobTitle(title)) return
