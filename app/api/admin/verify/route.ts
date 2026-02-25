@@ -27,18 +27,26 @@ async function checkJobStatus(url: string): Promise<boolean | null> {
     // Server-Fehler = nicht deaktivieren (temporäres Problem)
     if (res.status >= 500) return null
 
-    // Für Adzuna: finale URL prüfen
+    const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
+
+    // Für Adzuna: gelöschte Jobs landen auf Suchseite
     if (url.includes('adzuna')) {
-      const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
       if (finalUrl.includes('/search') || finalUrl.includes('/jobs?')) return false
     }
 
-    // Für jobscout24 / jobs.ch: Job-Detail-URL muss erhalten bleiben
-    // (gelöschte Jobs werden auf Suchseite umgeleitet → finale URL ändert sich)
-    const isJobDetailUrl = /\/(?:stelle|job)\/[\w-]{8,}/i.test(url)
-    if (isJobDetailUrl) {
-      const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
-      const finalIsDetail = /\/(?:stelle|job)\/[\w-]{8,}/i.test(finalUrl)
+    // Für jobscout24: /de/job/UUID/ oder /de/stelle/NUMMER/
+    // Gelöschte Jobs werden auf Suchergebnisseite umgeleitet
+    const isJobScout24Detail = /\/(?:job|stelle)\/[\w-]{5,}/i.test(url) && url.includes('jobscout24')
+    if (isJobScout24Detail) {
+      const finalIsDetail = /\/(?:job|stelle)\/[\w-]{5,}/i.test(finalUrl)
+      if (!finalIsDetail && finalUrl !== url) return false
+    }
+
+    // Für jobs.ch: /de/stellenangebote/detail/UUID/
+    // Gelöschte Jobs geben 404 (bereits oben abgedeckt) oder leiten um
+    const isJobsChDetail = /\/stellenangebote\/detail\/[\w-]{5,}/i.test(url)
+    if (isJobsChDetail) {
+      const finalIsDetail = /\/stellenangebote\/detail\/[\w-]{5,}/i.test(finalUrl)
       if (!finalIsDetail && finalUrl !== url) return false
     }
 

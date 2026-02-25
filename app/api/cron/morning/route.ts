@@ -38,15 +38,21 @@ async function isJobStillActive(url: string): Promise<boolean | null> {
     if (res.status === 404 || res.status === 410) return false
     if (res.status >= 500) return null // Temporärer Fehler → nicht deaktivieren
 
+    const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
+
     if (url.includes('adzuna')) {
-      const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
       if (finalUrl.includes('/search') || finalUrl.includes('/jobs?')) return false
     }
 
-    const isJobDetailUrl = /\/(?:stelle|job)\/[\w-]{8,}/i.test(url)
-    if (isJobDetailUrl) {
-      const finalUrl: string = (res.request as { res?: { responseUrl?: string } })?.res?.responseUrl ?? url
-      const finalIsDetail = /\/(?:stelle|job)\/[\w-]{8,}/i.test(finalUrl)
+    const isJobScout24Detail = /\/(?:job|stelle)\/[\w-]{5,}/i.test(url) && url.includes('jobscout24')
+    if (isJobScout24Detail) {
+      const finalIsDetail = /\/(?:job|stelle)\/[\w-]{5,}/i.test(finalUrl)
+      if (!finalIsDetail && finalUrl !== url) return false
+    }
+
+    const isJobsChDetail = /\/stellenangebote\/detail\/[\w-]{5,}/i.test(url)
+    if (isJobsChDetail) {
+      const finalIsDetail = /\/stellenangebote\/detail\/[\w-]{5,}/i.test(finalUrl)
       if (!finalIsDetail && finalUrl !== url) return false
     }
 
