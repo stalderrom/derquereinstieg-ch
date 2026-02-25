@@ -56,9 +56,11 @@ function fmtDate(d: string) {
 // Custom Tooltip für Recharts
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
   if (!active || !payload?.length) return null
+  // label ist bei AreaCharts ein Datum "2026-02-21", bei BarCharts ein Name-String
+  const displayLabel = /^\d{4}-\d{2}-\d{2}$/.test(label ?? '') ? fmtDate(label!) : label
   return (
     <div style={{ background: '#1e2d40', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 14px', fontSize: 13 }}>
-      <div style={{ color: C.muted, marginBottom: 6 }}>{label}</div>
+      <div style={{ color: C.muted, marginBottom: 6 }}>{displayLabel}</div>
       {payload.map(p => (
         <div key={p.name} style={{ color: p.color, fontWeight: 600 }}>{p.name}: {p.value}</div>
       ))}
@@ -118,11 +120,8 @@ export default function AnalyticsPage() {
   const maxCat = Math.max(...data.byCategory.map(c => c.count), 1)
   const maxSource = Math.max(...data.bySource.map(s => s.count), 1)
 
-  // Trendlinie: nur Tage mit Daten beschriften (jeden 5.)
-  const trendWithLabel = data.dailyTrend.map((d, i) => ({
-    ...d,
-    label: i % 5 === 0 ? fmtDate(d.date) : '',
-  }))
+  // XAxis tickFormatter: jeden 5. Tag beschriften
+  const fmtTick = (v: string, i: number) => i % 5 === 0 ? fmtDate(v) : ''
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1200 }}>
@@ -147,7 +146,7 @@ export default function AnalyticsPage() {
       <Card style={{ marginBottom: 24 }}>
         <SectionTitle>Tägliche Entwicklung — letzte 30 Tage</SectionTitle>
         <ResponsiveContainer width="100%" height={220}>
-          <AreaChart data={trendWithLabel} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+          <AreaChart data={data.dailyTrend} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="gAdded" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={C.green} stopOpacity={0.25} />
@@ -159,7 +158,7 @@ export default function AnalyticsPage() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-            <XAxis dataKey="label" tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="date" tickFormatter={fmtTick} tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
             <Legend
@@ -176,7 +175,7 @@ export default function AnalyticsPage() {
       <Card style={{ marginBottom: 24 }}>
         <SectionTitle>Gesamtbestand aktiver Inserate — letzte 30 Tage</SectionTitle>
         <ResponsiveContainer width="100%" height={160}>
-          <AreaChart data={trendWithLabel} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+          <AreaChart data={data.dailyTrend} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="gTotal" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={C.blue} stopOpacity={0.3} />
@@ -184,7 +183,7 @@ export default function AnalyticsPage() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-            <XAxis dataKey="label" tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="date" tickFormatter={fmtTick} tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
             <Area type="monotone" dataKey="total" name="total" stroke={C.blue} strokeWidth={2.5} fill="url(#gTotal)" dot={false} />
