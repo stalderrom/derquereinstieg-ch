@@ -199,20 +199,20 @@ export function SwissRegionMap({ data = {}, onRegionClick, selectedRegion, theme
                 >
                   {region}
                 </text>
-                {/* Count badge */}
-                {count > 0 && (
-                  <text
-                    x={labelX}
-                    y={labelY + 6}
-                    textAnchor="middle"
-                    fontSize={14}
-                    fontWeight="700"
-                    fill={theme === 'dark' ? '#f1f5f9' : '#fff'}
-                    style={{ pointerEvents: 'none', userSelect: 'none' }}
-                  >
-                    {count}
-                  </text>
-                )}
+                {/* Count badge — immer anzeigen, 0 gedimmt */}
+                <text
+                  x={labelX}
+                  y={labelY + 6}
+                  textAnchor="middle"
+                  fontSize={count === 0 ? 11 : 14}
+                  fontWeight={count === 0 ? '400' : '700'}
+                  fill={count === 0
+                    ? (theme === 'dark' ? '#334155' : 'rgba(255,255,255,0.4)')
+                    : (theme === 'dark' ? '#f1f5f9' : '#fff')}
+                  style={{ pointerEvents: 'none', userSelect: 'none' }}
+                >
+                  {count}
+                </text>
               </g>
             )
           })}
