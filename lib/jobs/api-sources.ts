@@ -9,7 +9,14 @@
 
 import axios from 'axios'
 import { detectCanton, cantonToRegion } from './geo'
-import { createJob, logApiFetch, getLastFetchTime } from './storage'
+import { createJob, logApiFetch, getLastFetchTime, getMonthlyApiCallCount, getLastApiScanTime } from './storage'
+
+// Adzuna Free Tier: 250 Calls/Monat
+// Bei 8 Termen/Scan und täglichem Cron ≈ 240 Calls/Monat (normalbetrieb).
+// Werden durch manuelle Scans zusätzliche Calls verbraucht und der Puffer
+// unterschreitet THROTTLE_THRESHOLD, wird auf 48h-Cooldown umgeschaltet.
+const MONTHLY_LIMIT = 250
+const THROTTLE_THRESHOLD = 30  // Unter 30 verbleibende Calls → 48h-Modus
 
 const SEARCH_TERMS = [
   // Deutsch
@@ -148,12 +155,41 @@ export async function fetchFromApis(): Promise<{
   added: number
   skipped: number
   apiCallsUsed: number
+  throttled: boolean
+  throttleReason?: string
+  monthlyCallsUsed?: number
   details: { term: string; fetched: number; added: number; createdAfter: string | null }[]
 }> {
   let added = 0
   let skipped = 0
   let apiCallsUsed = 0
-  const details = []
+  const details: { term: string; fetched: number; added: number; createdAfter: string | null }[] = []
+
+  // ─── Adaptive Rate Limiting ───────────────────────────────────────────────
+  const monthlyCallsUsed = await getMonthlyApiCallCount('adzuna')
+  const callsRemaining = MONTHLY_LIMIT - monthlyCallsUsed
+
+  if (callsRemaining < THROTTLE_THRESHOLD + SEARCH_TERMS.length) {
+    // Puffer unterschritten — nur noch alle 48h scannen
+    const lastScan = await getLastApiScanTime('adzuna')
+    const hoursSinceLast = lastScan
+      ? (Date.now() - lastScan.getTime()) / (1000 * 60 * 60)
+      : Infinity
+
+    if (hoursSinceLast < 48) {
+      const nextScanIn = Math.ceil(48 - hoursSinceLast)
+      return {
+        added: 0,
+        skipped: 0,
+        apiCallsUsed: 0,
+        throttled: true,
+        throttleReason: `Nur noch ${callsRemaining} Calls diesen Monat — nächster Scan in ~${nextScanIn}h`,
+        monthlyCallsUsed,
+        details: [],
+      }
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   for (const term of SEARCH_TERMS) {
     // Letzten Scan-Zeitpunkt laden → wird als `created_after` an Adzuna übergeben
@@ -229,5 +265,5 @@ export async function fetchFromApis(): Promise<{
     })
   }
 
-  return { added, skipped, apiCallsUsed, details }
+  return { added, skipped, apiCallsUsed, throttled: false, monthlyCallsUsed, details }
 }

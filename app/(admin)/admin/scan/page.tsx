@@ -12,7 +12,7 @@ interface ApiDetail {
 interface ScanResult {
   career?: { added: number; skipped: number; sources: number }
   portals?: { added: number; skipped: number; errors: string[] }
-  apis?: { added: number; skipped: number; apiCallsUsed: number; details?: ApiDetail[] }
+  apis?: { added: number; skipped: number; apiCallsUsed: number; throttled?: boolean; throttleReason?: string; monthlyCallsUsed?: number; details?: ApiDetail[] }
 }
 
 interface VerifyResult {
@@ -183,13 +183,22 @@ export default function ScanPage() {
                   extra={scanResult.portals.errors.length > 0 ? `${scanResult.portals.errors.length} Fehler` : undefined}
                 />
               )}
-              {scanResult.apis && (
+              {scanResult.apis && !scanResult.apis.throttled && (
                 <ResultCard
                   label="APIs"
                   added={scanResult.apis.added}
                   skipped={scanResult.apis.skipped}
-                  extra={`${scanResult.apis.apiCallsUsed} API-Calls`}
+                  extra={`${scanResult.apis.apiCallsUsed} API-Calls${scanResult.apis.monthlyCallsUsed !== undefined ? ` · ${scanResult.apis.monthlyCallsUsed}/250 diesen Monat` : ''}`}
                 />
+              )}
+              {scanResult.apis?.throttled && (
+                <div style={{ background: '#1c1400', border: '1px solid #78350f', borderRadius: 8, padding: '12px 16px' }}>
+                  <div style={{ fontSize: 12, color: '#fbbf24', marginBottom: 4 }}>⚠ API-Throttling aktiv</div>
+                  <div style={{ fontSize: 12, color: '#92400e' }}>{scanResult.apis.throttleReason}</div>
+                  {scanResult.apis.monthlyCallsUsed !== undefined && (
+                    <div style={{ fontSize: 11, color: '#78350f', marginTop: 4 }}>{scanResult.apis.monthlyCallsUsed} / 250 Calls verbraucht diesen Monat</div>
+                  )}
+                </div>
               )}
             </div>
 

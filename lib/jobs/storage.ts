@@ -211,6 +211,38 @@ export async function getApiFetchLogs(limit = 50): Promise<ApiFetchLog[]> {
   return data ?? []
 }
 
+// Summe aller api_calls_used im laufenden Kalendermonat für eine bestimmte API
+export async function getMonthlyApiCallCount(apiName: string): Promise<number> {
+  const supabase = await createClient()
+  const startOfMonth = new Date()
+  startOfMonth.setDate(1)
+  startOfMonth.setHours(0, 0, 0, 0)
+
+  const { data, error } = await supabase
+    .from('api_fetch_log')
+    .select('api_calls_used')
+    .eq('api_name', apiName)
+    .gte('fetched_at', startOfMonth.toISOString())
+
+  if (error) return 0
+  return (data ?? []).reduce((sum, row) => sum + (row.api_calls_used ?? 1), 0)
+}
+
+// Letzter Scan-Zeitpunkt (beliebiger Term) für eine API
+export async function getLastApiScanTime(apiName: string): Promise<Date | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('api_fetch_log')
+    .select('fetched_at')
+    .eq('api_name', apiName)
+    .order('fetched_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error || !data) return null
+  return new Date(data.fetched_at)
+}
+
 export async function logVerification(
   entry: Omit<VerificationLog, 'id' | 'recorded_at'>
 ): Promise<void> {
