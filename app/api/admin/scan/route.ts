@@ -13,10 +13,11 @@ export async function POST(req: NextRequest) {
 
     const results: Record<string, unknown> = {}
 
-    // Scrape custom career pages
+    // Scrape custom career pages + portal-type DB sources
+    // (portal = branchenspezifische Jobbörsen wie sozjobs.ch, publicjobs.ch etc.)
     if (mode === 'all' || mode === 'career') {
       const sources = await getSources()
-      const careerSources = sources.filter(s => s.type === 'career' && s.is_active)
+      const careerSources = sources.filter(s => (s.type === 'career' || s.type === 'portal') && s.is_active)
 
       let careerAdded = 0
       let careerSkipped = 0
