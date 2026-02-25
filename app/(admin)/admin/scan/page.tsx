@@ -112,7 +112,7 @@ export default function ScanPage() {
             label="APIs"
             icon="🔌"
             sources={[
-              { name: 'Adzuna', detail: 'quereinsteiger · quereinstieg · ohne erfahrung', url: 'https://www.adzuna.ch' },
+              { name: 'Adzuna', detail: 'quereinsteiger · quereinstieg · ohne erfahrung · berufswechsel · neueinsteiger · einsteiger · career change · no experience required', url: 'https://www.adzuna.ch' },
             ]}
             note="Nur neue Stellen (created_after)"
           />

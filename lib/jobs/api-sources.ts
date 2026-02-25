@@ -12,16 +12,29 @@ import { detectCanton, cantonToRegion } from './geo'
 import { createJob, logApiFetch, getLastFetchTime } from './storage'
 
 const SEARCH_TERMS = [
+  // Deutsch
   'quereinsteiger',
   'quereinstieg',
   'ohne erfahrung',
+  'berufswechsel',
+  'neueinsteiger',
+  'einsteiger',
+  // Englisch (Adzuna liefert auch englischsprachige CH-Inserate)
+  'career change',
+  'no experience required',
 ]
 
 const FILTER_KEYWORDS = [
+  // Deutsch
   'quereinsteiger', 'quereinstieg', 'quer einsteiger', 'quer einstieg',
-  'berufswechsel', 'neueinsteiger', 'ohne erfahrung', 'keine erfahrung',
+  'berufswechsel', 'neueinsteiger', 'berufseinsteiger', 'einsteiger',
+  'ohne erfahrung', 'keine erfahrung', 'auch ohne erfahrung',
   'umsatteln', 'umschulung', 'branchenwechsel', 'berufsumstieg',
   'auch ohne', 'willkommen auch', 'offen für quereinsteiger',
+  'willkommen als quereinsteiger', 'quereinsteiger willkommen',
+  // Englisch
+  'career change', 'career changer', 'career switch',
+  'no experience', 'no experience required', 'entry level', 'entry-level',
 ]
 
 function passesKeywordFilter(title: string, description: string): boolean {
