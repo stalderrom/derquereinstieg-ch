@@ -19,9 +19,9 @@ export function cleanJobTitle(raw: string): string {
   t = t.replace(/^(?:letzten\s+monat|vor\s+\d+\s+wochen?|vor\s+\d+\s+tagen?|gestern|vorgestern|heute)\s*/i, '')
 
   // 2. Metadaten-Suffix abschneiden (alles ab den Job-Karten-Labels)
-  t = t.replace(/\s*arbeitsort\s*:.*$/is, '')
-  t = t.replace(/\s*pensum\s*:.*$/is, '')
-  t = t.replace(/\s*vertragsart\s*:.*$/is, '')
+  t = t.replace(/\s*arbeitsort\s*:.*$/i, '')
+  t = t.replace(/\s*pensum\s*:.*$/i, '')
+  t = t.replace(/\s*vertragsart\s*:.*$/i, '')
   t = t.replace(/\s*ist der job relevant.*$/i, '')
   t = t.replace(/\s*einfach bewerben.*$/i, '')
 
