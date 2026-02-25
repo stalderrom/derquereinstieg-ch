@@ -274,7 +274,12 @@ export async function getStats() {
     supabase.from('job_sources').select('id', { count: 'exact', head: true }),
   ])
 
-  const regionCounts: Record<string, number> = {}
+  // Alle 8 Regionen immer anzeigen, auch wenn 0 Jobs vorhanden
+  const regionCounts: Record<string, number> = {
+    'Zürich': 0, 'Ostschweiz': 0, 'Nordwestschweiz': 0,
+    'Bern/Mittelland': 0, 'Zentralschweiz': 0, 'Vaud/Waadt': 0,
+    'Wallis': 0, 'Tessin': 0, 'unzuordnungsbar': 0,
+  }
   for (const row of regionRes.data ?? []) {
     const r = row.region ?? 'unzuordnungsbar'
     regionCounts[r] = (regionCounts[r] ?? 0) + 1
