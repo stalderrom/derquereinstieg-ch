@@ -1,18 +1,112 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-// Keyword-basierte Kategorisierung anhand des Stellentitels
+// Keyword-basierte Kategorisierung anhand des Stellentitels.
+// Reihenfolge ist relevant: erste Übereinstimmung gewinnt.
+// Spezifischere Kategorien stehen weiter oben.
 const CATEGORIES: { label: string; keywords: string[] }[] = [
-  { label: 'Pflege & Gesundheit', keywords: ['pflege', 'pflegefach', 'spital', 'klinik', 'arzt', 'therapeut', 'sanitär', 'fachfrau gesundheit', 'fachmann gesundheit', 'medizin', 'rettung', 'apotheke'] },
-  { label: 'IT & Technik', keywords: ['software', 'developer', 'informatik', 'it ', ' it-', 'digital', 'data', 'programmier', 'system', 'netzwerk', 'cyber', 'applikation'] },
-  { label: 'Verkauf & Handel', keywords: ['verkauf', 'handel', 'retail', 'shop', 'kasse', 'berater', 'kundenberater', 'filiale', 'detailhandel'] },
-  { label: 'Gastronomie & Hotel', keywords: ['restaurant', 'hotel', 'küche', 'koch', 'service', 'gastronomie', 'barkeeper', 'steward', 'catering', 'bäcker', 'konditor'] },
-  { label: 'Handwerk & Bau', keywords: ['bau', 'schreiner', 'elektriker', 'sanitär', 'handwerk', 'maurer', 'maler', 'monteur', 'mechaniker', 'schlosser', 'metallbau', 'zeichner', 'polymechan'] },
-  { label: 'Transport & Logistik', keywords: ['chauffeur', 'logistik', 'lager', 'transport', 'lieferung', 'fahrer', 'kurier', 'spedition'] },
-  { label: 'Büro & Administration', keywords: ['büro', 'admin', 'sachbearbeiter', 'sekretariat', 'kaufmänn', 'buchhaltung', 'personalassistent', 'office'] },
-  { label: 'Soziales & Bildung', keywords: ['sozial', 'kinder', 'jugend', 'betreuung', 'pädagog', 'lehrer', 'schule', 'erziehung', 'sozialpädagog', 'sozialarbeit'] },
-  { label: 'Sicherheit & Schutz', keywords: ['sicherheit', 'polizei', 'feuerwehr', 'bewachung', 'securitas', 'notfall'] },
-  { label: 'Finanz & Versicherung', keywords: ['finanz', 'versicherung', 'bank', 'treuhand', 'steuerberater', 'buchhalter', 'immobilien', 'anlage'] },
+  { label: 'Pflege & Gesundheit', keywords: [
+    'pflege', 'pflegefach', 'pflegehelfer', 'pflegeassist',
+    'fachfrau gesundheit', 'fachmann gesundheit', 'fage', 'okp',
+    'spital', 'klinik', 'arzt', 'ärztin', 'therapeut', 'physiother', 'ergother', 'psycholog',
+    'sanität', 'sanitäter', 'rettungssanit', 'apotheke', 'zahnarzt', 'hebamme',
+    'medizin', 'psychiatrie', 'pflegedienst', 'onkolog', 'kardiolog',
+  ]},
+  { label: 'IT & Technik', keywords: [
+    'software', 'developer', 'informatik', ' it-', 'ict ',
+    'programmier', 'netzwerk', 'cyber', 'applikation',
+    'devops', 'fullstack', 'frontend', 'backend', 'cloud',
+    'helpdesk', 'systemadmin', 'datenbankadmin',
+    'java ', 'python', '.net', 'sap ', 'wordpress', 'webmaster',
+    'data engineer', 'data scientist', 'data analyst',
+  ]},
+  { label: 'Ingenieurwesen & Produktion', keywords: [
+    'ingenieur', 'konstrukt', 'maschinenbau', 'fertigungs',
+    'produktionsleiter', 'produktionsmitar', 'anlagenführer', 'schichtleiter', 'schichtführer',
+    'polymechan', 'mechatronik', 'elektrotechnik', 'elektroniker', 'elektronik',
+    'automation', 'automatisier', 'steuerungstechnik',
+    'qualitätsmanag', 'qualitätsingenieur', 'cnc', 'prozessingenieur', 'verfahrenstechnik',
+  ]},
+  { label: 'Marketing & Kommunikation', keywords: [
+    'marketing', 'kommunikation', 'werbung', 'social media', 'online marketing',
+    'content manager', 'content creator', 'redakteur', 'redaktion', 'texter',
+    ' pr ', 'pr-', 'öffentlichkeitsarbeit', 'brand manager', 'campaign',
+    'seo', ' sem ', 'community manager', 'eventmanag', 'digitalmarketing',
+    'mediaplanung', 'werbetexter',
+  ]},
+  { label: 'HR & Personal', keywords: [
+    'hr manager', 'hr specialist', 'hr generalist', 'hr business', 'hr-',
+    'human resources', 'recruiting', 'talentmanag', 'talent acquisition',
+    'personalfach', 'personalleiter', 'personalberater', 'personaladmin',
+    'lohnbuchhalt', 'payroll',
+  ]},
+  { label: 'Design & Medien', keywords: [
+    'designer', 'grafik', 'fotograf', 'kameramann', 'film', 'video editor',
+    'gestalter', 'journalist', 'mediengestalter', 'illustrat',
+    ' ux ', ' ui ', 'motion design', 'printmedien', 'typograf',
+    'medienprodukt', 'bildbearbeit', 'cutter',
+  ]},
+  { label: 'Wissenschaft & Labor', keywords: [
+    'laborant', 'laborassist', 'labormitar', 'laborleiter',
+    'wissenschaft', 'forschung', 'forscher', 'chemik', 'biolog',
+    'pharma', 'medizinisch-technisch', 'mikrobiolog', 'biochem',
+    'analytik', 'qualitätskontroll', 'pcr ', 'probenvorbereitung',
+  ]},
+  { label: 'Verkauf & Handel', keywords: [
+    'verkauf', 'verkäufer', 'retail', 'detailhandel', 'kasse', 'kassierer',
+    'kundenberat', 'kundenberater', 'filialleiter', 'filialmitar',
+    'aussendienstmitar', 'account manager', 'vertrieb', 'handelsvertreter',
+    'verkaufsleiter', 'einkäufer', 'einkaufsleiter',
+  ]},
+  { label: 'Gastronomie & Hotel', keywords: [
+    'restaurant', 'hotel', 'küche', 'köch', 'gastronomie', 'barkeeper',
+    'catering', 'bäcker', 'konditor', 'metzger',
+    'kellner', 'servierfachmann', 'servicefachmann', 'servicemitar',
+    'rezeptionist', 'concierge', 'sommelier', 'hausdame',
+  ]},
+  { label: 'Handwerk & Bau', keywords: [
+    'schreiner', 'elektriker', 'sanitärinstall', 'handwerk',
+    'maurer', 'maler', 'monteur', 'mechaniker', 'schlosser', 'metallbau',
+    'technische zeichner', 'dachdecker', 'heizungstechnik', 'lüftungstechnik',
+    'gebäudetechnik', 'zimmermann', 'polier', 'gerüstbauer', 'gleisbauer',
+    'tiefbau', 'hochbau', 'baufach', 'bauleitung', 'bauprojekt',
+  ]},
+  { label: 'Transport & Logistik', keywords: [
+    'chauffeur', 'logistik', 'lager', 'lagermitar', 'transport',
+    'lieferung', 'fahrer', 'kurier', 'spedition', 'zolldeklarant',
+    'staplerfahrer', 'magaziner', 'postbot', 'zustellmitar', 'güterverk',
+  ]},
+  { label: 'Büro & Administration', keywords: [
+    'sachbearbeiter', 'sekretariat', 'kaufmänn', 'buchhaltung',
+    'personalassist', 'office manager', 'backoffice', 'projektassist',
+    'empfangsmitar', 'korrespondenz', 'administrat', 'bürokaufm',
+    'sachbearb', 'fibu', 'debitoren', 'kreditoren',
+  ]},
+  { label: 'Soziales & Bildung', keywords: [
+    'sozial', 'kinder', 'jugend', 'betreuung', 'pädagog', 'lehrer', 'lehrerin',
+    'schule', 'erziehung', 'sozialpädagog', 'sozialarbeit',
+    'coach', 'ausbilder', 'trainer', 'dozent', 'lernbetreuer',
+    'schulsozialarbeit', 'heilpädagog',
+  ]},
+  { label: 'Reinigung & Facility', keywords: [
+    'reinig', 'hauswart', 'hausmeister', 'facility',
+    'unterhaltsreinig', 'gebäudereinig', 'hauswirtschaft',
+    'wäscherei', 'reinigungskraft', 'gebäudedienst', 'objektbetreuer',
+  ]},
+  { label: 'Sicherheit & Schutz', keywords: [
+    'sicherheit', 'polizei', 'feuerwehr', 'bewachung', 'securitas',
+    'sicherheitsdienst', 'objektschutz', 'werkschutz', 'detektiv',
+  ]},
+  { label: 'Finanz & Versicherung', keywords: [
+    'finanz', 'versicherung', 'bank', 'treuhand', 'steuerberater', 'buchhalter',
+    'immobilien', 'anlage', 'controlling', 'treasurer', 'revisor',
+    'compliance', 'risikomanag', 'finanzberatung', 'vermögensberat',
+  ]},
+  { label: 'Landwirtschaft & Natur', keywords: [
+    'landwirtschaft', 'bauer', 'bäuerin', 'gärtner', 'gärtnerei', 'gartenarbeit',
+    'forst', 'forstwar', 'umwelt', 'agrar', 'tierarzt', 'tierpfleger',
+    'veterinär', 'pferdepfleger', 'tierheil', 'botanik', 'winzer',
+  ]},
 ]
 
 function categorize(title: string): string {

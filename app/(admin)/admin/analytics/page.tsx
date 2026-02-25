@@ -89,7 +89,13 @@ const SOURCE_COLORS: Record<string, string> = {
   adzuna: C.blue, 'jobs.ch': C.purple, jobscout24: C.teal,
 }
 
-const CAT_COLORS = [C.blue, C.teal, C.green, C.purple, C.amber, '#ec4899', '#f97316', '#06b6d4', '#84cc16', '#a78bfa', C.red]
+// 17 Farben für 17 Kategorien (+ Weitere)
+const CAT_COLORS = [
+  C.blue, C.teal, C.green, C.purple, C.amber,
+  '#ec4899', '#f97316', '#06b6d4', '#84cc16', '#a78bfa',
+  C.red, '#e11d48', '#0891b2', '#65a30d', '#7c3aed',
+  '#b45309', '#0d9488', '#9d174d',
+]
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<Analytics | null>(null)
