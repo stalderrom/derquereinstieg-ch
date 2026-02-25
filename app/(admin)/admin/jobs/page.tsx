@@ -5,6 +5,7 @@ import type { Stellenanzeige } from '@/types/database'
 
 const CANTONS = ['ZH','BE','LU','UR','SZ','OW','NW','GL','ZG','FR','SO','BS','BL','SH','AR','AI','SG','GR','AG','TG','TI','VD','VS','NE','GE','JU']
 const REGIONS = ['Zürich','Ostschweiz','Nordwestschweiz','Bern/Mittelland','Zentralschweiz','Vaud/Waadt','Wallis','Tessin','unzuordnungsbar']
+const BERUFSFELDER = ['Pflege & Gesundheit','IT & Tech','Ingenieurwesen & Produktion','Kundenservice','Marketing & Kommunikation','HR & Personal','Design & Medien','Wissenschaft & Labor','Verkauf & Detailhandel','Gastronomie & Tourismus','Handwerk & Bau','Transport & Logistik','Büro & Administration','Soziales & Bildung','Reinigung & Facility','Sicherheit','Finanz & Versicherung','Projektmanagement','Landwirtschaft & Natur','Management & Führung','Weitere']
 
 const pill = (text: string, color: string) => ({
   display: 'inline-block',
@@ -22,6 +23,7 @@ export default function JobsPage() {
   const [error, setError] = useState<string | null>(null)
   const [filterCanton, setFilterCanton] = useState('')
   const [filterRegion, setFilterRegion] = useState('')
+  const [filterCategory, setFilterCategory] = useState('')
   const [filterActive, setFilterActive] = useState('true')
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
@@ -32,6 +34,7 @@ export default function JobsPage() {
       const params = new URLSearchParams()
       if (filterCanton) params.set('canton', filterCanton)
       if (filterRegion) params.set('region', filterRegion)
+      if (filterCategory) params.set('category', filterCategory)
       params.set('is_active', filterActive)
       const res = await fetch(`/api/admin/jobs?${params}`)
       const json = await res.json()
@@ -42,7 +45,7 @@ export default function JobsPage() {
     } finally {
       setLoading(false)
     }
-  }, [filterCanton, filterRegion, filterActive])
+  }, [filterCanton, filterRegion, filterCategory, filterActive])
 
   useEffect(() => { load() }, [load])
 
@@ -94,6 +97,10 @@ export default function JobsPage() {
         <select value={filterRegion} onChange={e => setFilterRegion(e.target.value)} style={select}>
           <option value="">Alle Regionen</option>
           {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
+        <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)} style={select}>
+          <option value="">Alle Berufsfelder</option>
+          {BERUFSFELDER.map(b => <option key={b} value={b}>{b}</option>)}
         </select>
         <button
           onClick={load}

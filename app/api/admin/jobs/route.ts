@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getJobs, createJob } from '@/lib/jobs/storage'
 import { detectCanton, cantonToRegion } from '@/lib/jobs/geo'
+import { categorize } from '@/lib/jobs/categories'
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
+    const categoryFilter = searchParams.get('category') ?? ''
     const filters = {
       canton: searchParams.get('canton') ?? undefined,
       region: searchParams.get('region') ?? undefined,
@@ -13,7 +15,13 @@ export async function GET(req: NextRequest) {
         ? searchParams.get('is_active') === 'true'
         : undefined,
     }
-    const jobs = await getJobs(filters)
+    let jobs = await getJobs(filters)
+
+    // Kategorie-Filter: wird server-seitig aus dem Titel berechnet
+    if (categoryFilter) {
+      jobs = jobs.filter(j => categorize(j.title ?? '') === categoryFilter)
+    }
+
     return NextResponse.json({ jobs })
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 })
