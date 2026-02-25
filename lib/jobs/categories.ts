@@ -9,6 +9,7 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'spital', 'klinik', 'arzt', 'ärztin', 'therapeut', 'physiother', 'ergother', 'psycholog',
     'sanität', 'sanitäter', 'rettungssanit', 'apotheke', 'zahnarzt', 'hebamme',
     'medizin', 'psychiatrie', 'pflegedienst', 'onkolog', 'kardiolog', 'radiolog',
+    'dental', 'prophylaxe', 'patientenbetreuer', 'patientenbetreu',
     'nursing', 'caregiver', 'care worker',
   ]},
   { label: 'IT & Technik', keywords: [
@@ -18,7 +19,7 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'helpdesk', 'systemadmin', 'system administrator', 'datenbankadmin',
     'java ', 'python', '.net', 'sap ', 'wordpress', 'webmaster',
     'data engineer', 'data scientist', 'data analyst',
-    'it support', 'it-support', 'it specialist', 'it consultant',
+    'ict-', 'it support', 'it-support', 'it specialist', 'it consultant',
     'network engineer', 'network administrator',
     'systems engineer', 'system engineer',
     'machine learning', 'artificial intelligence', 'ki-',
@@ -50,7 +51,8 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
   ]},
   { label: 'HR & Personal', keywords: [
     'hr manager', 'hr specialist', 'hr generalist', 'hr business', 'hr-',
-    'human resources', 'recruiting', 'talentmanag', 'talent acquisition',
+    'human resources', 'human ressources',
+    'recruiting', 'talentmanag', 'talent acquisition',
     'personalfach', 'personalleiter', 'personalberater', 'personaladmin',
     'lohnbuchhalt', 'payroll', 'people manager', 'people & culture', 'people and culture',
   ]},
@@ -74,6 +76,10 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'handelsvertreter', 'verkaufsleiter', 'einkäufer', 'einkaufsleiter',
     'sales manager', 'sales representative', 'sales consultant', 'sales agent', 'inside sales',
     'key account', 'category manager', 'trade marketing',
+    // Supermarkt-Frischetheke (Migros/Coop)
+    'bedienungstheke', 'frischetheke', 'käsetheke', 'fleischtheke',
+    'abteilungsleitung food', 'abteilungsleitung frische', 'abteilungsleitung fleisch',
+    'mitarbeiter fleisch', 'mitarbeiter:in fleisch', 'mitarbeiter/in fleisch',
   ]},
   { label: 'Gastronomie & Hotel', keywords: [
     'restaurant', 'hotel', 'küche', 'köch', 'gastronomie', 'barkeeper', 'bartender',
@@ -81,6 +87,7 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'kellner', 'servierfachmann', 'servicefachmann', 'servicemitar',
     'rezeptionist', 'concierge', 'sommelier', 'hausdame',
     'chef de cuisine', 'sous chef', 'commis de cuisine', 'küchenmitar',
+    'réception', 'réceptionniste', 'käser', 'käserei',
   ]},
   { label: 'Handwerk & Bau', keywords: [
     'schreiner', 'elektriker', 'elektroinstall', 'sanitärinstall', 'handwerk',
@@ -88,7 +95,9 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'dachdecker', 'heizungstechnik', 'lüftungstechnik',
     'gebäudetechnik', 'zimmermann', 'polier', 'gerüstbauer', 'gleisbauer',
     'tiefbau', 'hochbau', 'baufach', 'bauleitung', 'bauprojekt', 'bauarbeit', 'bauführer',
-    'haustechnik', 'sanitärfachmann', 'rohrleger', 'bodenleger', 'gipser', 'strassenbauer',
+    'haustechnik', 'sanitärfachmann', 'rohrleger', 'bodenleger', 'gipser',
+    'strassenbauer', 'strassenbau',
+    'kanaltechnik', 'kältetechnik', 'kältemonteur', 'servicetechnik', 'servicetechniker',
     'zeichner', 'technischer zeichner', 'bautechnik',
   ]},
   { label: 'Transport & Logistik', keywords: [
@@ -97,6 +106,8 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'staplerfahrer', 'magaziner', 'postbot', 'zustellmitar', 'güterverk',
     'supply chain', 'warehouse', 'logistics manager', 'freight',
     'versandmitar', 'kommissionier', 'disponent',
+    'rangier', 'lokführer', 'trampilot', 'tramführer', 'trolleybus',
+    'kat. c', 'frühzustellung', 'nachtzustellung',
   ]},
   { label: 'Büro & Administration', keywords: [
     'sachbearbeiter', 'sekretariat', 'kaufmänn', 'buchhaltung',
@@ -111,6 +122,9 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'schule', 'erziehung', 'sozialpädagog', 'sozialarbeit',
     'coach', 'ausbilder', 'dozent', 'lernbetreuer',
     'schulsozialarbeit', 'heilpädagog', 'kindergärtner', 'hortner',
+    'alltagsbegleitung', 'notwohnen', 'wohnbegleitung',
+    'eingliederung', 'fallführung', 'fallbegleitung',
+    'berufsberater', 'berufsberatung', 'berufsmaturität', 'berufsschule',
   ]},
   { label: 'Reinigung & Facility', keywords: [
     'reinig', 'hauswart', 'hausmeister', 'facility',
@@ -128,6 +142,8 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'compliance', 'risikomanag', 'finanzberatung', 'vermögensberat',
     'controller', 'financial analyst', 'finance manager', 'auditor', 'accountant',
     'wirtschaftsprüfer', 'hypothek', 'kreditberater',
+    'vorsorge', 'vorsorgeberater', 'nachwuchsberater', 'financial advisor',
+    'berater privatkunden', 'berater 3a', 'sparplan', 'pensionskasse',
   ]},
   { label: 'Projektmanagement', keywords: [
     'projektleiter', 'projektmanager', 'projektmanagement', 'projektkoordinat',
@@ -135,15 +151,17 @@ export const CATEGORIES: { label: string; keywords: string[] }[] = [
     'projektingenieur', 'bauprojektleiter',
   ]},
   { label: 'Landwirtschaft & Natur', keywords: [
-    'landwirtschaft', 'bauer', 'bäuerin', 'gärtner', 'gärtnerei', 'gartenarbeit',
+    'landwirtschaft', 'bauer', 'bäuerin', 'gärtner', 'gärtnerei', 'gartenarbeit', 'garten',
     'forst', 'forstwar', 'umwelt', 'agrar', 'tierarzt', 'tierpfleger',
     'veterinär', 'pferdepfleger', 'tierheil', 'botanik', 'winzer', 'landschaftsgärtner',
   ]},
   // Catch-all: nur erreicht wenn keine andere Kategorie passt
   { label: 'Management & Führung', keywords: [
-    'teamleiter', 'teamlead', 'team lead', 'abteilungsleiter', 'bereichsleiter',
+    'teamleiter', 'teamlead', 'team lead', 'abteilungsleiter', 'abteilungsleitung',
+    'bereichsleiter', 'bereichsleitung',
     'geschäftsführer', 'geschäftsleiter', 'filialmanager', 'store manager',
     'niederlassungsleiter', 'standortleiter', 'betriebsleiter', 'werksleiter',
+    'gebietsleiter', 'gebietsleitung', 'regionalleiter', 'regionalleitung',
     'operations manager', 'general manager', 'ceo', 'coo', 'cto',
     'head of ', 'director of ', 'vice president', 'vp ',
   ]},
