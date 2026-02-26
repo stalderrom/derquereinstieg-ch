@@ -16,7 +16,7 @@ const JOBS_CH_TERMS = ['quereinsteiger', 'quereinstieg']
 const MAX_PAGES = 10
 
 // Brace-counter JSON extraction — robuster als Regex bei tief verschachteltem JSON
-function extractJsonVar(html: string, varName: string): Record<string, unknown> | null {
+export function extractJsonVar(html: string, varName: string): Record<string, unknown> | null {
   const marker = `${varName} = `
   const start = html.indexOf(marker)
   if (start === -1 || html[start + marker.length] !== '{') return null

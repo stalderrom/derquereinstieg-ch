@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSources, markSourceScanned, reGeocodeJobs, reactivateJob, deleteJob, cleanupGarbageTitles } from '@/lib/jobs/storage'
 import { scrapeCareerPage } from '@/lib/jobs/scraper'
+import { scrapePortalSource } from '@/lib/jobs/db-portal-scraper'
 import { scrapePortals } from '@/lib/jobs/portal-scraper'
 import { fetchFromApis } from '@/lib/jobs/api-sources'
 import { geocodeFromDetailPages } from '@/lib/jobs/detail-geocoder'
@@ -13,23 +14,31 @@ export async function POST(req: NextRequest) {
 
     const results: Record<string, unknown> = {}
 
-    // Scrape custom career pages + portal-type DB sources
-    // (portal = branchenspezifische Jobbörsen wie sozjobs.ch, publicjobs.ch etc.)
+    // Scrape custom career pages (type=career) + portal-type DB sources (type=portal)
     if (mode === 'all' || mode === 'career') {
       const sources = await getSources()
-      const careerSources = sources.filter(s => (s.type === 'career' || s.type === 'portal') && s.is_active)
 
       let careerAdded = 0
       let careerSkipped = 0
+      const careerDetails: { source: string; added: number; skipped: number }[] = []
 
-      for (const source of careerSources) {
+      for (const source of sources.filter(s => s.type === 'career' && s.is_active)) {
         const res = await scrapeCareerPage(source)
         careerAdded += res.added
         careerSkipped += res.skipped
+        careerDetails.push({ source: source.name, added: res.added, skipped: res.skipped })
         await markSourceScanned(source.id)
       }
 
-      results.career = { added: careerAdded, skipped: careerSkipped, sources: careerSources.length }
+      for (const source of sources.filter(s => s.type === 'portal' && s.is_active)) {
+        const res = await scrapePortalSource(source)
+        careerAdded += res.added
+        careerSkipped += res.skipped
+        careerDetails.push({ source: source.name, added: res.added, skipped: res.skipped })
+        await markSourceScanned(source.id)
+      }
+
+      results.career = { added: careerAdded, skipped: careerSkipped, sources: careerDetails.length, details: careerDetails }
     }
 
     // Scrape job portals

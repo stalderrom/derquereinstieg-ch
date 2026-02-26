@@ -11,7 +11,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { scrapePortals } from '@/lib/jobs/portal-scraper'
 import { fetchFromApis } from '@/lib/jobs/api-sources'
-import { getJobs, deactivateJob, updateJobVerified, logVerification } from '@/lib/jobs/storage'
+import { getJobs, getSources, markSourceScanned, deactivateJob, updateJobVerified, logVerification } from '@/lib/jobs/storage'
+import { scrapeCareerPage } from '@/lib/jobs/scraper'
+import { scrapePortalSource } from '@/lib/jobs/db-portal-scraper'
 import axios from 'axios'
 
 // Vercel Cron darf bis zu 300s laufen (Pro-Plan) — wir setzen 290s als Limit
@@ -77,9 +79,28 @@ export async function GET(req: NextRequest) {
       fetchFromApis(),
     ])
 
+    // DB-Portal-Quellen (branchenspezifische Jobbörsen aus der Datenbank)
+    let dbPortalAdded = 0
+    let dbPortalSkipped = 0
+    const dbPortalDetails: { source: string; added: number; skipped: number }[] = []
+    try {
+      const sources = await getSources()
+      const portalSources = sources.filter(s => s.type === 'portal' && s.is_active)
+      for (const source of portalSources) {
+        const res = await scrapePortalSource(source)
+        dbPortalAdded += res.added
+        dbPortalSkipped += res.skipped
+        dbPortalDetails.push({ source: source.name, added: res.added, skipped: res.skipped })
+        await markSourceScanned(source.id)
+      }
+    } catch (err) {
+      console.error('[cron/morning] DB-Portal-Scan Fehler:', err)
+    }
+
     results.scan = {
-      portals: portalRes.status === 'fulfilled' ? portalRes.value : { error: String((portalRes as PromiseRejectedResult).reason) },
-      apis:    apiRes.status    === 'fulfilled' ? apiRes.value    : { error: String((apiRes    as PromiseRejectedResult).reason) },
+      portals:  portalRes.status === 'fulfilled' ? portalRes.value : { error: String((portalRes as PromiseRejectedResult).reason) },
+      apis:     apiRes.status    === 'fulfilled' ? apiRes.value    : { error: String((apiRes    as PromiseRejectedResult).reason) },
+      dbPortals: { added: dbPortalAdded, skipped: dbPortalSkipped, details: dbPortalDetails },
     }
   } catch (err) {
     results.scan = { error: String(err) }
