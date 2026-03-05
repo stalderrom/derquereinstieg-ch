@@ -16,16 +16,25 @@ const JOBS_CH_TERMS = ['quereinsteiger', 'quereinstieg']
 const MAX_PAGES = 10
 
 // Brace-counter JSON extraction — robuster als Regex bei tief verschachteltem JSON
+// Toleriert Whitespace (Leerzeichen, Newlines) zwischen `=` und `{`
 export function extractJsonVar(html: string, varName: string): Record<string, unknown> | null {
-  const marker = `${varName} = `
-  const start = html.indexOf(marker)
-  if (start === -1 || html[start + marker.length] !== '{') return null
+  const marker = `${varName} =`
+  const markerIdx = html.indexOf(marker)
+  if (markerIdx === -1) return null
+
+  // Skip whitespace after `=` to reach the opening brace
+  let start = markerIdx + marker.length
+  while (start < html.length && html[start] !== '{') {
+    if (!/\s/.test(html[start])) return null // unexpected non-whitespace
+    start++
+  }
+  if (start >= html.length) return null
 
   let depth = 0
   let inString = false
   let escape = false
 
-  for (let i = start + marker.length; i < html.length; i++) {
+  for (let i = start; i < html.length; i++) {
     const c = html[i]
     if (escape) { escape = false; continue }
     if (c === '\\' && inString) { escape = true; continue }
@@ -35,7 +44,7 @@ export function extractJsonVar(html: string, varName: string): Record<string, un
     else if (c === '}') {
       depth--
       if (depth === 0) {
-        try { return JSON.parse(html.slice(start + marker.length, i + 1)) }
+        try { return JSON.parse(html.slice(start, i + 1)) }
         catch { return null }
       }
     }

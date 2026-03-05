@@ -137,7 +137,8 @@ async function scrapeSozJobs(source: JobSource): Promise<{ added: number; skippe
 
     $('a[href]').each((_, el) => {
       const href = $(el).attr('href') ?? ''
-      if (!/\/job\/[^/]+\/J\d+/i.test(href)) return
+      // Links sind absolute URLs: https://www.sozjobs.ch/job/<slug>/J<id>
+      if (!/\/job\/[^/\s]+\/J\d+/i.test(href)) return
 
       const url = href.startsWith('http') ? href : `https://www.sozjobs.ch${href}`
       if (seen.has(url)) return
@@ -200,73 +201,83 @@ interface PublicJobRaw {
   publicFrom?: string
 }
 
+// Extrahiert einen String-Wert für einen gegebenen Schlüssel aus einem JS-Objekt-Fragment.
+// Beispiel: extractJsField('contactCompany:"Bund AG",', 'contactCompany') → "Bund AG"
+function extractJsField(chunk: string, key: string): string {
+  const m = chunk.match(new RegExp(`${key}:"((?:[^"\\\\]|\\\\.)*?)"`))
+  return m ? m[1] : ''
+}
+
 async function scrapePublicJobs(source: JobSource): Promise<{ added: number; skipped: number }> {
   let added = 0
   let skipped = 0
 
   try {
     const { data: html } = await axios.get<string>(
-      'https://www.publicjobs.ch/jobs',
-      { timeout: 15_000, headers: { 'User-Agent': UA } }
+      'https://publicjobs.ch/jobs',  // www. leitet auf ohne-www weiter
+      { timeout: 15_000, headers: { 'User-Agent': UA }, maxRedirects: 5 }
     )
 
-    const $ = cheerio.load(html)
-
-    // SvelteKit bettet Daten in <script type="application/json"> oder normale <script>-Tags ein
-    let jobItems: PublicJobRaw[] = []
-
-    $('script').each((_, el) => {
-      const content = $(el).html() ?? ''
-      if (!content.includes('contactCompany')) return
-
-      // Versuche als reines JSON (SvelteKit data-Script)
-      try {
-        const parsed = JSON.parse(content)
-        // Pfad: data.jobSearch.data[] oder ähnlich
-        const items = parsed?.data?.jobSearch?.data ?? parsed?.jobSearch?.data ?? parsed?.data ?? []
-        if (Array.isArray(items) && items.length > 0) {
-          jobItems = items as PublicJobRaw[]
-          return false // break .each()
-        }
-        // Flaches Array direkt
-        if (Array.isArray(parsed) && parsed[0]?.contactCompany !== undefined) {
-          jobItems = parsed as PublicJobRaw[]
-          return false
-        }
-      } catch { /* kein reines JSON — versuche Variablen-Extraktion */ }
-
-      // Variablen-Muster: window.__data = {...} oder ähnlich
-      const varMatch = content.match(/(?:window\.__\w+|__data|__props)\s*=\s*(\{[\s\S]*\})/)
-      if (varMatch) {
-        try {
-          const obj = JSON.parse(varMatch[1])
-          const items = obj?.data?.jobSearch?.data ?? obj?.jobSearch?.data ?? []
-          if (Array.isArray(items)) jobItems = items as PublicJobRaw[]
-        } catch { /* ignorieren */ }
-      }
-    })
-
-    if (jobItems.length === 0) {
-      console.warn('[db-portal-scraper] publicjobs.ch: keine Job-Items gefunden')
+    // SvelteKit bettet Daten als JS-Objekt (nicht JSON!) in einen <script>-Tag ein.
+    // Muster: kit.start(app, element, { ..., data:[{type:"data",data:{...,jobSearch:{data:[{...},...]},...}}}] })
+    // Felder haben unquoted Keys: contactCompany:"...", title:"...", etc.
+    const scriptMatch = html.match(/<script[^>]*>([\s\S]*?contactCompany[\s\S]*?)<\/script>/)
+    if (!scriptMatch) {
+      console.warn('[db-portal-scraper] publicjobs.ch: kein Script-Tag mit contactCompany')
+      return { added: 0, skipped: 0 }
     }
 
-    for (const item of jobItems) {
-      const rawTitle = item.title ?? ''
+    const script = scriptMatch[1]
+
+    // Finde `jobSearch:{data:[` und extrahiere alle Job-Objekte per Brace-Counting
+    const marker = 'jobSearch:{data:['
+    const markerIdx = script.indexOf(marker)
+    if (markerIdx === -1) {
+      console.warn('[db-portal-scraper] publicjobs.ch: jobSearch:{data:[ nicht gefunden')
+      return { added: 0, skipped: 0 }
+    }
+
+    // Extrahiere Inhalt der Array-Klammern [...] mit Bracket-Counting
+    const arrayStart = markerIdx + marker.length
+    const jobChunks: string[] = []
+    let depth = 0
+    let itemStart = arrayStart
+
+    for (let i = arrayStart; i < script.length; i++) {
+      const c = script[i]
+      if (c === '{') {
+        if (depth === 0) itemStart = i
+        depth++
+      } else if (c === '}') {
+        depth--
+        if (depth === 0) {
+          jobChunks.push(script.slice(itemStart, i + 1))
+        }
+      } else if (c === ']' && depth === 0) {
+        break // Ende des Arrays
+      }
+    }
+
+    if (jobChunks.length === 0) {
+      console.warn('[db-portal-scraper] publicjobs.ch: keine Job-Objekte extrahiert')
+    }
+
+    for (const chunk of jobChunks) {
+      const rawTitle = extractJsField(chunk, 'title')
       if (!rawTitle) continue
 
       const title = cleanJobTitle(rawTitle)
       if (!passesKeywordFilter(title)) continue
 
-      const company = item.contactCompany ?? 'Unbekannt'
-      const city = item.workingAddressCity ?? ''
-      const regionHint = item.workingAddressRegion ?? ''  // Kanton-Kürzel
+      const company = extractJsField(chunk, 'contactCompany') || 'Unbekannt'
+      const city = extractJsField(chunk, 'workingAddressCity')
+      const regionHint = extractJsField(chunk, 'workingAddressRegion')  // Kanton-Kürzel z.B. "ZH"
       const location = [city, regionHint].filter(Boolean).join(', ')
+      const path = extractJsField(chunk, 'path')
+      const publicFrom = extractJsField(chunk, 'publicFrom')
 
-      // workingAddressRegion ist oft direkt das Kanton-Kürzel
       const canton = detectCanton(regionHint, city, title)
       const region = cantonToRegion(canton)
-
-      const path = item.path ?? ''
       const url = path.startsWith('http') ? path : `https://www.publicjobs.ch${path}`
 
       const result = await createJob({
@@ -281,7 +292,7 @@ async function scrapePublicJobs(source: JobSource): Promise<{ added: number; ski
         source_id: null,
         keywords: [],
         is_active: true,
-        posted_at: item.publicFrom ?? null,
+        posted_at: publicFrom || null,
         removed_at: null,
       })
 
@@ -297,7 +308,9 @@ async function scrapePublicJobs(source: JobSource): Promise<{ added: number; ski
 }
 
 // ─── workpool-jobs.ch ─────────────────────────────────────────────────────────
-// Cheerio HTML-Extraktion mit Pagination (&seite=N, bis 3 Seiten)
+// Die Stellenliste wird via Jaxon-AJAX nachgeladen — das initiale HTML enthält
+// keine Job-Einträge. Scraping ohne Browser-Rendering ist nicht möglich.
+// Die Funktion gibt 0 zurück und loggt einen Hinweis.
 
 const MAX_WORKPOOL_PAGES = 3
 
@@ -339,6 +352,7 @@ async function scrapeWorkpoolPage(pageNum: number): Promise<{
 }
 
 async function scrapeWorkpool(source: JobSource): Promise<{ added: number; skipped: number }> {
+  console.warn(`[db-portal-scraper] workpool-jobs.ch: Stellenliste wird via AJAX geladen — kein statisches Scraping möglich`)
   let added = 0
   let skipped = 0
   const seen = new Set<string>()

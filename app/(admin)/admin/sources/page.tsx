@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import type { JobSource } from '@/types/database'
 
+type SourceWithCount = JobSource & { job_count: number }
+
 const inputStyle: React.CSSProperties = {
   background: '#0f1117',
   border: '1px solid #1e2a3a',
@@ -19,7 +21,7 @@ const sourceTypeLabel = (t: string) => {
 }
 
 export default function SourcesPage() {
-  const [sources, setSources] = useState<JobSource[]>([])
+  const [sources, setSources] = useState<SourceWithCount[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({ name: '', url: '', type: 'career' })
@@ -156,7 +158,7 @@ export default function SourcesPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #1e2a3a' }}>
-                {['Name', 'URL', 'Typ', 'Aktiv', 'Letzter Scan', ''].map(h => (
+                {['Name', 'URL', 'Typ', 'Inserate', 'Aktiv', 'Letzter Scan', ''].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '10px 16px', color: '#64748b', fontWeight: 500 }}>{h}</th>
                 ))}
               </tr>
@@ -164,7 +166,7 @@ export default function SourcesPage() {
             <tbody>
               {sources.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ padding: '32px 16px', color: '#475569', textAlign: 'center' }}>
+                  <td colSpan={7} style={{ padding: '32px 16px', color: '#475569', textAlign: 'center' }}>
                     Noch keine Quellen vorhanden
                   </td>
                 </tr>
@@ -188,6 +190,9 @@ export default function SourcesPage() {
                     }}>
                       {sourceTypeLabel(source.type)}
                     </span>
+                  </td>
+                  <td style={{ padding: '10px 16px', color: source.job_count > 0 ? '#86efac' : '#475569', fontWeight: source.job_count > 0 ? 600 : 400, fontSize: 13 }}>
+                    {source.job_count > 0 ? source.job_count : '—'}
                   </td>
                   <td style={{ padding: '10px 16px' }}>
                     <button
