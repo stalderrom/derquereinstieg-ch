@@ -79,28 +79,36 @@ export async function GET(req: NextRequest) {
       fetchFromApis(),
     ])
 
-    // DB-Portal-Quellen (branchenspezifische Jobbörsen aus der Datenbank)
-    let dbPortalAdded = 0
-    let dbPortalSkipped = 0
+    // DB-Quellen: portal + career
+    let dbPortalAdded = 0, dbPortalSkipped = 0
+    let dbCareerAdded = 0, dbCareerSkipped = 0
     const dbPortalDetails: { source: string; added: number; skipped: number }[] = []
+    const dbCareerDetails: { source: string; added: number; skipped: number; warning?: string }[] = []
     try {
       const sources = await getSources()
-      const portalSources = sources.filter(s => s.type === 'portal' && s.is_active)
-      for (const source of portalSources) {
+      for (const source of sources.filter(s => s.type === 'portal' && s.is_active)) {
         const res = await scrapePortalSource(source)
         dbPortalAdded += res.added
         dbPortalSkipped += res.skipped
         dbPortalDetails.push({ source: source.name, added: res.added, skipped: res.skipped })
         await markSourceScanned(source.id)
       }
+      for (const source of sources.filter(s => s.type === 'career' && s.is_active)) {
+        const res = await scrapeCareerPage(source)
+        dbCareerAdded += res.added
+        dbCareerSkipped += res.skipped
+        dbCareerDetails.push({ source: source.name, added: res.added, skipped: res.skipped, warning: res.warning })
+        await markSourceScanned(source.id)
+      }
     } catch (err) {
-      console.error('[cron/morning] DB-Portal-Scan Fehler:', err)
+      console.error('[cron/morning] DB-Quellen-Scan Fehler:', err)
     }
 
     results.scan = {
-      portals:  portalRes.status === 'fulfilled' ? portalRes.value : { error: String((portalRes as PromiseRejectedResult).reason) },
-      apis:     apiRes.status    === 'fulfilled' ? apiRes.value    : { error: String((apiRes    as PromiseRejectedResult).reason) },
+      portals:   portalRes.status === 'fulfilled' ? portalRes.value : { error: String((portalRes as PromiseRejectedResult).reason) },
+      apis:      apiRes.status    === 'fulfilled' ? apiRes.value    : { error: String((apiRes    as PromiseRejectedResult).reason) },
       dbPortals: { added: dbPortalAdded, skipped: dbPortalSkipped, details: dbPortalDetails },
+      dbCareer:  { added: dbCareerAdded, skipped: dbCareerSkipped, details: dbCareerDetails },
     }
   } catch (err) {
     results.scan = { error: String(err) }

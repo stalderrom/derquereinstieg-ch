@@ -12,20 +12,22 @@ export default function Header() {
           <Link href="/quereinstieg-guide" className="hover:text-white transition-colors">Guide</Link>
           <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
         </nav>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm text-white/70 hover:text-white transition-colors hidden md:block"
-          >
-            Anmelden
-          </Link>
-          <Link
-            href="/register"
-            className="bg-orange hover:bg-orange-dark text-white text-sm font-semibold px-4 py-1.5 rounded-md transition-colors"
-          >
-            Job inserieren
-          </Link>
-        </div>
+        {process.env.NODE_ENV === 'development' && (
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm text-white/70 hover:text-white transition-colors hidden md:block"
+            >
+              Anmelden
+            </Link>
+            <Link
+              href="/register"
+              className="bg-orange hover:bg-orange-dark text-white text-sm font-semibold px-4 py-1.5 rounded-md transition-colors"
+            >
+              Job inserieren
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   )

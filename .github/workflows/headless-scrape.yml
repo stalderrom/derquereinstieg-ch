@@ -1,0 +1,44 @@
+name: Headless Scraper (JS-Karriereseiten)
+
+on:
+  schedule:
+    # Täglich 05:15 UTC = 06:15 CET / 07:15 CEST
+    # 15 Minuten nach dem Vercel-Cron (05:00 UTC) damit beide nicht gleichzeitig laufen
+    - cron: '15 5 * * *'
+  workflow_dispatch: # Manuell ausführbar via GitHub UI
+
+jobs:
+  scrape:
+    name: JS-Seiten scrapen
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Playwright-Browser cachen
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('scripts/package.json') }}
+
+      - name: Abhängigkeiten installieren
+        run: npm install
+        working-directory: scripts
+
+      - name: Playwright Chromium installieren
+        run: npx playwright install chromium --with-deps
+        working-directory: scripts
+
+      - name: Headless Scraper ausführen
+        env:
+          IMPORT_URL: ${{ vars.IMPORT_URL }}
+          IMPORT_SECRET: ${{ secrets.IMPORT_SECRET }}
+        run: node headless-scrape.mjs
+        working-directory: scripts

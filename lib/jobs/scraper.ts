@@ -59,6 +59,68 @@ function extractJsonLdJobs($: cheerio.CheerioAPI, pageUrl: string): ScrapedJob[]
   return jobs
 }
 
+// Extracts a location hint from URL path (e.g. /location/zuerich → "zuerich")
+function locationFromUrl(url: string): string {
+  const m = url.match(/\/location\/([^/?#]+)/)
+  if (m) return m[1].replace(/-/g, ' ')  // "la-chaux-de-fonds" → "la chaux de fonds"
+  return ''
+}
+
+// Phase 1.5: Erkennt Seiten die Jobs in vielen Städten auflisten (z.B. /location/[city]-Muster).
+// Statt 100 Einzelseiten zu besuchen, extrahiert diese Funktion alle Jobs direkt von der
+// Übersichtsseite — viel schneller und zuverlässiger.
+function extractLocationListJobs(
+  $: cheerio.CheerioAPI,
+  pageUrl: string,
+  companyName: string
+): ScrapedJob[] {
+  const seen = new Set<string>()
+  const jobs: ScrapedJob[] = []
+
+  // Beschreibung aus der Übersichtsseite (enthält "Quereinstieg" im Breadcrumb/H1)
+  const overviewDescription = $('body').text().slice(0, 2000)
+
+  // Fallback-Titel: Stellenbezeichnung aus dem ersten Link-Text oder H1
+  const fallbackTitle = $('h1').first().text().trim()
+
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href') ?? ''
+    const locMatch = href.match(/\/location\/([^/?#]+)/)
+    if (!locMatch) return
+
+    let absolute: string
+    try { absolute = new URL(href, pageUrl).toString() } catch { return }
+
+    if (seen.has(absolute)) return
+    seen.add(absolute)
+
+    const city = locMatch[1].replace(/-/g, ' ')
+
+    // Link-Text enthält oft den Ortsnamen mit korrekten Umlauten (z.B. "Zürich", "Küssnacht").
+    // Wenn er kurz genug ist (<= 40 Zeichen), nehmen wir ihn als Ortsbezeichnung;
+    // sonst verwenden wir den URL-Slug.
+    const linkText = $(el).text().replace(/\s+/g, ' ').trim()
+    const cityLabel = linkText.length > 0 && linkText.length <= 40 ? linkText : city
+
+    // Titel = H1 + Ort → jede Stadt erhält einen eindeutigen dedup_key.
+    // Fallback: nur Link-Text wenn H1 fehlt.
+    const title = fallbackTitle ? `${fallbackTitle} – ${cityLabel}` : cityLabel
+
+    if (!title) return
+
+    jobs.push({
+      title,
+      company: companyName,
+      location: city,
+      description: overviewDescription,
+      source_url: absolute,
+    })
+  })
+
+  // Nur zurückgeben wenn mindestens 3 Stadt-Links gefunden → echtes Locations-Muster
+  return jobs.length >= 3 ? jobs : []
+}
+
 // Phase 2: Find job-detail links on career pages
 function extractJobLinks($: cheerio.CheerioAPI, baseUrl: string): string[] {
   const links: string[] = []
@@ -80,20 +142,40 @@ function extractJobLinks($: cheerio.CheerioAPI, baseUrl: string): string[] {
     }
   })
 
-  return [...new Set(links)].slice(0, 20)
+  return [...new Set(links)].slice(0, 150)
+}
+
+// Erkennt JavaScript-gerenderte Seiten (SPAs) die ohne Browser-JS keine Inhalte zeigen.
+// Heuristiken: sehr wenig sichtbarer Text, typische SPA-Platzhalter, leere body-Elemente.
+function isJsRendered($: cheerio.CheerioAPI): boolean {
+  const bodyText = $('body').text().replace(/\s+/g, ' ').trim()
+  // Weniger als 200 Zeichen sichtbarer Text → wahrscheinlich leere SPA-Shell
+  if (bodyText.length < 200) return true
+  // Template-Platzhalter (z.B. ERB-Syntax, Handlebars, Mustache, SuccessFactors)
+  if (/<%[-=]?\s*\w/.test($('body').html() ?? '')) return true
+  // Typische "Loading..." / "JavaScript required" Hinweise
+  if (/javascript (ist |is )?(erforderlich|required|aktiviert|enabled)/i.test(bodyText)) return true
+  return false
 }
 
 // Scrape a single page for jobs
-async function scrapePage(url: string, companyName: string): Promise<ScrapedJob[]> {
+async function scrapePage(url: string, companyName: string): Promise<ScrapedJob[] | 'js-rendered'> {
   const { data: html } = await axios.get<string>(url, {
     timeout: 10_000,
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DQScraperBot/1.0)' },
   })
   const $ = cheerio.load(html)
 
+  // Frühzeitig erkennen wenn die Seite JavaScript benötigt
+  if (isJsRendered($)) return 'js-rendered'
+
   // Phase 1: JSON-LD
   const jsonLdJobs = extractJsonLdJobs($, url)
   if (jsonLdJobs.length > 0) return jsonLdJobs
+
+  // Phase 1.5: Location-Listen-Muster (/location/[city]) — direkt von der Übersichtsseite
+  const locationListJobs = extractLocationListJobs($, url, companyName)
+  if (locationListJobs.length > 0) return locationListJobs
 
   // Phase 2: Scan linked pages for JSON-LD
   const links = extractJobLinks($, url)
@@ -117,7 +199,7 @@ async function scrapePage(url: string, companyName: string): Promise<ScrapedJob[
           found.push({
             title,
             company: companyName,
-            location: '',
+            location: locationFromUrl(link),
             description: body.slice(0, 500),
             source_url: link,
           })
@@ -134,12 +216,18 @@ async function scrapePage(url: string, companyName: string): Promise<ScrapedJob[
 // Main: scrape a job source and persist new jobs
 export async function scrapeCareerPage(
   source: JobSource
-): Promise<{ added: number; skipped: number }> {
+): Promise<{ added: number; skipped: number; warning?: string }> {
   let added = 0
   let skipped = 0
 
   try {
-    const jobs = await scrapePage(source.url, source.name)
+    const result = await scrapePage(source.url, source.name)
+
+    if (result === 'js-rendered') {
+      return { added: 0, skipped: 0, warning: 'JavaScript-gerenderte Seite — nicht scrapbar ohne Headless Browser (z.B. SuccessFactors, Workday, Greenhouse)' }
+    }
+
+    const jobs = result
     const filtered = jobs.filter(j =>
       containsQuereinsteiger(j.title + ' ' + j.description)
     )

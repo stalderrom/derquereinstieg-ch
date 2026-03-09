@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSources, markSourceScanned, reGeocodeJobs, reactivateJob, deleteJob, cleanupGarbageTitles } from '@/lib/jobs/storage'
+import { getSources, markSourceScanned, reGeocodeJobs, reactivateJob, deleteJob, cleanupGarbageTitles, cleanupUnsuitableJobs } from '@/lib/jobs/storage'
 import { scrapeCareerPage } from '@/lib/jobs/scraper'
 import { scrapePortalSource } from '@/lib/jobs/db-portal-scraper'
 import { scrapePortals } from '@/lib/jobs/portal-scraper'
@@ -10,7 +10,7 @@ import { deduplicateJobs } from '@/lib/jobs/dedup'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}))
-    const mode: string = body.mode ?? 'all' // 'all' | 'career' | 'portals' | 'apis' | 're-geocode' | 'detail-geocode' | 'dedup' | 'rescue' | 'cleanup-titles'
+    const mode: string = body.mode ?? 'all' // 'all' | 'career' | 'portals' | 'apis' | 're-geocode' | 'detail-geocode' | 'dedup' | 'rescue' | 'cleanup-titles' | 'cleanup-unsuitable'
 
     const results: Record<string, unknown> = {}
 
@@ -20,13 +20,13 @@ export async function POST(req: NextRequest) {
 
       let careerAdded = 0
       let careerSkipped = 0
-      const careerDetails: { source: string; added: number; skipped: number }[] = []
+      const careerDetails: { source: string; added: number; skipped: number; warning?: string }[] = []
 
       for (const source of sources.filter(s => s.type === 'career' && s.is_active)) {
         const res = await scrapeCareerPage(source)
         careerAdded += res.added
         careerSkipped += res.skipped
-        careerDetails.push({ source: source.name, added: res.added, skipped: res.skipped })
+        careerDetails.push({ source: source.name, added: res.added, skipped: res.skipped, warning: res.warning })
         await markSourceScanned(source.id)
       }
 
@@ -119,6 +119,11 @@ export async function POST(req: NextRequest) {
     // Cleanup: Bereinigt Scraper-Garbage in Titeln (z.B. jobscout24 Karten-Text)
     if (mode === 'cleanup-titles') {
       results.cleanupTitles = await cleanupGarbageTitles()
+    }
+
+    // Cleanup: Löscht Jobs die nicht als Quereinsteiger erreichbar sind (Arzt, Anwalt, etc.)
+    if (mode === 'cleanup-unsuitable') {
+      results.cleanupUnsuitable = await cleanupUnsuitableJobs()
     }
 
     return NextResponse.json({ success: true, results })

@@ -13,6 +13,7 @@ out/
 # Environment variables (never commit!)
 .env.local
 .env*.local
+scripts/.env
 
 # Vercel
 .vercel

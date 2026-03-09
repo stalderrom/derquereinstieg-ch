@@ -5,6 +5,7 @@ import type { Stellenanzeige, JobSource, ApiFetchLog, VerificationLog } from '@/
 import { detectCanton, cantonToRegion, type RegionName } from './geo'
 import { computeDedupKey } from './dedup'
 import { cleanJobTitle } from './title-cleaner'
+import { isQuereinsteigSuitable } from './quereinstieg-filter'
 
 // ─── Stellenanzeigen ──────────────────────────────────────────────────────────
 
@@ -33,6 +34,9 @@ export async function getJobs(filters?: {
 export async function createJob(
   job: Omit<Stellenanzeige, 'id' | 'first_seen_at' | 'last_verified_at' | 'dedup_key'>
 ): Promise<Stellenanzeige | null> {
+  // Nicht-Quereinsteiger-geeignete Stellen (Arzt, Chirurg, Anwalt, etc.) ablehnen
+  if (!isQuereinsteigSuitable(job.title)) return null
+
   const supabase = await createClient()
 
   // Dedup-Key berechnen und auf semantische Duplikate prüfen
@@ -305,6 +309,49 @@ export async function cleanupGarbageTitles(): Promise<{
   }
 
   return { cleaned, deleted, skipped, log }
+}
+
+// ─── Nicht-Quereinsteiger-geeignete Jobs bereinigen ───────────────────────────
+
+// Löscht alle Jobs (aktiv und inaktiv) deren Titel auf eine Stelle hinweist,
+// die grundsätzlich nicht als Quereinsteiger erreichbar ist (Arzt, Anwalt, etc.).
+export async function cleanupUnsuitableJobs(): Promise<{
+  deleted: number
+  skipped: number
+  log: string[]
+}> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('stellenanzeigen')
+    .select('id, title')
+
+  if (error) throw new Error(error.message)
+
+  let deleted = 0
+  let skipped = 0
+  const log: string[] = []
+
+  for (const job of data ?? []) {
+    if (isQuereinsteigSuitable(job.title ?? '')) {
+      skipped++
+      continue
+    }
+
+    const { error: delErr } = await supabase
+      .from('stellenanzeigen')
+      .delete()
+      .eq('id', job.id)
+
+    if (!delErr) {
+      log.push(`✗ gelöscht: "${job.title?.slice(0, 80)}"`)
+      deleted++
+    } else {
+      skipped++
+    }
+  }
+
+  return { deleted, skipped, log }
 }
 
 // ─── Re-Geocoding ─────────────────────────────────────────────────────────────

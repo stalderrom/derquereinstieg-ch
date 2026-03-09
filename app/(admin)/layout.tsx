@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import type { Route } from 'next'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { createAnonClient } from '@/lib/supabase/server-anon'
 
 export const metadata: Metadata = {
   title: 'Admin — derquereinstieg.ch',
@@ -16,7 +18,20 @@ const NAV_ITEMS: { href: Route; label: string; icon: string }[] = [
   { href: '/admin/analytics' as Route, label: 'Analytics', icon: '▦' },
 ]
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createAnonClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect('/login')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile || profile.role !== 'superuser') redirect('/login')
+
   return (
     <div className="admin-root" style={{ display: 'flex', minHeight: '100vh', background: '#0f1117', color: '#e2e8f0', fontFamily: 'system-ui, sans-serif' }}>
       {/* Sidebar */}
@@ -67,9 +82,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        {/* Footer link */}
-        <div style={{ padding: '12px 20px 20px', borderTop: '1px solid #1e2a3a' }}>
-          <Link href={'/' as Route} style={{ fontSize: 12, color: '#475569', textDecoration: 'none' }}>
+        {/* Footer: User + Logout */}
+        <div style={{ padding: '12px 16px 20px', borderTop: '1px solid #1e2a3a' }}>
+          <div style={{ fontSize: 11, color: '#475569', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {user.email}
+          </div>
+          <form action="/api/auth/signout" method="POST">
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '7px 12px',
+                background: 'transparent',
+                border: '1px solid #334155',
+                borderRadius: 6,
+                color: '#64748b',
+                fontSize: 12,
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+            >
+              Abmelden
+            </button>
+          </form>
+          <Link href={'/' as Route} style={{ display: 'block', marginTop: 8, fontSize: 12, color: '#475569', textDecoration: 'none' }}>
             ← Zur Website
           </Link>
         </div>

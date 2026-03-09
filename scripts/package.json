@@ -1,0 +1,11 @@
+{
+  "name": "dq-headless-scraper",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Headless scraper für JavaScript-gerenderte Karriereseiten (läuft in GitHub Actions)",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "playwright": "^1.42.0"
+  }
+}

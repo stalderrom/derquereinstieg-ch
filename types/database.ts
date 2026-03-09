@@ -1,6 +1,4 @@
 // Typen für die Supabase-Datenbank
-// Wird nach dem Supabase-Setup automatisch generiert:
-// npx supabase gen types typescript --project-id DEIN_PROJECT_ID > types/database.ts
 
 export type Json =
   | string
@@ -27,31 +25,53 @@ export type EmploymentType =
   | 'temporaer'
   | 'praktikum'
 
-export type UserRole = 'jobseeker' | 'employer' | 'admin'
+// Legacy – wird durch UserRole unten ersetzt
+export type LegacyUserRole = 'jobseeker' | 'employer' | 'admin'
 
-export interface Job {
-  id: string
-  title: string
-  company: string
-  location: string
-  canton: string
-  category: JobCategory
-  description: string
-  requirements: string | null
-  salary_range: string | null
-  employment_type: EmploymentType
-  is_quereinsteiger_friendly: boolean
-  slug: string
-  published_at: string | null
-  created_at: string
-  employer_id: string
-  is_active: boolean
+// ─── Auth & User ──────────────────────────────────────────────────────────────
+
+export type UserRole = 'superuser' | 'user'
+
+export type UserTier = 1 | 2 | 3
+
+export interface ApplicationProfile {
+  currentJob: string          // "Projektmanager bei Migros, 8 Jahre"
+  currentJobDesc: string      // Was genau gemacht? 2-3 Sätze
+  prevJob?: string            // optional: vorherige Rolle, 1 Satz
+  education: string           // "KV-Abschluss, CAS Projektmanagement"
+  skills: string              // "Kundenberatung, Teamführung, Excel, ..."
+  motivation: string          // Warum Quereinstieg? 2-3 Sätze
+  tone: 'formal' | 'du'       // Sie-Form vs Du-Form
 }
 
 export interface Profile {
   id: string
   role: UserRole
-  company_name: string | null
+  tier: UserTier
+  full_name: string | null
+  target_field: string | null  // 'it'|'pflege'|'handwerk'|'verkauf'|'logistik'|'gastronomie'|'paedagogik'|'soziales'
+  region: string | null       // legacy single region
+  regions: string[] | null    // multi-region selection
+  birthdate: string | null    // YYYY-06-15 (nur Jahr gespeichert)
+  application_profile?: ApplicationProfile | null
+  created_at: string
+}
+
+export interface JobBookmark {
+  id: string
+  user_id: string
+  stellenanzeige_id: string
+  created_at: string
+}
+
+export interface Bewerbung {
+  id: string
+  user_id: string
+  firma: string
+  stelle: string
+  status: 'gespeichert' | 'beworben' | 'interview' | 'zusage' | 'absage'
+  notiz: string | null
+  datum: string | null
   created_at: string
 }
 

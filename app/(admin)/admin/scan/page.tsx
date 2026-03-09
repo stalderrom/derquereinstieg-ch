@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface ApiDetail {
   term: string
@@ -9,8 +9,15 @@ interface ApiDetail {
   createdAfter: string | null
 }
 
+interface CareerDetail {
+  source: string
+  added: number
+  skipped: number
+  warning?: string
+}
+
 interface ScanResult {
-  career?: { added: number; skipped: number; sources: number }
+  career?: { added: number; skipped: number; sources: number; details?: CareerDetail[] }
   portals?: { added: number; skipped: number; errors: string[] }
   apis?: { added: number; skipped: number; apiCallsUsed: number; throttled?: boolean; throttleReason?: string; monthlyCallsUsed?: number; details?: ApiDetail[] }
 }
@@ -34,6 +41,14 @@ const btnStyle = (color: string, disabled: boolean): React.CSSProperties => ({
   transition: 'background 0.15s',
 })
 
+interface DbSource {
+  name: string
+  url: string
+  type: string
+  is_active: boolean
+  last_scraped_at: string | null
+}
+
 export default function ScanPage() {
   const [scanning, setScanning] = useState(false)
   const [verifying, setVerifying] = useState(false)
@@ -42,6 +57,14 @@ export default function ScanPage() {
   const [error, setError] = useState<string | null>(null)
   const [mode, setMode] = useState<ScanMode>('all')
   const [log, setLog] = useState<string[]>([])
+  const [dbSources, setDbSources] = useState<DbSource[]>([])
+
+  useEffect(() => {
+    fetch('/api/admin/sources')
+      .then(r => r.json())
+      .then(d => setDbSources(d.sources ?? []))
+      .catch(() => {})
+  }, [])
 
   function addLog(msg: string) {
     setLog(prev => [...prev, `[${new Date().toLocaleTimeString('de-CH')}] ${msg}`])
@@ -127,8 +150,14 @@ export default function ScanPage() {
           <SourceCard
             label="Karriereseiten"
             icon="🏢"
-            sources={[]}
-            note="Quellen aus der Datenbank (Sources-Tab)"
+            sources={dbSources
+              .filter(s => s.type === 'career' || s.type === 'portal')
+              .map(s => ({
+                name: s.name,
+                detail: s.is_active ? `Zuletzt: ${s.last_scraped_at ? new Date(s.last_scraped_at).toLocaleDateString('de-CH') : 'noch nie'}` : '⏸ inaktiv',
+                url: s.url,
+              }))}
+            note={dbSources.length === 0 ? 'Quellen aus der Datenbank (Sources-Tab)' : undefined}
           />
         </div>
       </div>
@@ -175,6 +204,40 @@ export default function ScanPage() {
                   extra={`${scanResult.career.sources} Quellen`}
                 />
               )}
+            </div>
+            {scanResult.career?.details && scanResult.career.details.length > 0 && (
+              <div style={{ background: '#0f1117', border: '1px solid #1e2a3a', borderRadius: 8, overflow: 'hidden', marginBottom: 12 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #1e2a3a' }}>
+                      <th style={{ textAlign: 'left', padding: '7px 14px', color: '#475569', fontWeight: 500 }}>Quelle</th>
+                      <th style={{ textAlign: 'right', padding: '7px 14px', color: '#475569', fontWeight: 500 }}>Neu</th>
+                      <th style={{ textAlign: 'right', padding: '7px 14px', color: '#475569', fontWeight: 500 }}>Übersprungen</th>
+                      <th style={{ textAlign: 'left', padding: '7px 14px', color: '#475569', fontWeight: 500 }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scanResult.career.details.map(d => (
+                      <tr key={d.source} style={{ borderBottom: '1px solid #161b27' }}>
+                        <td style={{ padding: '6px 14px', color: '#94a3b8' }}>{d.source}</td>
+                        <td style={{ padding: '6px 14px', textAlign: 'right' }}>
+                          <span style={{ color: d.added > 0 ? '#86efac' : '#475569', fontWeight: d.added > 0 ? 700 : 400 }}>{d.added}</span>
+                        </td>
+                        <td style={{ padding: '6px 14px', color: '#475569', textAlign: 'right' }}>{d.skipped}</td>
+                        <td style={{ padding: '6px 14px' }}>
+                          {d.warning && (
+                            <span title={d.warning} style={{ color: '#f59e0b', fontSize: 11, cursor: 'help' }}>
+                              ⚠ JS-Seite
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12, marginBottom: 16 }}>
               {scanResult.portals && (
                 <ResultCard
                   label="Portale"
@@ -269,6 +332,40 @@ export default function ScanPage() {
           style={btnStyle('#7c3aed', isRunning)}
         >
           {scanning ? 'Läuft...' : 'Titel bereinigen'}
+        </button>
+      </div>
+
+      {/* Unsuitable jobs cleanup */}
+      <div style={{ background: '#161b27', border: '1px solid #1e2a3a', borderRadius: 12, padding: 24, marginBottom: 20 }}>
+        <h2 style={{ fontSize: 15, fontWeight: 600, color: '#cbd5e1', margin: '0 0 8px' }}>
+          Nicht-Quereinsteiger-Jobs löschen
+        </h2>
+        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
+          Löscht alle Jobs deren Titel auf eine nicht erreichbare Stelle hinweist (Arzt/Ärztin, Chirurg, Anwalt, Notar, Richter, Pilot …).
+          Neue Imports werden künftig automatisch blockiert.
+        </p>
+        <button
+          onClick={async () => {
+            setScanning(true)
+            addLog('Suche nicht-geeignete Jobs...')
+            try {
+              const res = await fetch('/api/admin/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: 'cleanup-unsuitable' }),
+              })
+              const json = await res.json()
+              const r = json.results?.cleanupUnsuitable
+              addLog(`Gelöscht: ${r?.deleted ?? 0} · Übersprungen: ${r?.skipped ?? 0}`)
+              if (r?.log?.length) r.log.slice(0, 20).forEach((l: string) => addLog(l))
+              if ((r?.log?.length ?? 0) > 20) addLog(`… und ${r.log.length - 20} weitere`)
+            } catch (e) { addLog(`Fehler: ${String(e)}`) }
+            finally { setScanning(false) }
+          }}
+          disabled={isRunning}
+          style={btnStyle('#7f1d1d', isRunning)}
+        >
+          {scanning ? 'Läuft...' : 'Ungeeignete Jobs löschen'}
         </button>
       </div>
 
