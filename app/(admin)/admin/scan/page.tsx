@@ -42,10 +42,12 @@ const btnStyle = (color: string, disabled: boolean): React.CSSProperties => ({
 })
 
 interface DbSource {
+  id: string
   name: string
   url: string
   type: string
   is_active: boolean
+  use_headless: boolean
   last_scraped_at: string | null
 }
 
@@ -68,6 +70,16 @@ export default function ScanPage() {
 
   function addLog(msg: string) {
     setLog(prev => [...prev, `[${new Date().toLocaleTimeString('de-CH')}] ${msg}`])
+  }
+
+  async function toggleHeadless(source: DbSource) {
+    const newValue = !source.use_headless
+    setDbSources(prev => prev.map(s => s.id === source.id ? { ...s, use_headless: newValue } : s))
+    await fetch(`/api/admin/sources/${source.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ use_headless: newValue }),
+    })
   }
 
   async function handleScan() {
@@ -147,18 +159,44 @@ export default function ScanPage() {
               { name: 'JobScout24', detail: 'quereinsteiger · quereinstieg', url: 'https://www.jobscout24.ch' },
             ]}
           />
-          <SourceCard
-            label="Karriereseiten"
-            icon="🏢"
-            sources={dbSources
-              .filter(s => s.type === 'career' || s.type === 'portal')
-              .map(s => ({
-                name: s.name,
-                detail: s.is_active ? `Zuletzt: ${s.last_scraped_at ? new Date(s.last_scraped_at).toLocaleDateString('de-CH') : 'noch nie'}` : '⏸ inaktiv',
-                url: s.url,
-              }))}
-            note={dbSources.length === 0 ? 'Quellen aus der Datenbank (Sources-Tab)' : undefined}
-          />
+          <div style={{ background: '#0f1117', border: '1px solid #1e2a3a', borderRadius: 8, padding: '14px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+              <span style={{ fontSize: 14 }}>🏢</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#cbd5e1' }}>Karriereseiten</span>
+            </div>
+            {dbSources.filter(s => s.type === 'career' || s.type === 'portal').map(s => (
+              <div key={s.id} style={{ marginBottom: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: 13, fontWeight: 500, color: '#60a5fa', textDecoration: 'none' }}
+                  >
+                    {s.name}
+                  </a>
+                  <button
+                    onClick={() => toggleHeadless(s)}
+                    style={{
+                      fontSize: 11, padding: '1px 6px', borderRadius: 4, cursor: 'pointer',
+                      background: s.use_headless ? 'rgba(234,179,8,0.15)' : 'rgba(255,255,255,0.04)',
+                      color: s.use_headless ? '#facc15' : 'rgba(255,255,255,0.25)',
+                      border: s.use_headless ? '1px solid rgba(234,179,8,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                    }}
+                    title={s.use_headless ? 'Headless aktiv — klicken zum Deaktivieren' : 'Headless inaktiv — klicken zum Aktivieren'}
+                  >
+                    ⚡ Headless
+                  </button>
+                </div>
+                <div style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>
+                  {s.is_active ? `Zuletzt: ${s.last_scraped_at ? new Date(s.last_scraped_at).toLocaleDateString('de-CH') : 'noch nie'}` : '⏸ inaktiv'}
+                </div>
+              </div>
+            ))}
+            {dbSources.filter(s => s.type === 'career' || s.type === 'portal').length === 0 && (
+              <div style={{ fontSize: 12, color: '#374151', fontStyle: 'italic' }}>Quellen aus der Datenbank (Sources-Tab)</div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -332,6 +370,38 @@ export default function ScanPage() {
           style={btnStyle('#7c3aed', isRunning)}
         >
           {scanning ? 'Läuft...' : 'Titel bereinigen'}
+        </button>
+      </div>
+
+      {/* Re-Geocoding */}
+      <div style={{ background: '#161b27', border: '1px solid #1e2a3a', borderRadius: 12, padding: 24, marginBottom: 20 }}>
+        <h2 style={{ fontSize: 15, fontWeight: 600, color: '#cbd5e1', margin: '0 0 8px' }}>
+          Re-Geocoding
+        </h2>
+        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
+          Ordnet alle &ldquo;unzuordnungsbar&rdquo;-Jobs erneut zu — liest Kanton und Region aus Ort, Titel und Beschreibung.
+          Keine HTTP-Requests, läuft schnell.
+        </p>
+        <button
+          onClick={async () => {
+            setScanning(true)
+            addLog('Starte Re-Geocoding...')
+            try {
+              const res = await fetch('/api/admin/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: 're-geocode' }),
+              })
+              const json = await res.json()
+              const r = json.results?.reGeocode
+              addLog(`Re-Geocoding: ${r?.updated ?? 0} aktualisiert · ${r?.skipped ?? 0} übersprungen`)
+            } catch (e) { addLog(`Fehler: ${String(e)}`) }
+            finally { setScanning(false) }
+          }}
+          disabled={isRunning}
+          style={btnStyle('#0f4c75', isRunning)}
+        >
+          {scanning ? 'Läuft...' : 'Re-Geocoding starten'}
         </button>
       </div>
 

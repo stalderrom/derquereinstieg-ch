@@ -9,24 +9,25 @@ export async function GET() {
     // ── 1. Täglicher Trend (letzte 30 Tage) ────────────────────────────────────
     const since30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
 
-    const [verifyRes, fetchRes] = await Promise.all([
+    const [verifyRes, newJobsRes] = await Promise.all([
       supabase
         .from('verification_log')
         .select('date, verified, removed, total_active_after')
         .gte('date', since30)
         .order('date'),
+      // Alle neu gesehenen Jobs der letzten 30 Tage — erfasst ALLE Quellen
+      // (Portale, APIs, Headless, Karriereseiten), nicht nur api_fetch_log
       supabase
-        .from('api_fetch_log')
-        .select('fetched_at, new_jobs_added')
-        .gte('fetched_at', since30 + 'T00:00:00Z')
-        .order('fetched_at'),
+        .from('stellenanzeigen')
+        .select('first_seen_at')
+        .gte('first_seen_at', since30 + 'T00:00:00Z'),
     ])
 
-    // Neue Jobs pro Tag aggregieren
+    // Neue Jobs pro Tag aggregieren (aus first_seen_at)
     const addedByDay: Record<string, number> = {}
-    for (const row of fetchRes.data ?? []) {
-      const day = row.fetched_at.slice(0, 10)
-      addedByDay[day] = (addedByDay[day] ?? 0) + (row.new_jobs_added ?? 0)
+    for (const row of newJobsRes.data ?? []) {
+      const day = row.first_seen_at.slice(0, 10)
+      addedByDay[day] = (addedByDay[day] ?? 0) + 1
     }
 
     // Letzten 30 Tage als Array aufbauen (auch Tage ohne Daten)

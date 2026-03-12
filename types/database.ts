@@ -103,6 +103,8 @@ export interface JobSource {
   url: string
   type: 'career' | 'portal' | 'api'
   is_active: boolean
+  use_headless: boolean
+  skip_keyword_filter: boolean
   last_scanned_at: string | null
   created_at: string
 }

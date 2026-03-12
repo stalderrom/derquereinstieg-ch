@@ -196,67 +196,75 @@ interface JobScout24Main {
 
 async function scrapeJobScout24(term: string): Promise<PortalJob[]> {
   const jobs: PortalJob[] = []
+  const MAX_PAGES_JS24 = 10
+
+  const parseInitData = (html: string): { results: PortalJob[]; numPages: number } => {
+    const initData = extractJsonVar(html, '__INIT__')
+    const main = (initData as { vacancy?: { results?: { main?: JobScout24Main } } } | null)
+      ?.vacancy?.results?.main
+    const numPages = Math.min(main?.meta?.numPages ?? 1, MAX_PAGES_JS24)
+    const results: PortalJob[] = []
+    for (const raw of main?.results ?? []) {
+      const id = String(raw.id)
+      if (id && raw.title && isValidJobTitle(raw.title)) {
+        results.push({
+          title: raw.title,
+          company: raw.company?.name ?? 'Unbekannt',
+          location: raw.place ?? '',
+          url: `https://www.jobscout24.ch/de/stelle/${id}/`,
+          posted_at: raw.publicationDate ?? null,
+          source_name: 'jobscout24',
+        })
+      }
+    }
+    return { results, numPages }
+  }
 
   try {
-    const { data: html } = await axios.get<string>(
+    // Seite 1
+    const { data: html1 } = await axios.get<string>(
       `https://www.jobscout24.ch/de/jobs/${encodeURIComponent(term)}/`,
       { timeout: 15_000, headers: { 'User-Agent': UA } }
     )
 
-    // Primär: __INIT__ JSON (gleiche Struktur wie jobs.ch, da beide JobCloud)
-    const initData = extractJsonVar(html, '__INIT__')
-    if (initData) {
-      const main = (initData as { vacancy?: { results?: { main?: JobScout24Main } } })
-        ?.vacancy?.results?.main
-      for (const raw of main?.results ?? []) {
-        const id = String(raw.id)
-        if (id && raw.title && isValidJobTitle(raw.title)) {
-          jobs.push({
-            title: raw.title,
-            company: raw.company?.name ?? 'Unbekannt',
-            location: raw.place ?? '',
-            url: `https://www.jobscout24.ch/de/stelle/${id}/`,
-            posted_at: raw.publicationDate ?? null,
-            source_name: 'jobscout24',
-          })
+    const { results: page1Results, numPages } = parseInitData(html1)
+
+    if (page1Results.length > 0) {
+      // __INIT__ vorhanden — paginieren
+      jobs.push(...page1Results)
+      console.log(`[portal-scraper] JobScout24 (${term}): Seite 1/${numPages} → ${page1Results.length} Jobs`)
+
+      for (let page = 2; page <= numPages; page++) {
+        try {
+          const { data: html } = await axios.get<string>(
+            `https://www.jobscout24.ch/de/jobs/${encodeURIComponent(term)}/${page}/`,
+            { timeout: 15_000, headers: { 'User-Agent': UA } }
+          )
+          const { results } = parseInitData(html)
+          jobs.push(...results)
+          console.log(`[portal-scraper] JobScout24 (${term}): Seite ${page}/${numPages} → ${results.length} Jobs`)
+          await new Promise(r => setTimeout(r, 300))
+        } catch (err) {
+          console.warn(`[portal-scraper] JobScout24 (${term}) Seite ${page} übersprungen:`, err)
         }
       }
-      if (jobs.length > 0) {
-        console.log(`[portal-scraper] JobScout24 (${term}): ${jobs.length} via __INIT__`)
-        return jobs
-      }
+      return jobs
     }
 
-    // Fallback: data-cy Selektoren
-    const $ = cheerio.load(html)
-    $('[data-cy="job-link"]').each((_, el) => {
+    // Fallback: Cheerio (kein __INIT__)
+    const $ = cheerio.load(html1)
+    $('[data-cy="job-link"], a[href]').each((_, el) => {
       const href = $(el).attr('href') ?? ''
+      if (!isJobDetailUrl(href)) return
       const rawTitle = $(el).find('[data-cy="job-title"], h2, h3').first().text().trim()
         || $(el).attr('title')?.trim() || ''
       const title = cleanJobTitle(rawTitle)
-      const company = $(el).find('[data-cy="company-name"]').first().text().trim()
-      const location = $(el).find('[data-cy="job-location"]').first().text().trim()
-
-      if (!isValidJobTitle(title) || !isJobDetailUrl(href)) return
+      const company = $(el).find('[data-cy="company-name"], [class*="company"]').first().text().trim()
+      const location = $(el).find('[data-cy="job-location"], [class*="location"]').first().text().trim()
+      if (!isValidJobTitle(title)) return
       const url = href.startsWith('http') ? href : `https://www.jobscout24.ch${href}`
       jobs.push({ title, company: company || 'Unbekannt', location, url, posted_at: null, source_name: 'jobscout24' })
     })
-
-    // Letzter Fallback: alle Links mit /stelle/NUMMER/ URLs
-    if (jobs.length === 0) {
-      $('a[href]').each((_, el) => {
-        const href = $(el).attr('href') ?? ''
-        if (!isJobDetailUrl(href)) return
-        const rawTitle = $(el).find('h2, h3').first().text().trim()
-          || $(el).attr('title')?.trim() || ''
-        const title = cleanJobTitle(rawTitle)
-        const company = $(el).find('[class*="company"]').first().text().trim()
-        const location = $(el).find('[class*="location"]').first().text().trim()
-        if (!isValidJobTitle(title)) return
-        const url = href.startsWith('http') ? href : `https://www.jobscout24.ch${href}`
-        jobs.push({ title, company: company || 'Unbekannt', location, url, posted_at: null, source_name: 'jobscout24' })
-      })
-    }
   } catch (err) {
     console.error('[portal-scraper] JobScout24 error:', err)
   }

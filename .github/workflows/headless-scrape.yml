@@ -1,17 +1,16 @@
-name: Headless Scraper (JS-Karriereseiten)
+name: Täglicher Scraper (Portale + APIs + Headless)
 
 on:
   schedule:
     # Täglich 05:15 UTC = 06:15 CET / 07:15 CEST
-    # 15 Minuten nach dem Vercel-Cron (05:00 UTC) damit beide nicht gleichzeitig laufen
     - cron: '15 5 * * *'
   workflow_dispatch: # Manuell ausführbar via GitHub UI
 
 jobs:
   scrape:
-    name: JS-Seiten scrapen
+    name: Alle Quellen scrapen
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -36,7 +35,23 @@ jobs:
         run: npx playwright install chromium --with-deps
         working-directory: scripts
 
-      - name: Headless Scraper ausführen
+      - name: Portal-Scraper (jobs.ch + JobScout24)
+        env:
+          IMPORT_URL: ${{ vars.IMPORT_URL }}
+          IMPORT_SECRET: ${{ secrets.IMPORT_SECRET }}
+        run: node scrape-portals.mjs
+        working-directory: scripts
+
+      - name: API-Scraper (Adzuna)
+        env:
+          IMPORT_URL: ${{ vars.IMPORT_URL }}
+          IMPORT_SECRET: ${{ secrets.IMPORT_SECRET }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+        run: node scrape-apis.mjs
+        working-directory: scripts
+
+      - name: Headless-Scraper (JS-Karriereseiten)
         env:
           IMPORT_URL: ${{ vars.IMPORT_URL }}
           IMPORT_SECRET: ${{ secrets.IMPORT_SECRET }}

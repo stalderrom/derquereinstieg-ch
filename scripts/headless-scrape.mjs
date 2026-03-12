@@ -13,7 +13,6 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const sources = JSON.parse(readFileSync(join(__dirname, 'js-sources.json'), 'utf-8'))
 
 const IMPORT_URL = process.env.IMPORT_URL?.replace(/\/$/, '')
 const IMPORT_SECRET = process.env.IMPORT_SECRET
@@ -21,6 +20,21 @@ const IMPORT_SECRET = process.env.IMPORT_SECRET
 if (!IMPORT_URL || !IMPORT_SECRET) {
   console.error('❌  IMPORT_URL und IMPORT_SECRET müssen gesetzt sein.')
   process.exit(1)
+}
+
+async function loadSources() {
+  try {
+    const res = await fetch(`${IMPORT_URL}/api/headless-sources`, {
+      headers: { 'Authorization': `Bearer ${IMPORT_SECRET}` }
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const { sources } = await res.json()
+    console.log(`  Quellen aus DB geladen (${sources.length})`)
+    return sources
+  } catch (err) {
+    console.warn(`  ⚠ DB-Fetch fehlgeschlagen (${err.message}), Fallback auf js-sources.json`)
+    return JSON.parse(readFileSync(join(__dirname, 'js-sources.json'), 'utf-8'))
+  }
 }
 
 // ─── Keyword-Filter (identisch mit lib/jobs/scraper.ts) ───────────────────────
@@ -169,6 +183,7 @@ async function scrapeSource(browser, source) {
 
 async function main() {
   console.log(`\n🤖 DQ Headless Scraper — ${new Date().toISOString()}`)
+  const sources = await loadSources()
   console.log(`   ${sources.length} Quelle(n) | Ziel: ${IMPORT_URL}\n`)
 
   const browser = await chromium.launch({ args: ['--no-sandbox'] })

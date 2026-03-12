@@ -27,6 +27,7 @@ export default function SourcesPage() {
   const [form, setForm] = useState({ name: '', url: '', type: 'career' })
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -78,7 +79,6 @@ export default function SourcesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Quelle wirklich löschen?')) return
     setDeleteId(id)
     try {
       await fetch(`/api/admin/sources/${id}`, { method: 'DELETE' })
@@ -217,13 +217,32 @@ export default function SourcesPage() {
                       : '—'}
                   </td>
                   <td style={{ padding: '10px 16px' }}>
-                    <button
-                      onClick={() => handleDelete(source.id)}
-                      disabled={deleteId === source.id}
-                      style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontSize: 11 }}
-                    >
-                      Löschen
-                    </button>
+                    {confirmDeleteId === source.id ? (
+                      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                        <span style={{ fontSize: 11, color: '#fca5a5', whiteSpace: 'nowrap' }}>Wirklich löschen?</span>
+                        <button
+                          onClick={() => { setConfirmDeleteId(null); handleDelete(source.id) }}
+                          disabled={deleteId === source.id}
+                          style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}
+                        >
+                          Ja
+                        </button>
+                        <button
+                          onClick={() => setConfirmDeleteId(null)}
+                          style={{ background: '#1e2a3a', color: '#94a3b8', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11 }}
+                        >
+                          Abbrechen
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDeleteId(source.id)}
+                        disabled={deleteId === source.id}
+                        style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontSize: 11 }}
+                      >
+                        Löschen
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

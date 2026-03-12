@@ -25,7 +25,9 @@ export default function JobsPage() {
   const [filterRegion, setFilterRegion] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
   const [filterActive, setFilterActive] = useState('true')
+  const [filterSearch, setFilterSearch] = useState('')
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -64,6 +66,17 @@ export default function JobsPage() {
     }
   }
 
+  const q = filterSearch.trim().toLowerCase()
+  const visibleJobs = q
+    ? jobs.filter(j =>
+        j.title?.toLowerCase().includes(q) ||
+        j.company?.toLowerCase().includes(q) ||
+        j.location?.toLowerCase().includes(q) ||
+        j.source_name?.toLowerCase().includes(q) ||
+        j.source_url?.toLowerCase().includes(q)
+      )
+    : jobs
+
   const select: React.CSSProperties = {
     background: '#0f1117',
     border: '1px solid #1e2a3a',
@@ -79,13 +92,32 @@ export default function JobsPage() {
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: '#f1f5f9', margin: 0 }}>Stellen</h1>
           <p style={{ fontSize: 14, color: '#64748b', marginTop: 6 }}>
-            {jobs.length} Einträge
+            {visibleJobs.length}{q ? ` von ${jobs.length}` : ''} Einträge
           </p>
         </div>
       </div>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: '1 1 220px', minWidth: 180 }}>
+          <input
+            value={filterSearch}
+            onChange={e => setFilterSearch(e.target.value)}
+            placeholder="Suche: Titel, Unternehmen, Ort, Quelle …"
+            style={{ ...select, width: '100%', paddingLeft: 32, boxSizing: 'border-box' }}
+          />
+          <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#475569', fontSize: 13, pointerEvents: 'none' }}>
+            🔍
+          </span>
+          {filterSearch && (
+            <button
+              onClick={() => setFilterSearch('')}
+              style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: 14, lineHeight: 1 }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
         <select value={filterActive} onChange={e => setFilterActive(e.target.value)} style={select}>
           <option value="true">Aktiv</option>
           <option value="false">Inaktiv</option>
@@ -129,13 +161,13 @@ export default function JobsPage() {
               </tr>
             </thead>
             <tbody>
-              {jobs.length === 0 ? (
+              {visibleJobs.length === 0 ? (
                 <tr>
                   <td colSpan={8} style={{ padding: '32px 16px', color: '#475569', textAlign: 'center' }}>
-                    Keine Stellen gefunden
+                    {q ? `Keine Treffer für „${filterSearch}"` : 'Keine Stellen gefunden'}
                   </td>
                 </tr>
-              ) : jobs.map(job => (
+              ) : visibleJobs.map(job => (
                 <tr key={job.id} style={{ borderBottom: '1px solid #0f1117' }}>
                   <td style={{ padding: '10px 16px', color: '#e2e8f0', maxWidth: 220 }}>
                     <a
@@ -162,24 +194,43 @@ export default function JobsPage() {
                     {new Date(job.first_seen_at).toLocaleDateString('de-CH')}
                   </td>
                   <td style={{ padding: '10px 16px' }}>
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <button
-                        onClick={() => handleDelete(job.id, true)}
-                        disabled={deleteId === job.id}
-                        title="Deaktivieren"
-                        style={{ background: '#374151', color: '#9ca3af', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11 }}
-                      >
-                        Deaktiv.
-                      </button>
-                      <button
-                        onClick={() => handleDelete(job.id, false)}
-                        disabled={deleteId === job.id}
-                        title="Löschen"
-                        style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11 }}
-                      >
-                        Löschen
-                      </button>
-                    </div>
+                    {confirmDelete === job.id ? (
+                      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                        <span style={{ fontSize: 11, color: '#fca5a5', whiteSpace: 'nowrap' }}>Wirklich löschen?</span>
+                        <button
+                          onClick={() => { setConfirmDelete(null); handleDelete(job.id, false) }}
+                          disabled={deleteId === job.id}
+                          style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}
+                        >
+                          Ja
+                        </button>
+                        <button
+                          onClick={() => setConfirmDelete(null)}
+                          style={{ background: '#1e2a3a', color: '#94a3b8', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11 }}
+                        >
+                          Abbrechen
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <button
+                          onClick={() => handleDelete(job.id, true)}
+                          disabled={deleteId === job.id}
+                          title="Deaktivieren"
+                          style={{ background: '#374151', color: '#9ca3af', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11 }}
+                        >
+                          Deaktiv.
+                        </button>
+                        <button
+                          onClick={() => setConfirmDelete(job.id)}
+                          disabled={deleteId === job.id}
+                          title="Löschen"
+                          style={{ background: '#7f1d1d', color: '#fca5a5', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', fontSize: 11 }}
+                        >
+                          Löschen
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -21,96 +21,146 @@ for (const [region, cantons] of Object.entries(REGIONS)) {
   }
 }
 
+// Normalizes location strings for robust matching:
+// - Umlauts → ASCII digraphs (ü→ue, ä→ae, ö→oe)
+// - Accented chars → base (é→e, à→a, etc.)
+// - Hyphens → spaces
+// This lets "duebendorf" match "dübendorf", "la chaux de fonds" match "la chaux-de-fonds"
+function normalizeForGeo(s: string): string {
+  return s.toLowerCase()
+    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue')
+    .replace(/[éèêë]/g, 'e').replace(/[àâá]/g, 'a')
+    .replace(/[îïí]/g, 'i').replace(/[ôó]/g, 'o').replace(/[ûú]/g, 'u')
+    .replace(/ç/g, 'c').replace(/ñ/g, 'n')
+    .replace(/-/g, ' ')
+}
+
 // Keyword → canton mapping (cities, canton names, abbreviations)
+// Keys with umlauts/accents/hyphens are normalized automatically via NORMALIZED_KEYWORDS below
 const LOCATION_KEYWORDS: Record<string, string> = {
   // ZH
-  'zürich': 'ZH', 'zuerich': 'ZH', 'winterthur': 'ZH', 'uster': 'ZH',
+  'zürich': 'ZH', 'winterthur': 'ZH', 'uster': 'ZH',
   'dübendorf': 'ZH', 'dietikon': 'ZH', 'kloten': 'ZH', 'horgen': 'ZH',
+  'bülach': 'ZH', 'regensdorf': 'ZH', 'opfikon': 'ZH', 'schlieren': 'ZH',
+  'adliswil': 'ZH', 'küsnacht': 'ZH', 'männedorf': 'ZH', 'meilen': 'ZH',
+  'illnau': 'ZH', 'effretikon': 'ZH', 'embrach': 'ZH', 'hinwil': 'ZH',
+  'wädenswil': 'ZH', 'thalwil': 'ZH', 'rüti': 'ZH', 'fehraltorf': 'ZH',
+  'hombrechtikon': 'ZH', 'gossau zh': 'ZH', 'bassersdorf': 'ZH',
+  'volketswil': 'ZH', 'greifensee': 'ZH', 'pfäffikon zh': 'ZH',
+  'weisslingen': 'ZH', 'zollikon': 'ZH', 'küsnacht': 'ZH',
+  'oberglatt': 'ZH', 'niederhasli': 'ZH',
 
   // BE
   'bern': 'BE', 'berne': 'BE', 'biel': 'BE', 'bienne': 'BE', 'thun': 'BE',
-  'köniz': 'BE', 'burgdorf': 'BE', 'langenthal': 'BE',
+  'köniz': 'BE', 'burgdorf': 'BE', 'langenthal': 'BE', 'interlaken': 'BE',
+  'muri bei bern': 'BE', 'ostermundigen': 'BE', 'münchenbuchsee': 'BE',
+  'lyss': 'BE', 'münsingen': 'BE', 'worb': 'BE', 'steffisburg': 'BE',
+  'spiez': 'BE', 'langnau': 'BE', 'herzogenbuchsee': 'BE', 'huttwil': 'BE',
+  'belp': 'BE', 'konolfingen': 'BE',
 
   // LU
   'luzern': 'LU', 'lucerne': 'LU', 'kriens': 'LU', 'emmen': 'LU',
-  'sursee': 'LU', 'willisau': 'LU',
+  'sursee': 'LU', 'willisau': 'LU', 'root': 'LU', 'horw': 'LU',
+  'hochdorf': 'LU', 'sempach': 'LU', 'wolhusen': 'LU', 'rothenburg': 'LU',
 
   // UR
-  'altdorf': 'UR',
+  'altdorf': 'UR', 'flüelen': 'UR', 'schattdorf': 'UR',
 
   // SZ
-  'schwyz': 'SZ', 'lachen': 'SZ',
+  'schwyz': 'SZ', 'lachen': 'SZ', 'küssnacht': 'SZ', 'einsiedeln': 'SZ',
+  'pfäffikon sz': 'SZ', 'arth': 'SZ', 'altendorf': 'SZ', 'wangen sz': 'SZ',
 
   // OW
-  'sarnen': 'OW',
+  'sarnen': 'OW', 'sachseln': 'OW',
 
   // NW
-  'stans': 'NW',
+  'stans': 'NW', 'nidwalden': 'NW',
 
   // GL
-  'glarus': 'GL',
+  'glarus': 'GL', 'näfels': 'GL',
 
   // ZG
-  'zug': 'ZG', 'baar': 'ZG', 'cham': 'ZG',
+  'zug': 'ZG', 'baar': 'ZG', 'cham': 'ZG', 'rotkreuz': 'ZG',
+  'steinhausen': 'ZG', 'hünenberg': 'ZG', 'risch': 'ZG',
 
   // FR
-  'freiburg': 'FR', 'fribourg': 'FR', 'bulle': 'FR',
+  'freiburg': 'FR', 'fribourg': 'FR', 'bulle': 'FR', 'murten': 'FR',
+  'düdingen': 'FR', 'tafers': 'FR',
 
   // SO
-  'solothurn': 'SO', 'olten': 'SO', 'grenchen': 'SO',
+  'solothurn': 'SO', 'olten': 'SO', 'grenchen': 'SO', 'bettlach': 'SO',
+  'zuchwil': 'SO', 'dornach': 'SO', 'schönenwerd': 'SO',
 
   // BS
   'basel': 'BS', 'bâle': 'BS',
 
   // BL
-  'liestal': 'BL', 'allschwil': 'BL', 'reinach': 'BL',
+  'liestal': 'BL', 'allschwil': 'BL', 'reinach bl': 'BL', 'binningen': 'BL',
+  'münchenstein': 'BL', 'pratteln': 'BL', 'muttenz': 'BL', 'arlesheim': 'BL',
+  'aesch': 'BL', 'oberwil': 'BL', 'laufen': 'BL',
 
   // SH
-  'schaffhausen': 'SH',
+  'schaffhausen': 'SH', 'neuhausen': 'SH', 'thayngen': 'SH',
 
   // AR
-  'herisau': 'AR',
+  'herisau': 'AR', 'teufen': 'AR',
 
   // AI
   'appenzell': 'AI',
 
   // SG
-  'st. gallen': 'SG', 'st gallen': 'SG', 'st.gallen': 'SG', 'Sankt gallen': 'SG',
-  'wil': 'SG', 'rapperswil': 'SG', 'buchs': 'SG',
+  'st. gallen': 'SG', 'st gallen': 'SG', 'st.gallen': 'SG', 'sankt gallen': 'SG',
+  'wil': 'SG', 'rapperswil': 'SG', 'buchs': 'SG', 'rorschach': 'SG',
+  'gossau sg': 'SG', 'flawil': 'SG', 'uzwil': 'SG', 'wattwil': 'SG',
+
+  // FL (Liechtenstein) — geografisch Ostschweiz, viele CH-Pendler
+  'vaduz': 'SG', 'schaan': 'SG', 'triesen': 'SG', 'balzers': 'SG',
+  'eschen': 'SG', 'mauren': 'SG', 'liechtenstein': 'SG',
 
   // GR
   'chur': 'GR', 'davos': 'GR', 'arosa': 'GR', 'graubünden': 'GR',
+  'landquart': 'GR', 'ilanz': 'GR', 'thusis': 'GR',
 
   // AG
   'aarau': 'AG', 'aargau': 'AG', 'baden': 'AG', 'wettingen': 'AG',
-  'rheinfelden': 'AG', 'brugg': 'AG',
+  'rheinfelden': 'AG', 'brugg': 'AG', 'oftringen': 'AG', 'schafisheim': 'AG',
+  'lenzburg': 'AG', 'zofingen': 'AG', 'aarburg': 'AG', 'muri ag': 'AG',
+  'suhr': 'AG', 'buchs ag': 'AG', 'turgi': 'AG', 'windisch': 'AG',
 
   // TG
   'frauenfeld': 'TG', 'kreuzlingen': 'TG', 'thurgau': 'TG',
+  'arbon': 'TG', 'amriswil': 'TG', 'weinfelden': 'TG', 'romanshorn': 'TG',
 
   // TI
   'lugano': 'TI', 'bellinzona': 'TI', 'locarno': 'TI', 'tessin': 'TI',
-  'ticino': 'TI', 'mendrisio': 'TI',
+  'ticino': 'TI', 'mendrisio': 'TI', 'chiasso': 'TI', 'minusio': 'TI',
 
-  // VD  (Vaud/Waadt)
+  // VD
   'lausanne': 'VD', 'nyon': 'VD', 'yverdon': 'VD', 'vevey': 'VD',
   'montreux': 'VD', 'waadt': 'VD', 'vaud': 'VD', 'morges': 'VD',
-  'renens': 'VD', 'prilly': 'VD',
+  'renens': 'VD', 'prilly': 'VD', 'pully': 'VD', 'gland': 'VD',
 
-  // VS  (Wallis)
+  // VS
   'sion': 'VS', 'sitten': 'VS', 'brig': 'VS', 'visp': 'VS',
   'martigny': 'VS', 'monthey': 'VS', 'wallis': 'VS', 'valais': 'VS',
-  'zermatt': 'VS', 'saas-fee': 'VS', 'leuk': 'VS',
+  'zermatt': 'VS', 'saas-fee': 'VS', 'leuk': 'VS', 'naters': 'VS',
 
   // NE
   'neuchâtel': 'NE', 'neuenburg': 'NE', 'la chaux-de-fonds': 'NE',
+  'le locle': 'NE', 'fleurier': 'NE',
 
-  // GE  (Vaud/Waadt region)
+  // GE
   'genf': 'GE', 'genève': 'GE', 'geneva': 'GE', 'carouge': 'GE', 'lancy': 'GE',
-  'meyrin': 'GE', 'vernier': 'GE', 'thônex': 'GE',
+  'meyrin': 'GE', 'vernier': 'GE', 'thônex': 'GE', 'onex': 'GE',
 
   // JU
-  'delémont': 'JU', 'jura': 'JU',
+  'delémont': 'JU', 'jura': 'JU', 'porrentruy': 'JU',
+}
+
+// Precomputed normalized keyword map for umlaut/accent/hyphen-insensitive matching
+const NORMALIZED_KEYWORDS: Record<string, string> = {}
+for (const [keyword, canton] of Object.entries(LOCATION_KEYWORDS)) {
+  NORMALIZED_KEYWORDS[normalizeForGeo(keyword)] = canton
 }
 
 // Canton abbreviations (e.g. "ZH" anywhere in the text)
@@ -166,7 +216,7 @@ export function detectCanton(...textFragments: (string | null | undefined)[]): s
   const combined = textFragments.filter(Boolean).join(' ')
   if (!combined) return null
 
-  const lower = combined.toLowerCase().trim()
+  const normalized = normalizeForGeo(combined)
 
   // 1. Explicit canton abbreviation like "(ZH)" or ", ZH" or "ZH "
   const codeMatch = combined.match(/\b([A-Z]{2})\b/)
@@ -174,9 +224,10 @@ export function detectCanton(...textFragments: (string | null | undefined)[]): s
     return codeMatch[1]
   }
 
-  // 2. Keyword mapping (city names, canton names)
-  for (const [keyword, canton] of Object.entries(LOCATION_KEYWORDS)) {
-    if (lower.includes(keyword.toLowerCase())) {
+  // 2. Keyword mapping — normalized so "duebendorf" matches "dübendorf",
+  //    "la chaux de fonds" matches "la chaux-de-fonds", etc.
+  for (const [keyword, canton] of Object.entries(NORMALIZED_KEYWORDS)) {
+    if (normalized.includes(keyword)) {
       return canton
     }
   }
