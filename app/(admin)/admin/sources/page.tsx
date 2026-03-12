@@ -1,9 +1,19 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import type { JobSource } from '@/types/database'
 
 type SourceWithCount = JobSource & { job_count: number }
+
+interface TestResult {
+  reachable: boolean | null
+  method?: string
+  total: number | null
+  keywordHits: number | null
+  samples: { title: string; company: string; location: string; passesFilter: boolean }[]
+  warning?: string
+  error?: string
+}
 
 const inputStyle: React.CSSProperties = {
   background: '#0f1117',
@@ -28,6 +38,8 @@ export default function SourcesPage() {
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [testingId, setTestingId] = useState<string | null>(null)
+  const [testResults, setTestResults] = useState<Record<string, TestResult>>({})
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -75,6 +87,20 @@ export default function SourcesPage() {
       await load()
     } catch (e) {
       alert('Fehler: ' + String(e))
+    }
+  }
+
+  async function handleTest(source: SourceWithCount) {
+    setTestingId(source.id)
+    setTestResults(prev => { const next = { ...prev }; delete next[source.id]; return next })
+    try {
+      const res = await fetch(`/api/admin/sources/${source.id}/test`)
+      const json = await res.json()
+      setTestResults(prev => ({ ...prev, [source.id]: json }))
+    } catch (e) {
+      setTestResults(prev => ({ ...prev, [source.id]: { reachable: false, error: String(e), total: 0, keywordHits: 0, samples: [] } }))
+    } finally {
+      setTestingId(null)
     }
   }
 
@@ -158,7 +184,7 @@ export default function SourcesPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #1e2a3a' }}>
-                {['Name', 'URL', 'Typ', 'Inserate', 'Aktiv', 'Letzter Scan', ''].map(h => (
+                {['Name', 'URL', 'Typ', 'Inserate', 'Aktiv', 'Letzter Scan', '', ''].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '10px 16px', color: '#64748b', fontWeight: 500 }}>{h}</th>
                 ))}
               </tr>
@@ -171,7 +197,8 @@ export default function SourcesPage() {
                   </td>
                 </tr>
               ) : sources.map(source => (
-                <tr key={source.id} style={{ borderBottom: '1px solid #0f1117' }}>
+                <React.Fragment key={source.id}>
+                <tr style={{ borderBottom: testResults[source.id] ? 'none' : '1px solid #0f1117' }}>
                   <td style={{ padding: '10px 16px', color: '#e2e8f0', fontWeight: 500 }}>{source.name}</td>
                   <td style={{ padding: '10px 16px', maxWidth: 280 }}>
                     <a href={source.url} target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa', fontSize: 12, textDecoration: 'none' }}>
@@ -217,6 +244,17 @@ export default function SourcesPage() {
                       : '—'}
                   </td>
                   <td style={{ padding: '10px 16px' }}>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      <button
+                        onClick={() => handleTest(source)}
+                        disabled={testingId === source.id}
+                        style={{ background: '#0f2a4a', color: '#60a5fa', border: '1px solid #1e3a5f', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontSize: 11, whiteSpace: 'nowrap' }}
+                      >
+                        {testingId === source.id ? 'Prüft…' : '▶ Test'}
+                      </button>
+                    </div>
+                  </td>
+                  <td style={{ padding: '10px 16px' }}>
                     {confirmDeleteId === source.id ? (
                       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                         <span style={{ fontSize: 11, color: '#fca5a5', whiteSpace: 'nowrap' }}>Wirklich löschen?</span>
@@ -245,11 +283,83 @@ export default function SourcesPage() {
                     )}
                   </td>
                 </tr>
+                {testResults[source.id] && (
+                  <tr style={{ borderBottom: '1px solid #0f1117', background: '#0a0f1a' }}>
+                    <td colSpan={8} style={{ padding: '10px 16px 14px' }}>
+                      <TestResultRow result={testResults[source.id]} onClose={() => setTestResults(prev => { const next = { ...prev }; delete next[source.id]; return next })} />
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
         </div>
       )}
     </div>
+  )
+}
+
+function TestResultRow({ result, onClose }: { result: TestResult; onClose: () => void }) {
+  const { reachable, method, total, keywordHits, samples, warning, error } = result
+
+  if (reachable === null) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <span style={{ fontSize: 18 }}>⚡</span>
+        <span style={{ fontSize: 12, color: '#fbbf24' }}>{warning}</span>
+        <CloseBtn onClose={onClose} />
+      </div>
+    )
+  }
+
+  if (!reachable) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <span style={{ fontSize: 13, color: '#f87171', fontWeight: 600 }}>✗ Nicht erreichbar</span>
+        <span style={{ fontSize: 12, color: '#64748b' }}>{error}</span>
+        <CloseBtn onClose={onClose} />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: samples.length > 0 ? 10 : 0 }}>
+        <span style={{ fontSize: 13, color: '#86efac', fontWeight: 600 }}>✓ Erreichbar</span>
+        <span style={{ fontSize: 12, color: '#94a3b8' }}>
+          {total} Jobs gefunden
+          {keywordHits !== null && total !== null && total > 0 && (
+            <> · <span style={{ color: keywordHits > 0 ? '#86efac' : '#f87171' }}>{keywordHits} mit Keyword</span></>
+          )}
+        </span>
+        {method && <span style={{ fontSize: 11, color: '#475569' }}>via {method}</span>}
+        {warning && <span style={{ fontSize: 11, color: '#fbbf24' }}>⚠ {warning}</span>}
+        <CloseBtn onClose={onClose} />
+      </div>
+      {samples.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {samples.map((s, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+              <span style={{ fontSize: 11, color: s.passesFilter ? '#86efac' : '#475569', flexShrink: 0 }}>
+                {s.passesFilter ? '✓' : '○'}
+              </span>
+              <span style={{ fontSize: 12, color: s.passesFilter ? '#cbd5e1' : '#475569' }}>{s.title}</span>
+              {s.company && <span style={{ fontSize: 11, color: '#374151' }}>{s.company}</span>}
+              {s.location && <span style={{ fontSize: 11, color: '#374151' }}>{s.location}</span>}
+            </div>
+          ))}
+          {total !== null && total > samples.length && (
+            <div style={{ fontSize: 11, color: '#374151', marginTop: 2 }}>… und {total - samples.length} weitere</div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function CloseBtn({ onClose }: { onClose: () => void }) {
+  return (
+    <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', fontSize: 14, padding: '0 4px', marginLeft: 'auto' }}>✕</button>
   )
 }
