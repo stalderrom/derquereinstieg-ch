@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getJobEnrichment } from '@/lib/jobs/job-enrichment'
+import type { KununuData } from '@/app/api/user/kununu/route'
 
 export interface CareerGoalInput {
   job_title: string
@@ -45,6 +46,150 @@ interface JobDetailDrawerProps {
   userAge?: number
 }
 
+function StarDots({ score }: { score: number }) {
+  const filled = Math.round(score)
+  return (
+    <span style={{ fontSize: 13, letterSpacing: 1 }}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} style={{ color: i < filled ? '#F59E0B' : '#D1D5DB' }}>●</span>
+      ))}
+    </span>
+  )
+}
+
+function KununuBlock({ data, company }: { data: KununuData; company: string }) {
+  const searchUrl = `https://www.kununu.com/ch/search?searchterm=${encodeURIComponent(company)}`
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: '#1A2332' }}>
+          ⭐ Was Mitarbeitende sagen
+        </div>
+        <a
+          href={data.profileUrl ?? searchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: 10, color: '#9CA3AF', textDecoration: 'none' }}
+        >
+          kununu ↗
+        </a>
+      </div>
+
+      {data.found && data.score != null ? (
+        <>
+          {/* Score */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <StarDots score={data.score} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#1A2332' }}>
+              {data.score.toFixed(1)}
+            </span>
+            <span style={{ fontSize: 11, color: '#9CA3AF' }}>
+              {data.reviewCount ? `${data.reviewCount} Bewertungen` : ''}
+              {data.recommendRate != null ? ` · ${data.recommendRate}% empfehlen` : ''}
+            </span>
+          </div>
+
+          {/* Best reviews */}
+          {data.topReviews && data.topReviews.length > 0 && (
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#059669', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                👍 Beste Bewertungen
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {data.topReviews.map((r, i) => (
+                  <div key={i} style={{
+                    background: '#F0FDF4',
+                    border: '1px solid #BBF7D0',
+                    borderRadius: 7,
+                    padding: '7px 10px',
+                    borderLeft: '3px solid #34D399',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: r.pros ? 3 : 0 }}>
+                      <span style={{ fontSize: 10, color: '#F59E0B' }}>
+                        {'●'.repeat(Math.round(r.rating))}{'○'.repeat(5 - Math.round(r.rating))}
+                      </span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: '#065F46' }}>{r.title}</span>
+                    </div>
+                    {r.pros && (
+                      <div style={{ fontSize: 11, color: '#047857', lineHeight: 1.4 }}>
+                        {r.pros}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Worst reviews */}
+          {data.worstReviews && data.worstReviews.length > 0 && (
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#DC2626', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                👎 Kritische Stimmen
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {data.worstReviews.map((r, i) => (
+                  <div key={i} style={{
+                    background: '#FFF1F2',
+                    border: '1px solid #FECDD3',
+                    borderRadius: 7,
+                    padding: '7px 10px',
+                    borderLeft: '3px solid #F87171',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: r.cons ? 3 : 0 }}>
+                      <span style={{ fontSize: 10, color: '#F59E0B' }}>
+                        {'●'.repeat(Math.round(r.rating))}{'○'.repeat(5 - Math.round(r.rating))}
+                      </span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: '#9F1239' }}>{r.title}</span>
+                    </div>
+                    {r.cons && (
+                      <div style={{ fontSize: 11, color: '#BE123C', lineHeight: 1.4 }}>
+                        {r.cons}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* No reviews extracted — just link */}
+          {(!data.topReviews || data.topReviews.length === 0) && (!data.worstReviews || data.worstReviews.length === 0) && (
+            <div style={{ fontSize: 11, color: '#9CA3AF' }}>
+              Bewertungen auf Kununu verfügbar
+            </div>
+          )}
+
+          <a
+            href={data.profileUrl ?? searchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 11, color: '#6B7280', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 3, marginTop: 4 }}
+          >
+            Alle Bewertungen auf Kununu →
+          </a>
+        </>
+      ) : (
+        // Not found on Kununu — show search link
+        <div>
+          <div style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 6 }}>
+            Kein Kununu-Profil für <strong style={{ color: '#6B7280' }}>{company}</strong> gefunden.
+          </div>
+          <a
+            href={searchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 11, color: '#6B7280', textDecoration: 'none' }}
+          >
+            Manuell auf Kununu suchen →
+          </a>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function JobDetailDrawer({
   job,
   onClose,
@@ -60,6 +205,20 @@ export default function JobDetailDrawer({
 }: JobDetailDrawerProps) {
   const [goalSaving, setGoalSaving] = useState(false)
   const [goalJustSet, setGoalJustSet] = useState(false)
+  const [kununu, setKununu] = useState<KununuData | null>(null)
+  const [kununuLoading, setKununuLoading] = useState(false)
+
+  // Fetch Kununu data when company changes
+  useEffect(() => {
+    if (!job?.company) return
+    setKununu(null)
+    setKununuLoading(true)
+    fetch(`/api/user/kununu?company=${encodeURIComponent(job.company)}`)
+      .then(r => r.json())
+      .then((data: KununuData) => { setKununu(data); setKununuLoading(false) })
+      .catch(() => setKununuLoading(false))
+  }, [job?.company])
+
   // ESC to close
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -387,6 +546,22 @@ export default function JobDetailDrawer({
               <div style={{ fontSize: 12, color: '#78350F', lineHeight: 1.6 }}>
                 {enrichment.tip}
               </div>
+            </div>
+          )}
+
+          {/* Kununu Arbeitgeberbewertungen */}
+          {(kununuLoading || kununu) && (
+            <div style={{
+              background: '#fff',
+              border: '1.5px solid #E5E0D8',
+              borderRadius: 10,
+              padding: '12px 14px',
+            }}>
+              {kununuLoading ? (
+                <div style={{ fontSize: 11, color: '#9CA3AF' }}>Lade Kununu-Bewertungen…</div>
+              ) : kununu ? (
+                <KununuBlock data={kununu} company={job.company} />
+              ) : null}
             </div>
           )}
 

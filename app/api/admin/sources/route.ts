@@ -45,6 +45,8 @@ export async function POST(req: NextRequest) {
       url,
       type: type ?? 'career',
       is_active: true,
+      use_headless: false,
+      skip_keyword_filter: false,
     })
 
     return NextResponse.json({ source }, { status: 201 })

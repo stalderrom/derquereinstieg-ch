@@ -9,7 +9,7 @@ const nunito = Nunito({
   display: 'swap',
 })
 
-const GA_ID = 'G-9CWXYP0Z9C'
+const GA_ID = 'G-E40T2GZKWN'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://derquereinstieg.ch'),

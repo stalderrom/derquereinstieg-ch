@@ -47,7 +47,7 @@ const LOCATION_KEYWORDS: Record<string, string> = {
   'wädenswil': 'ZH', 'thalwil': 'ZH', 'rüti': 'ZH', 'fehraltorf': 'ZH',
   'hombrechtikon': 'ZH', 'gossau zh': 'ZH', 'bassersdorf': 'ZH',
   'volketswil': 'ZH', 'greifensee': 'ZH', 'pfäffikon zh': 'ZH',
-  'weisslingen': 'ZH', 'zollikon': 'ZH', 'küsnacht': 'ZH',
+  'weisslingen': 'ZH', 'zollikon': 'ZH',
   'oberglatt': 'ZH', 'niederhasli': 'ZH',
 
   // BE
